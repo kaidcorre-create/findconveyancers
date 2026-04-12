@@ -1,5 +1,4 @@
--- ConveyLink D1 Schema
--- Run with: wrangler d1 execute conveylink-db --file=schema.sql
+-- ConveySelect D1 Schema
 
 -- ── Leads ──────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS leads (
