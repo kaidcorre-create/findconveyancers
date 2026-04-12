@@ -675,7 +675,7 @@
 
     <!-- Top bar -->
     <div class="topbar">
-      <div class="topbar-logo">⬡ ConveyLink</div>
+      <div class="topbar-logo">⬡ ConveySelect</div>
       <div class="topbar-right">
         <span class="topbar-badge" id="lastRefresh"></span>
         <button class="logout-btn" onclick="logout()">Sign out</button>
@@ -848,7 +848,7 @@
   // ── Config ──────────────────────────────────────────────────────────────
   // In production this is the same origin (your worker domain)
   // In development, point to your local wrangler dev URL
-  const API = '';   // empty = same origin
+  const API = 'conveyselect.kai-d-corre-ea2.workers.dev';   // empty = same origin
 
   // ── Auth ─────────────────────────────────────────────────────────────────
   let token = localStorage.getItem('cl_token') || '';
