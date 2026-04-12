@@ -1,0 +1,14 @@
+name = "conveylink"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "conveylink-db"
+database_id = "38b8fefc-b26c-4a61-969f-a5e45f7c6750" 
+
+[vars]
+NOTIFY_EMAIL = "kai@correconnections.co.uk"
+
+# Set secrets via CLI — never commit these:
+# wrangler secret put ADMIN_PASSWORD
