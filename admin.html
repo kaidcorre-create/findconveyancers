@@ -3,28 +3,27 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ConveySelect Admin</title>
+  <title>ConveySelect Admin Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:       #0d0f12;
-      --surface:  #151820;
-      --border:   #1f2330;
-      --border2:  #2a2f42;
-      --text:     #e8eaf0;
-      --muted:    #6b7280;
-      --subtle:   #9ca3af;
-      --gold:     #f0b429;
-      --gold-dim: rgba(240,180,41,0.12);
-      --green:    #34d399;
-      --green-dim:rgba(52,211,153,0.1);
-      --red:      #f87171;
-      --red-dim:  rgba(248,113,113,0.1);
-      --blue:     #60a5fa;
-      --blue-dim: rgba(96,165,250,0.1);
-      --amber:    #fbbf24;
-      --radius:   6px;
+      --bg:        #0d0f12;
+      --surface:   #151820;
+      --border:    #1f2330;
+      --border2:   #2a2f42;
+      --text:      #e8eaf0;
+      --muted:     #6b7280;
+      --subtle:    #9ca3af;
+      --gold:      #f0b429;
+      --gold-dim:  rgba(240,180,41,0.12);
+      --green:     #34d399;
+      --green-dim: rgba(52,211,153,0.1);
+      --red:       #f87171;
+      --red-dim:   rgba(248,113,113,0.1);
+      --blue:      #60a5fa;
+      --blue-dim:  rgba(96,165,250,0.1);
+      --radius:    6px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,13 +36,12 @@
       font-size: 14px;
     }
 
-    /* ── Login screen ── */
+    /* ── Login ── */
     #loginScreen {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: var(--bg);
     }
 
     .login-card {
@@ -56,19 +54,8 @@
       text-align: center;
     }
 
-    .login-logo {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 0.4rem;
-      letter-spacing: -0.02em;
-    }
-
-    .login-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
+    .login-logo { font-size: 1.5rem; font-weight: 600; color: var(--gold); margin-bottom: 0.4rem; }
+    .login-sub  { font-size: 0.82rem; color: var(--muted); margin-bottom: 2rem; }
 
     .login-input {
       width: 100%;
@@ -83,7 +70,6 @@
       margin-bottom: 1rem;
       transition: border-color 0.2s;
     }
-
     .login-input:focus { border-color: var(--gold); }
 
     .login-btn {
@@ -99,12 +85,13 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
+    .login-btn:hover { opacity: 0.88; }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .login-btn:hover { opacity: 0.9; }
     .login-error { color: var(--red); font-size: 0.8rem; margin-top: 0.75rem; display: none; }
 
     /* ── App shell ── */
-    #app { display: none; }
+    #app { display: none; min-height: 100vh; }
 
     .shell {
       display: grid;
@@ -113,7 +100,7 @@
       min-height: 100vh;
     }
 
-    /* ── Top bar ── */
+    /* ── Topbar ── */
     .topbar {
       grid-column: 1 / -1;
       display: flex;
@@ -124,23 +111,11 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .topbar-logo {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--gold);
-      letter-spacing: -0.01em;
-    }
+    .topbar-logo { font-weight: 600; font-size: 1rem; color: var(--gold); }
 
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
 
-    .topbar-badge {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+    .topbar-badge { font-size: 0.75rem; color: var(--muted); }
 
     .logout-btn {
       font-size: 0.78rem;
@@ -152,7 +127,6 @@
       cursor: pointer;
       transition: color 0.2s;
     }
-
     .logout-btn:hover { color: var(--text); }
 
     /* ── Sidebar ── */
@@ -162,12 +136,9 @@
       padding: 1.25rem 0;
     }
 
-    .nav-section {
-      padding: 0 0.75rem;
-      margin-bottom: 0.5rem;
-    }
+    .nav-section { padding: 0 0.75rem; margin-bottom: 0.75rem; }
 
-    .nav-section-label {
+    .nav-label {
       font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -187,14 +158,13 @@
       color: var(--subtle);
       font-size: 0.85rem;
       font-weight: 400;
-      transition: background 0.15s, color 0.15s;
       border: none;
       background: none;
       width: 100%;
       text-align: left;
+      transition: background 0.15s, color 0.15s;
     }
-
-    .nav-item:hover { background: var(--border); color: var(--text); }
+    .nav-item:hover  { background: var(--border); color: var(--text); }
     .nav-item.active { background: var(--gold-dim); color: var(--gold); font-weight: 500; }
 
     .nav-badge {
@@ -205,13 +175,12 @@
       font-weight: 700;
       padding: 0.1rem 0.45rem;
       border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
     }
 
-    /* ── Main content ── */
-    .main {
-      padding: 1.75rem;
-      overflow-y: auto;
-    }
+    /* ── Main ── */
+    .main { padding: 1.75rem; overflow-y: auto; }
 
     /* ── Views ── */
     .view { display: none; }
@@ -220,22 +189,12 @@
     /* ── Page header ── */
     .page-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 1.75rem;
     }
-
-    .page-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .page-sub {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
+    .page-title { font-size: 1.2rem; font-weight: 600; }
+    .page-sub   { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
 
     /* ── Stat cards ── */
     .stats-grid {
@@ -251,35 +210,16 @@
       border-radius: 8px;
       padding: 1.25rem;
     }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-value {
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      line-height: 1;
-    }
-
-    .stat-sub {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 0.4rem;
-    }
-
     .stat-card.highlight { border-color: rgba(240,180,41,0.3); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; }
+    .stat-value { font-size: 1.75rem; font-weight: 600; font-family: 'DM Mono', monospace; line-height: 1; }
     .stat-card.highlight .stat-value { color: var(--gold); }
+    .stat-sub   { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
 
     /* ── Filters ── */
     .filters {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.6rem;
       margin-bottom: 1.25rem;
       flex-wrap: wrap;
       align-items: center;
@@ -296,11 +236,11 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-
-    .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+    .filter-btn:hover  { border-color: var(--muted); color: var(--text); }
     .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
 
     .search-input {
+      margin-left: auto;
       padding: 0.4rem 0.9rem;
       border: 1px solid var(--border2);
       border-radius: var(--radius);
@@ -310,10 +250,8 @@
       font-size: 0.82rem;
       outline: none;
       width: 200px;
-      margin-left: auto;
       transition: border-color 0.2s;
     }
-
     .search-input:focus { border-color: var(--gold); }
     .search-input::placeholder { color: var(--muted); }
 
@@ -325,10 +263,7 @@
       overflow: hidden;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
 
     th {
       padding: 0.75rem 1rem;
@@ -351,18 +286,13 @@
     }
 
     tr:last-child td { border-bottom: none; }
-
     tr:hover td { background: rgba(255,255,255,0.02); }
 
     .td-name { font-weight: 500; }
     .td-sub  { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .td-mono { font-family: 'DM Mono', monospace; font-size: 0.8rem; }
 
-    .td-mono {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-    }
-
-    /* ── Status badges ── */
+    /* ── Badges ── */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -373,15 +303,13 @@
       font-weight: 600;
       white-space: nowrap;
     }
-
     .badge::before { content: '●'; font-size: 0.55rem; }
-
     .badge-new       { background: var(--blue-dim);  color: var(--blue); }
     .badge-contacted { background: var(--gold-dim);  color: var(--gold); }
     .badge-converted { background: var(--green-dim); color: var(--green); }
     .badge-lost      { background: var(--red-dim);   color: var(--red); }
 
-    /* ── Actions ── */
+    /* ── Buttons ── */
     .action-btn {
       padding: 0.3rem 0.65rem;
       border-radius: var(--radius);
@@ -392,10 +320,27 @@
       color: var(--subtle);
       cursor: pointer;
       transition: all 0.15s;
-      margin-right: 0.25rem;
+      font-family: 'DM Sans', sans-serif;
     }
-
     .action-btn:hover { border-color: var(--muted); color: var(--text); background: var(--border); }
+
+    /* ── Agent list ── */
+    .agent-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .agent-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .agent-ref       { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--gold); min-width: 120px; }
+    .agent-full-name { font-size: 0.85rem; flex: 1; }
+    .agent-count     { font-family: 'DM Mono', monospace; font-size: 0.85rem; font-weight: 600; }
+    .agent-bar-wrap  { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .agent-bar       { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
 
     /* ── Modal ── */
     .modal-overlay {
@@ -407,13 +352,7 @@
       align-items: center;
       justify-content: center;
     }
-
-    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    .modal-overlay.open { display: flex; }
 
     .modal {
       background: var(--surface);
@@ -428,8 +367,8 @@
     }
 
     @keyframes slideUp {
-      from { transform: translateY(12px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from { transform: translateY(10px); opacity: 0; }
+      to   { transform: translateY(0);   opacity: 1; }
     }
 
     .modal-header {
@@ -439,19 +378,18 @@
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--border);
     }
-
     .modal-title { font-weight: 600; font-size: 0.95rem; }
 
     .modal-close {
       background: none;
       border: none;
       color: var(--muted);
-      font-size: 1.25rem;
+      font-size: 1.4rem;
       cursor: pointer;
       line-height: 1;
+      padding: 0;
       transition: color 0.15s;
     }
-
     .modal-close:hover { color: var(--text); }
 
     .modal-body { padding: 1.5rem; }
@@ -472,12 +410,7 @@
       display: block;
       margin-bottom: 0.3rem;
     }
-
-    .detail-item .val {
-      font-size: 0.88rem;
-      color: var(--text);
-    }
-
+    .detail-item .val      { font-size: 0.88rem; }
     .detail-item .val.mono { font-family: 'DM Mono', monospace; }
 
     .modal-section-title {
@@ -489,7 +422,7 @@
       margin-bottom: 0.75rem;
     }
 
-    .status-select {
+    .status-select, .notes-area {
       width: 100%;
       padding: 0.65rem 0.9rem;
       background: var(--bg);
@@ -500,29 +433,16 @@
       font-size: 0.88rem;
       outline: none;
       margin-bottom: 1rem;
-      appearance: none;
-      cursor: pointer;
     }
-
-    .status-select:focus { border-color: var(--gold); }
+    .status-select { appearance: none; cursor: pointer; }
+    .status-select:focus, .notes-area:focus { border-color: var(--gold); }
 
     .notes-area {
-      width: 100%;
-      padding: 0.65rem 0.9rem;
-      background: var(--bg);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      outline: none;
       resize: vertical;
       min-height: 90px;
-      margin-bottom: 1rem;
+      font-size: 0.85rem;
       line-height: 1.6;
     }
-
-    .notes-area:focus { border-color: var(--gold); }
     .notes-area::placeholder { color: var(--muted); }
 
     .modal-footer {
@@ -533,7 +453,7 @@
       border-top: 1px solid var(--border);
     }
 
-    .btn-modal-cancel {
+    .btn-cancel {
       padding: 0.6rem 1.2rem;
       border-radius: var(--radius);
       border: 1px solid var(--border2);
@@ -544,10 +464,9 @@
       cursor: pointer;
       transition: all 0.15s;
     }
+    .btn-cancel:hover { color: var(--text); border-color: var(--muted); }
 
-    .btn-modal-cancel:hover { color: var(--text); border-color: var(--muted); }
-
-    .btn-modal-save {
+    .btn-save {
       padding: 0.6rem 1.4rem;
       border-radius: var(--radius);
       background: var(--gold);
@@ -559,70 +478,19 @@
       cursor: pointer;
       transition: opacity 0.15s;
     }
+    .btn-save:hover    { opacity: 0.88; }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-modal-save:hover { opacity: 0.9; }
-
-    /* ── Empty state ── */
+    /* ── Empty / loading states ── */
     .empty-state {
       text-align: center;
       padding: 3rem 1rem;
       color: var(--muted);
     }
-
     .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; }
     .empty-text { font-size: 0.88rem; }
 
-    /* ── Loading ── */
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    /* ── Agent breakdown ── */
-    .agent-list { display: flex; flex-direction: column; gap: 0.5rem; }
-
-    .agent-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.75rem 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .agent-ref {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--gold);
-      min-width: 120px;
-    }
-
-    .agent-full-name { font-size: 0.85rem; flex: 1; }
-
-    .agent-count {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .agent-bar-wrap {
-      flex: 1;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .agent-bar {
-      height: 100%;
-      background: var(--gold);
-      border-radius: 2px;
-      transition: width 0.5s ease;
-    }
+    .loading { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; }
 
     /* ── Toast ── */
     .toast {
@@ -637,18 +505,17 @@
       color: var(--text);
       box-shadow: 0 4px 24px rgba(0,0,0,0.4);
       z-index: 200;
-      display: none;
-      animation: slideUp 0.2s ease;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
     }
-
-    .toast.show { display: block; }
+    .toast.show    { opacity: 1; transform: translateY(0); }
     .toast.success { border-color: var(--green); color: var(--green); }
     .toast.error   { border-color: var(--red);   color: var(--red); }
 
     /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-    }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 680px) {
       .shell { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -663,8 +530,8 @@
   <div class="login-card">
     <div class="login-logo">ConveySelect</div>
     <div class="login-sub">Admin dashboard</div>
-    <input type="password" class="login-input" id="passwordInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')login()">
-    <button class="login-btn" onclick="login()">Sign in</button>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Enter admin password">
+    <button class="login-btn" id="loginBtn">Sign in</button>
     <div class="login-error" id="loginError">Incorrect password</div>
   </div>
 </div>
@@ -673,59 +540,49 @@
 <div id="app">
   <div class="shell">
 
-    <!-- Top bar -->
+    <!-- Topbar -->
     <div class="topbar">
       <div class="topbar-logo">⬡ ConveySelect</div>
       <div class="topbar-right">
         <span class="topbar-badge" id="lastRefresh"></span>
-        <button class="logout-btn" onclick="logout()">Sign out</button>
+        <button class="logout-btn" id="logoutBtn">Sign out</button>
       </div>
     </div>
 
     <!-- Sidebar -->
     <nav class="sidebar">
       <div class="nav-section">
-        <div class="nav-section-label">Overview</div>
-        <button class="nav-item active" onclick="showView('dashboard', this)">
-          <span>📊</span> Dashboard
-        </button>
+        <div class="nav-label">Overview</div>
+        <button class="nav-item active" data-view="dashboard">📊 Dashboard</button>
       </div>
       <div class="nav-section">
-        <div class="nav-section-label">Leads</div>
-        <button class="nav-item" onclick="showView('leads', this); filterLeads('all')">
-          <span>📋</span> All Leads
-          <span class="nav-badge" id="navBadgeAll">—</span>
+        <div class="nav-label">Leads</div>
+        <button class="nav-item" data-view="leads" data-filter="all">
+          📋 All Leads <span class="nav-badge" id="navBadgeAll">—</span>
         </button>
-        <button class="nav-item" onclick="showView('leads', this); filterLeads('new')">
-          <span>🔵</span> New
-          <span class="nav-badge" id="navBadgeNew">—</span>
+        <button class="nav-item" data-view="leads" data-filter="new">
+          🔵 New <span class="nav-badge" id="navBadgeNew">—</span>
         </button>
-        <button class="nav-item" onclick="showView('leads', this); filterLeads('contacted')">
-          <span>🟡</span> Contacted
-        </button>
-        <button class="nav-item" onclick="showView('leads', this); filterLeads('converted')">
-          <span>🟢</span> Converted
-        </button>
+        <button class="nav-item" data-view="leads" data-filter="contacted">🟡 Contacted</button>
+        <button class="nav-item" data-view="leads" data-filter="converted">🟢 Converted</button>
       </div>
       <div class="nav-section">
-        <div class="nav-section-label">Partners</div>
-        <button class="nav-item" onclick="showView('agents', this)">
-          <span>🏘</span> Agents
-        </button>
+        <div class="nav-label">Partners</div>
+        <button class="nav-item" data-view="agents">🏘 Agents</button>
       </div>
     </nav>
 
     <!-- Main -->
     <main class="main">
 
-      <!-- Dashboard view -->
+      <!-- Dashboard -->
       <div class="view active" id="view-dashboard">
         <div class="page-header">
           <div>
             <div class="page-title">Dashboard</div>
             <div class="page-sub">Overview of all conveyancing leads</div>
           </div>
-          <button class="action-btn" onclick="loadAll()">↻ Refresh</button>
+          <button class="action-btn" id="refreshBtn">↻ Refresh</button>
         </div>
 
         <div class="stats-grid">
@@ -751,15 +608,13 @@
           </div>
         </div>
 
-        <div style="margin-bottom:1.25rem">
+        <div>
           <div class="page-title" style="font-size:0.95rem; margin-bottom:1rem">Leads by agent partner</div>
-          <div class="agent-list" id="agentBreakdown">
-            <div class="loading">Loading…</div>
-          </div>
+          <div class="agent-list" id="agentBreakdown"><div class="loading">Loading…</div></div>
         </div>
       </div>
 
-      <!-- Leads view -->
+      <!-- Leads -->
       <div class="view" id="view-leads">
         <div class="page-header">
           <div>
@@ -769,12 +624,12 @@
         </div>
 
         <div class="filters">
-          <button class="filter-btn active" id="filter-all"      onclick="filterLeads('all')">All</button>
-          <button class="filter-btn"        id="filter-new"      onclick="filterLeads('new')">New</button>
-          <button class="filter-btn"        id="filter-contacted" onclick="filterLeads('contacted')">Contacted</button>
-          <button class="filter-btn"        id="filter-converted" onclick="filterLeads('converted')">Converted</button>
-          <button class="filter-btn"        id="filter-lost"     onclick="filterLeads('lost')">Lost</button>
-          <input type="text" class="search-input" placeholder="Search name, postcode…" oninput="searchLeads(this.value)">
+          <button class="filter-btn active" data-status="all">All</button>
+          <button class="filter-btn" data-status="new">New</button>
+          <button class="filter-btn" data-status="contacted">Contacted</button>
+          <button class="filter-btn" data-status="converted">Converted</button>
+          <button class="filter-btn" data-status="lost">Lost</button>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search name, postcode…">
         </div>
 
         <div class="table-wrap">
@@ -798,7 +653,7 @@
         </div>
       </div>
 
-      <!-- Agents view -->
+      <!-- Agents -->
       <div class="view" id="view-agents">
         <div class="page-header">
           <div>
@@ -806,21 +661,19 @@
             <div class="page-sub">Estate agents referring leads to you</div>
           </div>
         </div>
-        <div class="agent-list" id="agentsList">
-          <div class="loading">Loading…</div>
-        </div>
+        <div class="agent-list" id="agentsList"><div class="loading">Loading…</div></div>
       </div>
 
     </main>
   </div>
 </div>
 
-<!-- ── Lead detail modal ── -->
+<!-- Lead detail modal -->
 <div class="modal-overlay" id="leadModal">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="modalName">Lead Details</div>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="modal-close" id="modalCloseBtn">×</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid" id="modalDetails"></div>
@@ -835,8 +688,8 @@
       <textarea class="notes-area" id="modalNotes" placeholder="Add notes about this lead…"></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-modal-save" onclick="saveLead()">Save changes</button>
+      <button class="btn-cancel" id="modalCancelBtn">Cancel</button>
+      <button class="btn-save"   id="modalSaveBtn">Save changes</button>
     </div>
   </div>
 </div>
@@ -845,63 +698,136 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── Config ──────────────────────────────────────────────────────────────
-  // In production this is the same origin (your worker domain)
-  // In development, point to your local wrangler dev URL
-  // AFTER
-const API = 'https://conveyselect.kai-d-corre-ea2.workers.dev';  // added https://
+  // ── Config ───────────────────────────────────────────────────────────────
+  const API = 'https://conveyselect.kai-d-corre-ea2.workers.dev';
 
-async function login() {
-  const pw = document.getElementById('passwordInput').value;
-  try {
-    const r = await fetch(API + '/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pw })
-    });
-    const data = await r.json();
-    if (data.success) {
-      token = data.token;
-      localStorage.setItem('cl_token', token);
-      showApp();
-    } else {
-      document.getElementById('loginError').style.display = 'block';
+  // ── State ────────────────────────────────────────────────────────────────
+  let token         = localStorage.getItem('cl_token') || '';
+  let allLeads      = [];
+  let currentFilter = 'all';
+  let currentSearch = '';
+  let currentLeadId = null;
+  let toastTimer    = null;
+
+  // ── Boot ─────────────────────────────────────────────────────────────────
+  if (token) showApp();
+
+  // ── Login ─────────────────────────────────────────────────────────────────
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  async function doLogin() {
+    const pw  = document.getElementById('passwordInput').value.trim();
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginError');
+
+    if (!pw) return;
+
+    btn.disabled    = true;
+    btn.textContent = 'Signing in…';
+    err.style.display = 'none';
+
+    try {
+      const res  = await fetch(API + '/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        token = data.token;
+        localStorage.setItem('cl_token', token);
+        showApp();
+      } else {
+        err.textContent   = 'Incorrect password';
+        err.style.display = 'block';
+      }
+    } catch (e) {
+      err.textContent   = 'Could not reach server. Please try again.';
+      err.style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Sign in';
     }
-  } catch (e) {
-    // Network error — show an error, never bypass auth
-    document.getElementById('loginError').textContent = 'Could not reach server. Please try again.';
-    document.getElementById('loginError').style.display = 'block';
-  }
-}
-  function logout() {
-    localStorage.removeItem('cl_token');
-    location.reload();
   }
 
+  // ── Logout ────────────────────────────────────────────────────────────────
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('cl_token');
+    token = '';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('passwordInput').value = '';
+  });
+
+  // ── Show app ──────────────────────────────────────────────────────────────
   function showApp() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadAll();
   }
 
-  // Auto-login if token exists
-  if (token) showApp();
+  // ── Sidebar navigation ────────────────────────────────────────────────────
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view   = btn.dataset.view;
+      const filter = btn.dataset.filter;
 
-  // ── Data ──────────────────────────────────────────────────────────────────
-  let allLeads = [];
-  let currentFilter = 'all';
-  let currentSearch = '';
-  let currentLeadId = null;
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
+      showView(view);
+      if (filter) setFilter(filter);
+    });
+  });
+
+  function showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+  }
+
+  // ── Refresh button ────────────────────────────────────────────────────────
+  document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+  // ── Filter buttons ────────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setFilter(btn.dataset.status);
+    });
+  });
+
+  function setFilter(status) {
+    currentFilter = status;
+    currentSearch = '';
+    document.getElementById('searchInput').value = '';
+
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.status === status);
+    });
+
+    renderLeads();
+  }
+
+  // ── Search ────────────────────────────────────────────────────────────────
+  document.getElementById('searchInput').addEventListener('input', e => {
+    currentSearch = e.target.value.trim().toLowerCase();
+    renderLeads();
+  });
+
+  // ── API helpers ───────────────────────────────────────────────────────────
   async function apiGet(path) {
-    const r = await fetch(API + path, {
+    const res = await fetch(API + path, {
       headers: { 'Authorization': 'Bearer ' + token }
     });
-    return r.json();
+    if (!res.ok) throw new Error('API error ' + res.status);
+    return res.json();
   }
 
   async function apiPatch(path, data) {
-    const r = await fetch(API + path, {
+    const res = await fetch(API + path, {
       method: 'PATCH',
       headers: {
         'Authorization': 'Bearer ' + token,
@@ -909,150 +835,149 @@ async function login() {
       },
       body: JSON.stringify(data)
     });
-    return r.json();
+    if (!res.ok) throw new Error('API error ' + res.status);
+    return res.json();
   }
 
+  // ── Load all data ─────────────────────────────────────────────────────────
   async function loadAll() {
     document.getElementById('lastRefresh').textContent =
       'Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     await Promise.all([loadStats(), loadLeads()]);
   }
 
+  // ── Stats ─────────────────────────────────────────────────────────────────
   async function loadStats() {
     try {
       const data = await apiGet('/api/admin/stats');
+
       document.getElementById('statTotal').textContent = data.total ?? '—';
       document.getElementById('statWeek').textContent  = data.thisWeek ?? '—';
 
       const converted = (data.byStatus || []).find(s => s.status === 'converted');
       const newLeads  = (data.byStatus || []).find(s => s.status === 'new');
-      document.getElementById('statConverted').textContent = converted ? converted.count : '0';
-      document.getElementById('statNew').textContent       = newLeads  ? newLeads.count  : '0';
-      document.getElementById('navBadgeNew').textContent   = newLeads  ? newLeads.count  : '0';
+
+      document.getElementById('statConverted').textContent = converted?.count ?? '0';
+      document.getElementById('statNew').textContent       = newLeads?.count  ?? '0';
+      document.getElementById('navBadgeNew').textContent   = newLeads?.count  ?? '0';
       document.getElementById('navBadgeAll').textContent   = data.total ?? '0';
 
       // Agent breakdown
-      const agents = data.byAgent || [];
+      const agents   = data.byAgent || [];
       const maxCount = agents.length ? Math.max(...agents.map(a => a.count)) : 1;
-      const container = document.getElementById('agentBreakdown');
-      const agentsList = document.getElementById('agentsList');
 
-      if (!agents.length) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-icon">🏘</div><div class="empty-text">No agent data yet</div></div>';
-        agentsList.innerHTML = container.innerHTML;
-        return;
-      }
+      const agentHTML = agents.length
+        ? agents.map(a => `
+            <div class="agent-row">
+              <div class="agent-ref">${escHtml(a.agent_ref)}</div>
+              <div class="agent-full-name">${escHtml(a.agent_name)}</div>
+              <div class="agent-bar-wrap">
+                <div class="agent-bar" style="width:${Math.round((a.count / maxCount) * 100)}%"></div>
+              </div>
+              <div class="agent-count">${a.count} lead${a.count !== 1 ? 's' : ''}</div>
+              <button class="action-btn" data-agent-ref="${escHtml(a.agent_ref)}">View →</button>
+            </div>
+          `).join('')
+        : '<div class="empty-state"><div class="empty-icon">🏘</div><div class="empty-text">No agent data yet</div></div>';
 
-      const rows = agents.map(a => `
-        <div class="agent-row">
-          <div class="agent-ref">${a.agent_ref}</div>
-          <div class="agent-full-name">${a.agent_name}</div>
-          <div class="agent-bar-wrap">
-            <div class="agent-bar" style="width:${Math.round((a.count/maxCount)*100)}%"></div>
-          </div>
-          <div class="agent-count">${a.count} lead${a.count !== 1 ? 's' : ''}</div>
-          <button class="action-btn" onclick="filterLeads('all', '${a.agent_ref}')">View →</button>
-        </div>
-      `).join('');
+      document.getElementById('agentBreakdown').innerHTML = agentHTML;
+      document.getElementById('agentsList').innerHTML     = agentHTML;
 
-      container.innerHTML = rows;
-      agentsList.innerHTML = rows;
+      // Wire up agent "View →" buttons
+      document.querySelectorAll('[data-agent-ref]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const ref = btn.dataset.agentRef;
+          showView('leads');
+          document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+          // Filter leads by agent ref
+          currentFilter = 'all';
+          currentSearch = '';
+          document.getElementById('searchInput').value = '';
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          renderLeadsFiltered(lead => lead.agent_ref === ref);
+        });
+      });
 
     } catch (e) {
-      console.error('Stats error:', e);
+      console.error('Stats load failed:', e);
     }
   }
 
+  // ── Leads ─────────────────────────────────────────────────────────────────
   async function loadLeads() {
     try {
       const data = await apiGet('/api/admin/leads?limit=200');
-      allLeads = data.leads || [];
+      allLeads = (data.leads || []).map(l => ({
+        ...l,
+        transaction_types: Array.isArray(l.transaction_types)
+          ? l.transaction_types
+          : JSON.parse(l.transaction_types || '[]')
+      }));
       renderLeads();
     } catch (e) {
       document.getElementById('leadsTable').innerHTML =
-        '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load leads. Is the Worker running?</div></div></td></tr>';
+        `<tr><td colspan="8"><div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-text">Could not load leads. Check the Worker is deployed.</div>
+        </div></td></tr>`;
     }
   }
 
   function renderLeads() {
     let leads = allLeads;
-
-    if (currentFilter !== 'all') {
-      leads = leads.filter(l => l.status === currentFilter);
-    }
-
+    if (currentFilter !== 'all') leads = leads.filter(l => l.status === currentFilter);
     if (currentSearch) {
-      const q = currentSearch.toLowerCase();
       leads = leads.filter(l =>
-        `${l.first_name} ${l.last_name}`.toLowerCase().includes(q) ||
-        l.postcode.toLowerCase().includes(q) ||
-        l.email.toLowerCase().includes(q) ||
-        l.agent_ref.toLowerCase().includes(q)
+        `${l.first_name} ${l.last_name}`.toLowerCase().includes(currentSearch) ||
+        (l.postcode  || '').toLowerCase().includes(currentSearch) ||
+        (l.email     || '').toLowerCase().includes(currentSearch) ||
+        (l.agent_ref || '').toLowerCase().includes(currentSearch)
       );
     }
+    renderLeadsFiltered(_ => true, leads);
+  }
+
+  function renderLeadsFiltered(filterFn, overrideLeads) {
+    const leads = overrideLeads ?? allLeads.filter(filterFn);
 
     document.getElementById('leadsPageSub').textContent =
       `${leads.length} lead${leads.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ' · ' + currentFilter : ''}`;
 
     if (!leads.length) {
       document.getElementById('leadsTable').innerHTML =
-        '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No leads found</div></div></td></tr>';
+        `<tr><td colspan="8"><div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-text">No leads found</div>
+        </div></td></tr>`;
       return;
     }
 
     document.getElementById('leadsTable').innerHTML = leads.map(l => `
       <tr>
         <td>
-          <div class="td-name">${l.first_name} ${l.last_name}</div>
-          <div class="td-sub">${l.email}</div>
+          <div class="td-name">${escHtml(l.first_name)} ${escHtml(l.last_name)}</div>
+          <div class="td-sub">${escHtml(l.email)}</div>
         </td>
-        <td>${formatTypes(l.transaction_types)} <span style="color:var(--muted); font-size:0.75rem">${l.property_type || ''}</span></td>
-        <td class="td-mono">${formatValue(l.property_value)}</td>
-        <td class="td-mono">${l.postcode}</td>
         <td>
-          <div style="font-size:0.82rem">${l.agent_name}</div>
-          <div class="td-sub">${l.agent_ref}</div>
+          ${formatTypes(l.transaction_types)}
+          <span style="color:var(--muted);font-size:0.75rem"> ${escHtml(l.property_type || '')}</span>
+        </td>
+        <td class="td-mono">${formatValue(l.property_value)}</td>
+        <td class="td-mono">${escHtml(l.postcode)}</td>
+        <td>
+          <div style="font-size:0.82rem">${escHtml(l.agent_name)}</div>
+          <div class="td-sub">${escHtml(l.agent_ref)}</div>
         </td>
         <td><span class="badge badge-${l.status}">${l.status}</span></td>
         <td class="td-mono" style="color:var(--muted)">${formatDate(l.created_at)}</td>
-        <td><button class="action-btn" onclick="openLead('${l.id}')">View</button></td>
+        <td><button class="action-btn view-lead-btn" data-lead-id="${l.id}">View</button></td>
       </tr>
     `).join('');
-  }
 
-  // ── Filters ───────────────────────────────────────────────────────────────
-  function filterLeads(status, agentRef) {
-    currentFilter = status;
-    currentSearch = '';
-
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById('filter-' + status);
-    if (btn) btn.classList.add('active');
-
-    if (agentRef) {
-      showView('leads');
-      const filtered = allLeads.filter(l => l.agent_ref === agentRef);
-      document.getElementById('leadsTable').innerHTML = filtered.map(l => `
-        <tr>
-          <td><div class="td-name">${l.first_name} ${l.last_name}</div><div class="td-sub">${l.email}</div></td>
-          <td>${formatTypes(l.transaction_types)}</td>
-          <td class="td-mono">${formatValue(l.property_value)}</td>
-          <td class="td-mono">${l.postcode}</td>
-          <td><span style="font-size:0.82rem">${l.agent_name}</span></td>
-          <td><span class="badge badge-${l.status}">${l.status}</span></td>
-          <td class="td-mono" style="color:var(--muted)">${formatDate(l.created_at)}</td>
-          <td><button class="action-btn" onclick="openLead('${l.id}')">View</button></td>
-        </tr>
-      `).join('');
-      return;
-    }
-
-    renderLeads();
-  }
-
-  function searchLeads(q) {
-    currentSearch = q;
-    renderLeads();
+    // Wire up "View" buttons
+    document.querySelectorAll('.view-lead-btn').forEach(btn => {
+      btn.addEventListener('click', () => openLead(btn.dataset.leadId));
+    });
   }
 
   // ── Modal ─────────────────────────────────────────────────────────────────
@@ -1061,21 +986,21 @@ async function login() {
     if (!lead) return;
     currentLeadId = id;
 
-    document.getElementById('modalName').textContent = `${lead.first_name} ${lead.last_name}`;
-    document.getElementById('modalStatus').value = lead.status || 'new';
-    document.getElementById('modalNotes').value  = lead.notes  || '';
+    document.getElementById('modalName').textContent   = `${lead.first_name} ${lead.last_name}`;
+    document.getElementById('modalStatus').value       = lead.status || 'new';
+    document.getElementById('modalNotes').value        = lead.notes  || '';
 
     document.getElementById('modalDetails').innerHTML = `
-      <div class="detail-item"><label>Email</label><div class="val">${lead.email}</div></div>
-      <div class="detail-item"><label>Phone</label><div class="val">${lead.phone}</div></div>
-      <div class="detail-item"><label>Postcode</label><div class="val mono">${lead.postcode}</div></div>
+      <div class="detail-item"><label>Email</label><div class="val">${escHtml(lead.email)}</div></div>
+      <div class="detail-item"><label>Phone</label><div class="val">${escHtml(lead.phone)}</div></div>
+      <div class="detail-item"><label>Postcode</label><div class="val mono">${escHtml(lead.postcode)}</div></div>
       <div class="detail-item"><label>Property value</label><div class="val mono">${formatValue(lead.property_value)}</div></div>
       <div class="detail-item"><label>Transaction</label><div class="val">${formatTypes(lead.transaction_types)}</div></div>
-      <div class="detail-item"><label>Property type</label><div class="val">${lead.property_type || '—'}</div></div>
-      <div class="detail-item"><label>Timeline</label><div class="val">${lead.timeline || '—'}</div></div>
-      <div class="detail-item"><label>Referred by</label><div class="val">${lead.agent_name} <span style="color:var(--muted);font-size:0.75rem">(${lead.agent_ref})</span></div></div>
+      <div class="detail-item"><label>Property type</label><div class="val">${escHtml(lead.property_type || '—')}</div></div>
+      <div class="detail-item"><label>Timeline</label><div class="val">${escHtml(lead.timeline || '—')}</div></div>
+      <div class="detail-item"><label>Referred by</label><div class="val">${escHtml(lead.agent_name)} <span style="color:var(--muted);font-size:0.75rem">(${escHtml(lead.agent_ref)})</span></div></div>
       <div class="detail-item"><label>Received</label><div class="val mono" style="font-size:0.8rem">${new Date(lead.created_at).toLocaleString('en-GB')}</div></div>
-      <div class="detail-item"><label>Lead ID</label><div class="val mono" style="font-size:0.72rem;color:var(--muted)">${lead.id}</div></div>
+      <div class="detail-item"><label>Lead ID</label><div class="val mono" style="font-size:0.72rem;color:var(--muted)">${escHtml(lead.id)}</div></div>
     `;
 
     document.getElementById('leadModal').classList.add('open');
@@ -1086,15 +1011,25 @@ async function login() {
     currentLeadId = null;
   }
 
-  async function saveLead() {
+  document.getElementById('modalCloseBtn').addEventListener('click',  closeModal);
+  document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+  document.getElementById('leadModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('leadModal')) closeModal();
+  });
+
+  document.getElementById('modalSaveBtn').addEventListener('click', async () => {
     if (!currentLeadId) return;
+
+    const btn    = document.getElementById('modalSaveBtn');
     const status = document.getElementById('modalStatus').value;
     const notes  = document.getElementById('modalNotes').value;
+
+    btn.disabled    = true;
+    btn.textContent = 'Saving…';
 
     try {
       await apiPatch('/api/admin/leads/' + currentLeadId, { status, notes });
 
-      // Update local state
       const lead = allLeads.find(l => l.id === currentLeadId);
       if (lead) { lead.status = status; lead.notes = notes; }
 
@@ -1104,53 +1039,51 @@ async function login() {
       showToast('Lead updated', 'success');
     } catch (e) {
       showToast('Failed to save', 'error');
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Save changes';
     }
-  }
-
-  // ── Views ─────────────────────────────────────────────────────────────────
-  function showView(name, navBtn) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + name).classList.add('active');
-    if (navBtn) {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      navBtn.classList.add('active');
-    }
-  }
+  });
 
   // ── Toast ─────────────────────────────────────────────────────────────────
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');
     t.textContent = msg;
-    t.className = 'toast show ' + type;
-    setTimeout(() => t.classList.remove('show'), 2500);
+    t.className   = 'toast show ' + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
   }
 
   // ── Formatters ────────────────────────────────────────────────────────────
   function formatValue(v) {
     if (!v) return '—';
-    if (v >= 1000000) return '£' + (v/1000000).toFixed(1) + 'm';
+    if (v >= 1000000) return '£' + (v / 1000000).toFixed(1) + 'm';
     return '£' + parseInt(v).toLocaleString('en-GB');
   }
 
   function formatTypes(types) {
     if (!types || !types.length) return '—';
-    return types.map(t => ({ buy: 'Buying', sell: 'Selling', remortgage: 'Remortgage' }[t] || t)).join(', ');
+    const map = { buy: 'Buying', sell: 'Selling', remortgage: 'Remortgage' };
+    return types.map(t => map[t] || t).join(', ');
   }
 
   function formatDate(iso) {
     if (!iso) return '—';
-    const d = new Date(iso);
-    const now = new Date();
-    const diffH = Math.round((now - d) / 3600000);
+    const d     = new Date(iso);
+    const diffH = Math.round((Date.now() - d) / 3600000);
     if (diffH < 1)  return 'Just now';
     if (diffH < 24) return diffH + 'h ago';
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
   }
 
-  // Close modal on overlay click
-  document.getElementById('leadModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
 </script>
 
 </body>
