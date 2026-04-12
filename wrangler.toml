@@ -10,5 +10,7 @@ database_id = "38b8fefc-b26c-4a61-969f-a5e45f7c6750"
 [vars]
 NOTIFY_EMAIL = "kai@correconnections.co.uk"
 
+[observability]
+enabled = false
 # Set secrets via CLI — never commit these:
 # wrangler secret put ADMIN_PASSWORD
