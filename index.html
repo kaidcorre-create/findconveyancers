@@ -884,29 +884,36 @@
   }
 
   // ── Submit ──
-  async function submitForm() {
-    if (!validateStep(3)) return;
-    collectStep(3);
+async function submitForm() {
+  if (!validateStep(3)) return;
+  collectStep(3);
 
-    const btn = document.getElementById('submitBtn');
-    btn.textContent = 'Submitting…';
-    btn.disabled = true;
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
 
-    try {
-      // POST to your Cloudflare Worker endpoint
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+  try {
+    const res = await fetch('https://conveyselect.kai-d-corre-ea2.workers.dev/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
 
-      // Show success regardless in MVP (Worker not built yet)
-      showSuccess();
-    } catch (e) {
-      // In development, show success anyway
-      showSuccess();
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Submission failed');
     }
+
+    showSuccess();
+  } catch (e) {
+    console.error('Submit error:', e);
+    btn.textContent = 'Get my quotes →';
+    btn.disabled = false;
+    alert('Sorry, something went wrong: ' + e.message + '\n\nPlease try again.');
   }
+}
+
+  
 
   function showSuccess() {
     document.querySelector('.steps-container').style.display = 'none';
