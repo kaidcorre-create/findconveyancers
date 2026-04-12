@@ -9,7 +9,7 @@ database_id = "b1f419a1-b804-48fa-80c0-8a877214a006"
 
 [vars]
 NOTIFY_EMAIL = "kai@correconnections.co.uk"
-ADMIN_PASSWORD = ""
+ADMIN_PASSWORD = "pabloswim"
 
 [observability]
 enabled = false
