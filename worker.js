@@ -1,5 +1,5 @@
 /**
- * ConveyLink - Cloudflare Worker
+ * ConveySelect - Cloudflare Worker
  * Handles: lead submission, lead retrieval, status updates, admin auth
  */
 
@@ -203,7 +203,7 @@ async function sendNotifications(lead, leadId, env) {
   const types = (lead.transactionTypes || []).join(', ');
 
   const emailBody = `
-New conveyancing lead received via ConveyLink
+New conveyancing lead received via ConveySelect
 
 Lead ID: ${leadId}
 Name: ${lead.firstName} ${lead.lastName}
