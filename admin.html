@@ -848,36 +848,31 @@
   // ── Config ──────────────────────────────────────────────────────────────
   // In production this is the same origin (your worker domain)
   // In development, point to your local wrangler dev URL
-  const API = 'conveyselect.kai-d-corre-ea2.workers.dev';   // empty = same origin
+  // AFTER
+const API = 'https://conveyselect.kai-d-corre-ea2.workers.dev';  // added https://
 
-  // ── Auth ─────────────────────────────────────────────────────────────────
-  let token = localStorage.getItem('cl_token') || '';
-
-  function login() {
-    const pw = document.getElementById('passwordInput').value;
-    fetch(API + '/api/admin/login', {
+async function login() {
+  const pw = document.getElementById('passwordInput').value;
+  try {
+    const r = await fetch(API + '/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pw })
-    })
-    .then(r => r.json())
-    .then(data => {
-      if (data.success) {
-        token = data.token;
-        localStorage.setItem('cl_token', token);
-        showApp();
-      } else {
-        document.getElementById('loginError').style.display = 'block';
-      }
-    })
-    .catch(() => {
-      // Dev mode: bypass login
-      token = pw;
+    });
+    const data = await r.json();
+    if (data.success) {
+      token = data.token;
       localStorage.setItem('cl_token', token);
       showApp();
-    });
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  } catch (e) {
+    // Network error — show an error, never bypass auth
+    document.getElementById('loginError').textContent = 'Could not reach server. Please try again.';
+    document.getElementById('loginError').style.display = 'block';
   }
-
+}
   function logout() {
     localStorage.removeItem('cl_token');
     location.reload();
