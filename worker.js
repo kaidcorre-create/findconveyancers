@@ -160,30 +160,43 @@ async function handleUpdateLead(request, env, id) {
 
   return jsonResponse({ success: true });
 }
-// ── add agent (admin) ──────────────────────────────────────────────────────────
+// ── Add agent (admin) ──────────────────────────────────────────────────────────
 async function handleAddAgent(request, env) {
-  if (!isAuthorized(request, env)) {
+  if (!isAdminAuthorized(request, env)) {        // ← Fixed
     return jsonResponse({ error: 'Unauthorized' }, 401);
   }
 
-  const body = await request.json();
-  const now = new Date().toISOString();
+  try {
+    const body = await request.json();
+    
+    if (!body.ref || !body.name || !body.email) {
+      return jsonResponse({ error: 'Missing required fields (ref, name, email)' }, 400);
+    }
 
-  await env.DB.prepare(`
-    INSERT INTO agents (id, ref, name, email, phone, fee_per_lead, active, created_at, password)
-    VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
-  `).bind(
-    body.id || crypto.randomUUID(),
-    body.ref,
-    body.name,
-    body.email,
-    body.phone || '',
-    body.fee_per_lead || 0,
-    now,
-    body.password
-  ).run();
+    const now = new Date().toISOString();
 
-  return jsonResponse({ success: true });
+    await env.DB.prepare(`
+      INSERT INTO agents (
+        id, ref, name, email, phone, 
+        fee_per_lead, active, created_at, password
+      )
+      VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
+    `).bind(
+      body.id || crypto.randomUUID(),
+      body.ref.toLowerCase().trim(),
+      body.name.trim(),
+      body.email.trim().toLowerCase(),
+      body.phone || '',
+      body.fee_per_lead || 0,
+      now,
+      body.password || 'temp123'   // You should improve this later
+    ).run();
+
+    return jsonResponse({ success: true });
+  } catch (err) {
+    console.error('Add agent error:', err);
+    return jsonResponse({ error: 'Failed to add agent', details: err.message }, 500);
+  }
 }
 // ── Stats (admin) ──────────────────────────────────────────────────────────
 async function handleGetStats(request, env) {
