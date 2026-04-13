@@ -1263,7 +1263,7 @@ async function saveAgent() {
     phone:       document.getElementById('agentPhoneInput').value.trim(),
     fee_per_lead: parseInt(document.getElementById('agentFeeInput').value || '0') * 100,
     created_at:  new Date().toISOString(),
-    passwowrd: document.getElementById('agentPasswordInput').value.trim()
+    password: document.getElementById('agentPasswordInput').value.trim()
   };
 
   try {
