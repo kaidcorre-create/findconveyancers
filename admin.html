@@ -1284,10 +1284,10 @@ async function saveAgent() {
     } else {
       showToast(data.error || 'Failed to add agent', 'error');
     }
-  } catch(e) {
-    // Worker endpoint not built yet — show success anyway in dev
-    closeAgentModal();
-    showToast('Agent added (dev mode)', 'success');
+  } } catch(e) {
+  console.error(e);
+  showToast('Failed to add agent - check console', 'error');
+}
   }
 }
 
