@@ -807,7 +807,12 @@
         <label>Referral fee <span style="color:var(--muted);font-weight:300;font-size:0.75rem">— what you pay them per completion (£)</span></label>
         <input type="number" class="modal-input" id="agentFeeInput" placeholder="e.g. 150" min="0" step="5">
       </div>
-
+      
+        <div class="field">
+          <label>Password</label>
+          <input type="pass" class="modal-input" id="agentPasswordInput" placeholder="******">
+        </div>
+      
       <div class="highlight-box" style="margin-top:0.5rem">
         <p>Share this link with the agent once added:</p>
         <div class="ref-link" id="refLink" style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--gold);margin-top:0.4rem;word-break:break-all">
@@ -1178,7 +1183,7 @@
 function openAddAgent() {
   // Clear form
   ['agentNameInput','agentRefInput','agentEmailInput',
-   'agentPhoneInput','agentFeeInput'].forEach(id => {
+   'agentPhoneInput','agentFeeInput', 'agentPasswordInput' ].forEach(id => {
     document.getElementById(id).value = '';
     document.getElementById(id).classList.remove('error');
   });
@@ -1257,7 +1262,8 @@ async function saveAgent() {
     email:       document.getElementById('agentEmailInput').value.trim(),
     phone:       document.getElementById('agentPhoneInput').value.trim(),
     fee_per_lead: parseInt(document.getElementById('agentFeeInput').value || '0') * 100,
-    created_at:  new Date().toISOString()
+    created_at:  new Date().toISOString(),
+    passwowrd: document.getElementById('agentPasswordInput').value.trim()
   };
 
   try {
