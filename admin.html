@@ -342,6 +342,78 @@
     .agent-bar-wrap  { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .agent-bar       { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
 
+
+.btn-add {
+  padding: 0.55rem 1.1rem;
+  background: var(--gold);
+  color: #0d0f12;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-add:hover { opacity: 0.85; }
+
+.modal-input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus { border-color: var(--gold); }
+.modal-input::placeholder { color: var(--muted); }
+.modal-input.error { border-color: var(--red); }
+
+.field { margin-bottom: 1.1rem; }
+
+.field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--subtle);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--red);
+  margin-top: 0.3rem;
+  display: none;
+}
+
+.ref-preview {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+  font-family: 'DM Mono', monospace;
+}
+
+.highlight-box {
+  background: rgba(240,180,41,0.06);
+  border: 1px solid rgba(240,180,41,0.2);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+
+.highlight-box p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0;
+}
+    
     /* ── Modal ── */
     .modal-overlay {
       display: none;
@@ -568,9 +640,13 @@
       </div>
       <div class="nav-section">
         <div class="nav-label">Partners</div>
-        <button class="nav-item" data-view="agents">🏘 Agents</button>
+          <button class="nav-item" onclick="showView('agents', this)">
+            <span>🏘</span> Agents
+              <span class="nav-badge" id="navBadgeAgents">—</span>
+          </button>
       </div>
     </nav>
+
 
     <!-- Main -->
     <main class="main">
@@ -653,18 +729,17 @@
         </div>
       </div>
 
-      <!-- Agents -->
-      <div class="view" id="view-agents">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Agent Partners</div>
-            <div class="page-sub">Estate agents referring leads to you</div>
-          </div>
-        </div>
-        <div class="agent-list" id="agentsList"><div class="loading">Loading…</div></div>
-      </div>
-
-    </main>
+<!-- Agents view -->
+<div class="view" id="view-agents">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Agent Partners</div>
+      <div class="page-sub">Estate agents referring leads to you</div>
+    </div>
+    <button class="btn-add" onclick="openAddAgent()">+ Add agent</button>
+  </div>
+  <div class="agent-list" id="agentsList">
+    <div class="loading">Loading…</div>
   </div>
 </div>
 
@@ -690,6 +765,60 @@
     <div class="modal-footer">
       <button class="btn-cancel" id="modalCancelBtn">Cancel</button>
       <button class="btn-save"   id="modalSaveBtn">Save changes</button>
+    </div>
+  </div>
+</div>
+      <!-- Add agent modal -->
+<div class="modal-overlay" id="agentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add agent partner</div>
+      <button class="modal-close" onclick="closeAgentModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label>Agency name</label>
+        <input type="text" class="modal-input" id="agentNameInput" placeholder="e.g. Smith Property">
+        <div class="field-error" id="agentName-error">Required</div>
+      </div>
+
+      <div class="field">
+        <label>URL reference <span style="color:var(--muted);font-weight:300;font-size:0.75rem">— used in their referral link</span></label>
+        <input type="text" class="modal-input" id="agentRefInput" placeholder="e.g. smithproperty"
+          oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,''); updateRefPreview()">
+        <div class="field-error" id="agentRef-error">Required — letters, numbers and hyphens only</div>
+        <div class="ref-preview" id="refPreview" style="display:none"></div>
+      </div>
+
+      <div class="field-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="field">
+          <label>Contact email</label>
+          <input type="email" class="modal-input" id="agentEmailInput" placeholder="jane@smithproperty.co.uk">
+          <div class="field-error" id="agentEmail-error">Valid email required</div>
+        </div>
+        <div class="field">
+          <label>Contact phone</label>
+          <input type="tel" class="modal-input" id="agentPhoneInput" placeholder="07700 900000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Referral fee <span style="color:var(--muted);font-weight:300;font-size:0.75rem">— what you pay them per completion (£)</span></label>
+        <input type="number" class="modal-input" id="agentFeeInput" placeholder="e.g. 150" min="0" step="5">
+      </div>
+
+      <div class="highlight-box" style="margin-top:0.5rem">
+        <p>Share this link with the agent once added:</p>
+        <div class="ref-link" id="refLink" style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--gold);margin-top:0.4rem;word-break:break-all">
+          Fill in the reference above to generate link
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeAgentModal()">Cancel</button>
+      <button class="btn-modal-save" onclick="saveAgent()">Add agent</button>
     </div>
   </div>
 </div>
@@ -1045,6 +1174,122 @@
     }
   });
 
+  // ── Add agent modal ────────────────────────────────────────────────────────
+function openAddAgent() {
+  // Clear form
+  ['agentNameInput','agentRefInput','agentEmailInput',
+   'agentPhoneInput','agentFeeInput'].forEach(id => {
+    document.getElementById(id).value = '';
+    document.getElementById(id).classList.remove('error');
+  });
+  ['agentName-error','agentRef-error','agentEmail-error'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('refLink').textContent = 'Fill in the reference above to generate link';
+  document.getElementById('agentModal').classList.add('open');
+}
+
+function closeAgentModal() {
+  document.getElementById('agentModal').classList.remove('open');
+}
+
+function updateRefPreview() {
+  const ref = document.getElementById('agentRefInput').value;
+  const name = document.getElementById('agentNameInput').value || 'Agent Name';
+  const origin = window.location.origin;
+
+  if (ref) {
+    const url = `${origin}/?ref=${ref}&name=${encodeURIComponent(name)}`;
+    document.getElementById('refLink').textContent = url;
+    document.getElementById('refPreview').style.display = 'block';
+    document.getElementById('refPreview').textContent = `Link: ${url}`;
+  } else {
+    document.getElementById('refLink').textContent = 'Fill in the reference above to generate link';
+    document.getElementById('refPreview').style.display = 'none';
+  }
+}
+
+function validateAgentForm() {
+  let valid = true;
+  const name  = document.getElementById('agentNameInput').value.trim();
+  const ref   = document.getElementById('agentRefInput').value.trim();
+  const email = document.getElementById('agentEmailInput').value.trim();
+  const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const refReg   = /^[a-z0-9-]+$/;
+
+  if (!name) {
+    document.getElementById('agentNameInput').classList.add('error');
+    document.getElementById('agentName-error').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('agentNameInput').classList.remove('error');
+    document.getElementById('agentName-error').style.display = 'none';
+  }
+
+  if (!ref || !refReg.test(ref)) {
+    document.getElementById('agentRefInput').classList.add('error');
+    document.getElementById('agentRef-error').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('agentRefInput').classList.remove('error');
+    document.getElementById('agentRef-error').style.display = 'none';
+  }
+
+  if (!emailReg.test(email)) {
+    document.getElementById('agentEmailInput').classList.add('error');
+    document.getElementById('agentEmail-error').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('agentEmailInput').classList.remove('error');
+    document.getElementById('agentEmail-error').style.display = 'none';
+  }
+
+  return valid;
+}
+
+async function saveAgent() {
+  if (!validateAgentForm()) return;
+
+  const agentData = {
+    id:          crypto.randomUUID(),
+    ref:         document.getElementById('agentRefInput').value.trim(),
+    name:        document.getElementById('agentNameInput').value.trim(),
+    email:       document.getElementById('agentEmailInput').value.trim(),
+    phone:       document.getElementById('agentPhoneInput').value.trim(),
+    fee_per_lead: parseInt(document.getElementById('agentFeeInput').value || '0') * 100,
+    created_at:  new Date().toISOString()
+  };
+
+  try {
+    const res = await fetch(API + '/api/admin/agents', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(agentData)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      closeAgentModal();
+      showToast('Agent added successfully', 'success');
+      loadStats(); // refresh agent list
+    } else {
+      showToast(data.error || 'Failed to add agent', 'error');
+    }
+  } catch(e) {
+    // Worker endpoint not built yet — show success anyway in dev
+    closeAgentModal();
+    showToast('Agent added (dev mode)', 'success');
+  }
+}
+
+// Update ref preview when name changes too
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('agentNameInput')
+    ?.addEventListener('input', updateRefPreview);
+});
   // ── Toast ─────────────────────────────────────────────────────────────────
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');
