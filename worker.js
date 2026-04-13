@@ -180,7 +180,7 @@ async function handleAddAgent(request, env) {
     body.phone || '',
     body.fee_per_lead || 0,
     now,
-    password
+    body.password
   ).run();
 
   return jsonResponse({ success: true });
