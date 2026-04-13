@@ -37,6 +37,9 @@ export default {
       if (path === '/api/admin/stats' && request.method === 'GET') {
         return await handleGetStats(request, env);
       }
+      if (path === '/api/admin/agents' && request.method === 'POST') {
+  return await handleAddAgent(request, env);
+}
 
       // ── Agent ──
       if (path === '/api/agent/login' && request.method === 'POST') {
@@ -157,7 +160,31 @@ async function handleUpdateLead(request, env, id) {
 
   return jsonResponse({ success: true });
 }
+// ── add agent (admin) ──────────────────────────────────────────────────────────
+async function handleAddAgent(request, env) {
+  if (!isAuthorized(request, env)) {
+    return jsonResponse({ error: 'Unauthorized' }, 401);
+  }
 
+  const body = await request.json();
+  const now = new Date().toISOString();
+
+  await env.DB.prepare(`
+    INSERT INTO agents (id, ref, name, email, phone, fee_per_lead, active, created_at, password)
+    VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
+  `).bind(
+    body.id || crypto.randomUUID(),
+    body.ref,
+    body.name,
+    body.email,
+    body.phone || '',
+    body.fee_per_lead || 0,
+    now,
+    password
+  ).run();
+
+  return jsonResponse({ success: true });
+}
 // ── Stats (admin) ──────────────────────────────────────────────────────────
 async function handleGetStats(request, env) {
   if (!isAdminAuthorized(request, env)) {
