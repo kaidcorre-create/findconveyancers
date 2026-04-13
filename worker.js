@@ -207,7 +207,17 @@ async function handleGetStats(request, env) {
   const [total, byStatus, byAgent, recent] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) as count FROM leads').first(),
     env.DB.prepare('SELECT status, COUNT(*) as count FROM leads GROUP BY status').all(),
-    env.DB.prepare('SELECT agent_ref, agent_name, COUNT(*) as count FROM leads GROUP BY agent_ref ORDER BY count DESC LIMIT 10').all(),
+    // Updated: Query from agents table first to include those with 0 leads
+    env.DB.prepare(`
+      SELECT 
+        a.ref as agent_ref, 
+        a.name as agent_name, 
+        COUNT(l.id) as count 
+      FROM agents a
+      LEFT JOIN leads l ON a.ref = l.agent_ref
+      GROUP BY a.ref, a.name
+      ORDER BY count DESC
+    `).all(),
     env.DB.prepare('SELECT COUNT(*) as count FROM leads WHERE created_at > datetime("now", "-7 days")').first(),
   ]);
 
