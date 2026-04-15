@@ -133,7 +133,7 @@
       font-weight: 300;
     }
 
-    /* ── Trust bar — 2 col on mobile, 4 on wider ── */
+    /* ── Trust bar  ── */
     .trust-bar {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -296,7 +296,7 @@
       margin-bottom: 0.35rem;
     }
 
-    /* font-size 16px prevents iOS auto-zoom on focus */
+
     input[type="text"],
     input[type="email"],
     input[type="tel"],
@@ -510,7 +510,7 @@
       <div class="agent-tagline">Trusted conveyancing partners</div>
     </div>
   </div>
-  <div class="powered-by">Powered by <strong>ConveyLink</strong></div>
+  <div class="powered-by">Powered by <strong>ConveySelect</strong></div>
 </header>
 
 <section class="hero">
@@ -680,7 +680,7 @@
         </div>
       </div>
 
-    </div><!-- /steps-container -->
+    </div>
 
     <div class="success-panel" id="successPanel">
       <div class="success-icon">✓</div>
@@ -763,7 +763,6 @@
     cur.classList.add('active');
     cur.classList.remove('done');
 
-    // Scroll form into view on mobile
     document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
