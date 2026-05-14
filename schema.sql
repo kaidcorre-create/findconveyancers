@@ -6,23 +6,20 @@ CREATE TABLE IF NOT EXISTS leads (
   agent_ref         TEXT NOT NULL DEFAULT 'direct',
   agent_name        TEXT NOT NULL DEFAULT 'Direct',
 
-  -- Property info
-  transaction_types TEXT NOT NULL DEFAULT '[]',  -- JSON array: ["buy","sell"]
-  property_type     TEXT NOT NULL DEFAULT '',     -- freehold / leasehold
+  transaction_types TEXT NOT NULL DEFAULT '[]',
+  property_type     TEXT NOT NULL DEFAULT '',
   property_value    INTEGER NOT NULL DEFAULT 0,
   postcode          TEXT NOT NULL DEFAULT '',
   timeline          TEXT NOT NULL DEFAULT '',
 
-  -- Contact
   first_name        TEXT NOT NULL,
   last_name         TEXT NOT NULL,
   email             TEXT NOT NULL,
   phone             TEXT NOT NULL,
 
-  -- CRM
-  status            TEXT NOT NULL DEFAULT 'new',  -- new/contacted/converted/lost
+  status            TEXT NOT NULL DEFAULT 'new',
   notes             TEXT NOT NULL DEFAULT '',
-  assigned_to       TEXT NOT NULL DEFAULT '',     -- conveyancer firm name
+  assigned_to       TEXT NOT NULL DEFAULT '',
 
   created_at        TEXT NOT NULL,
   updated_at        TEXT NOT NULL
@@ -31,12 +28,13 @@ CREATE TABLE IF NOT EXISTS leads (
 -- ── Agents ─────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS agents (
   id            TEXT PRIMARY KEY,
-  ref           TEXT NOT NULL UNIQUE,   -- used in URL ?ref=
+  ref           TEXT NOT NULL UNIQUE,
   name          TEXT NOT NULL,
   email         TEXT NOT NULL,
   phone         TEXT NOT NULL DEFAULT '',
+  password      TEXT NOT NULL DEFAULT '',   -- plain text for now; hash later
   active        INTEGER NOT NULL DEFAULT 1,
-  fee_per_lead  INTEGER NOT NULL DEFAULT 0,  -- pence
+  fee_per_lead  INTEGER NOT NULL DEFAULT 0, -- pence
   created_at    TEXT NOT NULL
 );
 
@@ -46,9 +44,9 @@ CREATE TABLE IF NOT EXISTS conveyancers (
   name         TEXT NOT NULL,
   email        TEXT NOT NULL,
   phone        TEXT NOT NULL DEFAULT '',
-  regions      TEXT NOT NULL DEFAULT '[]',  -- JSON array of postcodes/regions
+  regions      TEXT NOT NULL DEFAULT '[]',
   active       INTEGER NOT NULL DEFAULT 1,
-  fee_per_lead INTEGER NOT NULL DEFAULT 0,  -- pence, what they pay you
+  fee_per_lead INTEGER NOT NULL DEFAULT 0,
   created_at   TEXT NOT NULL
 );
 

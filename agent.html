@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConveySelect - Agent Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --paper:        #f7f4ef;
+      --cream:        #ede9e1;
+      --cream2:       #e4dfd6;
+      --white:        #ffffff;
+      --ink:          #0f0f0f;
+      --ink2:         #2a2a2a;
+      --muted:        #7a7469;
+      --faint:        #b5b0a8;
+      --gold:         #c9a84c;
+      --gold-bg:      rgba(201,168,76,0.08);
+      --gold-border:  rgba(201,168,76,0.25);
+      --sage:         #4a6050;
+      --sage-bg:      rgba(74,96,80,0.08);
+      --sage-border:  rgba(74,96,80,0.2);
+      --red:          #c0392b;
+      --red-bg:       rgba(192,57,43,0.07);
+      --blue:         #2563eb;
+      --blue-bg:      rgba(37,99,235,0.07);
+      --radius:       6px;
+      --shadow:       0 1px 3px rgba(15,15,15,0.06), 0 4px 16px rgba(15,15,15,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ── Login ── */
+    #loginScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .login-wrap { width: 100%; max-width: 400px; }
+
+    .login-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .login-sub {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .login-card {
+      background: var(--white);
+      border: 1px solid var(--cream);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: var(--paper);
+      border: 1px solid var(--cream2);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .field-input:focus { border-color: var(--gold); background: var(--white); }
+    .field-input::placeholder { color: var(--faint); }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .login-btn:hover    { opacity: 0.88; }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .login-error {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.65rem 0.9rem;
+      background: var(--red-bg);
+      border: 1px solid rgba(192,57,43,0.2);
+      border-radius: var(--radius);
+      color: var(--red);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--faint);
+    }
+
+    /* ── App ── */
+    #app { display: none; }
+
+    /* ── Header ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--cream);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+
+    .header-agent-name { font-size: 0.82rem; font-weight: 500; color: var(--ink2); }
+
+    .signout-btn {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--cream2);
+      border-radius: var(--radius);
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.15s;
+    }
+    .signout-btn:hover { color: var(--ink); }
+
+    /* ── Page ── */
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    .welcome { margin-bottom: 2rem; }
+
+    .welcome-kicker {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.45rem;
+    }
+
+    .welcome h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .welcome h1 em { font-style: italic; color: var(--sage); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--cream);
+      border-radius: 10px;
+      padding: 1.35rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card { position: relative; overflow: hidden; }
+    .stat-card.accent-gold { border-color: var(--gold-border); }
+    .stat-card.accent-sage { border-color: var(--sage-border); }
+
+    .stat-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .stat-card.accent-gold .stat-val { color: var(--gold); }
+    .stat-card.accent-sage .stat-val { color: var(--sage); }
+    .stat-lbl { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
+    .stat-bg  { position:absolute; bottom:-6px; right:0; font-size:3.5rem; opacity:0.05; line-height:1; pointer-events:none; }
+
+    /* ── Two-col ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      align-items: start;
+    }
+
+    .left-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── Link ── */
+    .link-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--paper);
+      border: 1px solid var(--cream2);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .link-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.77rem;
+      color: var(--ink2);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+      padding: 0.35rem 0.8rem;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, background 0.2s;
+    }
+    .copy-btn:hover  { opacity: 0.88; }
+    .copy-btn.copied { background: var(--sage); }
+
+    .link-hint { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+
+    /* ── QR + how ── */
+    .qr-how { display: flex; gap: 1.5rem; align-items: flex-start; }
+
+    .qr-side { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+    #qrcode { border-radius: 6px; overflow: hidden; }
+    #qrcode canvas, #qrcode img { display: block; }
+
+    .qr-dl-btn {
+      padding: 0.38rem 0.9rem;
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      background: none;
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .qr-dl-btn:hover { background: var(--gold-bg); }
+
+    .how-steps { display: flex; flex-direction: column; gap: 0.85rem; padding-top: 0.1rem; }
+
+    .how-step { display: flex; gap: 0.75rem; align-items: flex-start; }
+
+    .how-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .how-text { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.6; }
+
+    /* ── Earnings ── */
+    .earnings-hero {
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .earnings-hero-label {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .earnings-hero-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 2.25rem;
+      font-weight: 500;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .earnings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--cream);
+      font-size: 0.85rem;
+    }
+    .earnings-row:last-of-type { border-bottom: none; }
+    .e-lbl { color: var(--muted); font-weight: 300; }
+    .e-val { font-family: 'DM Mono', monospace; font-weight: 500; }
+    .e-val.gold  { color: var(--gold); }
+    .e-val.sage  { color: var(--sage); }
+    .e-val.faint { color: var(--faint); }
+
+    .earnings-note {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--paper);
+      border-radius: var(--radius);
+      font-size: 0.74rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ── Leads ── */
+    .leads-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .section-title { font-size: 1rem; font-weight: 600; }
+
+    .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .pill {
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--cream2);
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+    .pill:hover  { border-color: var(--gold-border); color: var(--ink); }
+    .pill.active { background: var(--gold-bg); border-color: var(--gold-border); color: var(--gold); font-weight: 600; }
+
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--cream);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--cream);
+      background: var(--paper);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--cream);
+      font-size: 0.85rem;
+      color: var(--ink2);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(201,168,76,0.025); }
+
+    .td-name { font-weight: 500; color: var(--ink); }
+    .td-sub  { font-size: 0.72rem; color: var(--faint); margin-top: 0.1rem; }
+    .td-mono { font-family: 'DM Mono', monospace; font-size: 0.78rem; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.2rem 0.6rem; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 600;
+    }
+    .badge::before { content: '●'; font-size: 0.5rem; }
+    .badge-new       { background: var(--blue-bg);  color: var(--blue); }
+    .badge-contacted { background: var(--gold-bg);  color: var(--gold); border: 1px solid var(--gold-border); }
+    .badge-converted { background: var(--sage-bg);  color: var(--sage); border: 1px solid var(--sage-border); }
+    .badge-lost      { background: var(--red-bg);   color: var(--red); }
+
+    .fee-tag {
+      display: inline-block;
+      padding: 0.18rem 0.55rem;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.73rem;
+      font-weight: 500;
+    }
+    .fee-earned  { background: var(--sage-bg);  color: var(--sage); }
+    .fee-pending { background: var(--cream);    color: var(--faint); font-style: italic; }
+
+    .empty { text-align: center; padding: 4rem 1rem; color: var(--muted); }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+    .empty-text { font-size: 0.88rem; }
+    .empty-sub  { font-size: 0.78rem; color: var(--faint); margin-top: 0.3rem; font-weight: 300; }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--ink); color: var(--white);
+      border-radius: 8px; padding: 0.6rem 1.2rem;
+      font-size: 0.82rem; font-weight: 500;
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeRow {
+      from { opacity:0; transform:translateY(4px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .two-col   { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .header    { padding: 0 1rem; }
+      .container { padding: 1.25rem 1rem 3rem; }
+      .qr-how    { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-logo">ConveySelect</div>
+    <div class="login-sub">Agent portal - sign in to your account</div>
+    <div class="login-card">
+      <label class="field-label" for="inputRef">Agent ID</label>
+      <input type="text" class="field-input" id="inputRef" placeholder="e.g. smiths-property" autocomplete="username" spellcheck="false">
+      <label class="field-label" for="inputPassword">Password</label>
+      <input type="password" class="field-input" id="inputPassword" placeholder="••••••••" autocomplete="current-password">
+      <button class="login-btn" id="loginBtn">Sign in →</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+    <div class="login-footer">Trouble signing in? Email <strong style="color:var(--ink2)">kai@correconnections.co.uk</strong></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <header class="header">
+    <div class="header-logo">ConveySelect</div>
+    <div class="header-right">
+      <span class="header-agent-name" id="headerAgentName"></span>
+      <button class="signout-btn" id="signoutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="welcome">
+      <div class="welcome-kicker">Agent Portal</div>
+      <h1>Welcome back, <em id="agentFirstName">there</em>.</h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card card accent-gold">
+        <div class="stat-val" id="statTotal">—</div>
+        <div class="stat-lbl">Total referrals</div>
+        <div class="stat-bg">📋</div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-val" id="statInProg">—</div>
+        <div class="stat-lbl">In progress</div>
+        <div class="stat-bg">🔄</div>
+      </div>
+      <div class="stat-card card accent-sage">
+        <div class="stat-val" id="statConverted">—</div>
+        <div class="stat-lbl">Converted</div>
+        <div class="stat-bg">✓</div>
+      </div>
+      <div class="stat-card card accent-gold">
+        <div class="stat-val" id="statEarned">—</div>
+        <div class="stat-lbl">Total earned</div>
+        <div class="stat-bg">£</div>
+      </div>
+    </div>
+
+    <!-- Link + Earnings -->
+    <div class="two-col">
+      <div class="left-col">
+
+        <!-- Referral link -->
+        <div class="card">
+          <div class="card-title">Your referral link</div>
+          <div class="link-box">
+            <div class="link-text" id="referralUrl"></div>
+            <button class="copy-btn" id="copyBtn">Copy</button>
+          </div>
+          <div class="link-hint">Add this to your email signature or website. Every enquiry submitted through it is tracked to you automatically.</div>
+        </div>
+
+        <!-- QR + How it works -->
+        <div class="card">
+          <div class="card-title">QR code &amp; how it works</div>
+          <div class="qr-how">
+            <div class="qr-side">
+              <div id="qrcode"></div>
+              <button class="qr-dl-btn" id="qrDownloadBtn">↓ Download</button>
+            </div>
+            <div class="how-steps">
+              <div class="how-step">
+                <div class="how-num">1</div>
+                <div class="how-text">Share your link or print the QR code for viewings and your office window</div>
+              </div>
+              <div class="how-step">
+                <div class="how-num">2</div>
+                <div class="how-text">Your client completes a short form - takes under 2 minutes</div>
+              </div>
+              <div class="how-step">
+                <div class="how-num">3</div>
+                <div class="how-text">We match them with a regulated conveyancer and your fee is logged automatically</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Earnings -->
+      <div class="card">
+        <div class="card-title">Earnings</div>
+        <div class="earnings-hero">
+          <div class="earnings-hero-label">Total earned</div>
+          <div class="earnings-hero-val" id="earningsHero">£0</div>
+        </div>
+        <div class="earnings-row">
+          <span class="e-lbl">Fee per referral</span>
+          <span class="e-val" id="earnFeePerLead">—</span>
+        </div>
+        <div class="earnings-row">
+          <span class="e-lbl">Converted leads</span>
+          <span class="e-val sage" id="earnConverted">—</span>
+        </div>
+        <div class="earnings-row">
+          <span class="e-lbl">Pending payment</span>
+          <span class="e-val gold" id="earnPending">—</span>
+        </div>
+        <div class="earnings-row">
+          <span class="e-lbl">Paid out</span>
+          <span class="e-val faint" id="earnPaid">—</span>
+        </div>
+        <div class="earnings-row">
+          <span class="e-lbl">Next payment</span>
+          <span class="e-val" id="earnNext">End of month</span>
+        </div>
+        <div class="earnings-note">
+          Fees are paid monthly for all converted leads from the prior month. Questions? Email <strong style="color:var(--ink2)">kai@correconnections.co.uk</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads -->
+    <div class="leads-header">
+      <div class="section-title">Your referrals</div>
+      <div class="filters">
+        <button class="pill active" data-status="all">All</button>
+        <button class="pill" data-status="new">New</button>
+        <button class="pill" data-status="contacted">Contacted</button>
+        <button class="pill" data-status="converted">Converted</button>
+        <button class="pill" data-status="lost">Lost</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Transaction</th>
+            <th>Property value</th>
+            <th>Postcode</th>
+            <th>Status</th>
+            <th>Referral fee</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTable">
+          <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API      = 'https://conveyselect.kai-d-corre-ea2.workers.dev';
+  const SITE_URL = 'https://conveyselect.pages.dev';
+
+  let token        = localStorage.getItem('agent_token') || '';
+  let agentRef     = localStorage.getItem('agent_ref')   || '';
+  let agentData    = null;
+  let allLeads     = [];
+  let activeFilter = 'all';
+  let toastTimer   = null;
+  let qrGenerated  = false;
+
+  // Auto-login if token exists
+  if (token && agentRef) showApp();
+
+  // ── Login ──────────────────────────────────────────────────────────────
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('inputPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  async function doLogin() {
+    const ref = document.getElementById('inputRef').value.trim().toLowerCase();
+    const pw  = document.getElementById('inputPassword').value;
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginError');
+
+    if (!ref || !pw) {
+      err.textContent = 'Please enter your agent ID and password.';
+      err.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    err.style.display = 'none';
+
+    try {
+      const res  = await fetch(API + '/api/agent/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref, password: pw })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        token    = data.token;
+        agentRef = data.agentRef;
+        localStorage.setItem('agent_token', token);
+        localStorage.setItem('agent_ref',   agentRef);
+        showApp();
+      } else {
+        err.textContent   = 'Incorrect agent ID or password.';
+        err.style.display = 'block';
+      }
+    } catch (e) {
+      err.textContent   = 'Could not reach server. Please try again.';
+      err.style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Sign in →';
+    }
+  }
+
+  // ── Sign out ───────────────────────────────────────────────────────────
+  document.getElementById('signoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('agent_token');
+    localStorage.removeItem('agent_ref');
+    token = ''; agentRef = '';
+    document.getElementById('app').style.display         = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('inputPassword').value = '';
+  });
+
+  // ── Show app ───────────────────────────────────────────────────────────
+  function showApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display         = 'block';
+    loadData();
+  }
+
+  // ── Load data ──────────────────────────────────────────────────────────
+  async function loadData() {
+    try {
+      const data = await apiGet('/api/agent/me');
+      agentData  = data.agent;
+      allLeads   = (data.leads || []).map(l => ({
+        ...l,
+        transaction_types: Array.isArray(l.transaction_types)
+          ? l.transaction_types
+          : JSON.parse(l.transaction_types || '[]')
+      }));
+      renderPage(data);
+    } catch (e) {
+      // Token invalid — back to login
+      localStorage.removeItem('agent_token');
+      localStorage.removeItem('agent_ref');
+      document.getElementById('app').style.display         = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+    }
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────
+  function renderPage(data) {
+    const agent     = data.agent;
+    const earnings  = data.earnings;
+    const firstName = agent.name.split(' ')[0];
+
+    document.getElementById('headerAgentName').textContent = agent.name;
+    document.getElementById('agentFirstName').textContent  = firstName;
+
+    // Stats
+    const inProg = allLeads.filter(l => l.status === 'new' || l.status === 'contacted').length;
+    document.getElementById('statTotal').textContent     = allLeads.length;
+    document.getElementById('statInProg').textContent    = inProg;
+    document.getElementById('statConverted').textContent = earnings.converted;
+    document.getElementById('statEarned').textContent    = formatMoney(earnings.totalEarned);
+
+    // Earnings
+    document.getElementById('earningsHero').textContent   = formatMoney(earnings.totalEarned);
+    document.getElementById('earnFeePerLead').textContent = formatMoney(earnings.feePerLead) + ' per lead';
+    document.getElementById('earnConverted').textContent  = earnings.converted + ' lead' + (earnings.converted !== 1 ? 's' : '');
+    document.getElementById('earnPending').textContent    = formatMoney(earnings.pending);
+    document.getElementById('earnPaid').textContent       = formatMoney(earnings.paid);
+
+    // Referral link
+    const referralLink = `${SITE_URL}?ref=${encodeURIComponent(agent.ref)}&name=${encodeURIComponent(agent.name)}`;
+    document.getElementById('referralUrl').textContent = referralLink;
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(referralLink).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        showToast('Link copied to clipboard');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2200);
+      });
+    });
+
+    // QR code (generate once)
+    if (!qrGenerated) {
+      new QRCode(document.getElementById('qrcode'), {
+        text:         referralLink,
+        width:        120,
+        height:       120,
+        colorDark:    '#0f0f0f',
+        colorLight:   '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      qrGenerated = true;
+    }
+
+    document.getElementById('qrDownloadBtn').addEventListener('click', () => {
+      const canvas = document.querySelector('#qrcode canvas');
+      if (!canvas) return;
+      const a    = document.createElement('a');
+      a.download = `conveylink-qr-${agent.ref}.png`;
+      a.href     = canvas.toDataURL();
+      a.click();
+    });
+
+    // Filter pills
+    document.querySelectorAll('.pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.status;
+        document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderLeads();
+      });
+    });
+
+    renderLeads();
+  }
+
+  function renderLeads() {
+    let leads = activeFilter === 'all'
+      ? allLeads
+      : allLeads.filter(l => l.status === activeFilter);
+
+    if (!leads.length) {
+      document.getElementById('leadsTable').innerHTML = `
+        <tr><td colspan="7"><div class="empty">
+          <div class="empty-icon">📋</div>
+          <div class="empty-text">${activeFilter === 'all' ? 'No referrals yet' : 'No ' + activeFilter + ' leads'}</div>
+          <div class="empty-sub">${activeFilter === 'all' ? 'Share your referral link to get started' : 'Try a different filter'}</div>
+        </div></td></tr>`;
+      return;
+    }
+
+    const feePerLead = agentData?.feePerLead || 0;
+
+    document.getElementById('leadsTable').innerHTML = leads.map((l, i) => {
+      const isConverted = l.status === 'converted';
+      return `
+        <tr style="animation:fadeRow 0.25s ease ${i * 0.03}s both">
+          <td>
+            <div class="td-name">${escHtml(l.first_name)} ${escHtml((l.last_name || '').charAt(0))}.</div>
+            <div class="td-sub">${escHtml(l.postcode)}</div>
+          </td>
+          <td>${formatTypes(l.transaction_types)}</td>
+          <td class="td-mono">${formatValue(l.property_value)}</td>
+          <td class="td-mono">${escHtml(l.postcode)}</td>
+          <td><span class="badge badge-${l.status}">${statusLabel(l.status)}</span></td>
+          <td>${isConverted
+            ? `<span class="fee-tag fee-earned">${formatMoney(feePerLead)}</span>`
+            : `<span class="fee-tag fee-pending">Pending</span>`}</td>
+          <td class="td-mono" style="color:var(--faint)">${formatDate(l.created_at)}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── API ────────────────────────────────────────────────────────────────
+  async function apiGet(path) {
+    const res = await fetch(API + path, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (res.status === 401) throw new Error('Unauthorized');
+    if (!res.ok) throw new Error('API error ' + res.status);
+    return res.json();
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────
+  function formatMoney(p)  { return p ? '£' + parseInt(p).toLocaleString('en-GB') : '£0'; }
+
+  function formatValue(v) {
+    if (!v) return '—';
+    if (v >= 1000000) return '£' + (v / 1000000).toFixed(1) + 'm';
+    return '£' + parseInt(v).toLocaleString('en-GB');
+  }
+
+  function formatTypes(types) {
+    if (!types || !types.length) return '—';
+    const map = { buy: 'Buying', sell: 'Selling', remortgage: 'Remortgage' };
+    return types.map(t => map[t] || t).join(', ');
+  }
+
+  function statusLabel(s) {
+    return { new: 'New', contacted: 'Contacted', converted: 'Converted', lost: 'Lost' }[s] || s;
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    const d     = new Date(iso);
+    const diffH = Math.round((Date.now() - d) / 3600000);
+    if (diffH < 1)   return 'Just now';
+    if (diffH < 24)  return diffH + 'h ago';
+    if (diffH < 168) return Math.round(diffH / 24) + 'd ago';
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+</body>
+</html>

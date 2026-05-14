@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legal - ConveySelect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:    #0f0f0f;
+      --paper:  #f7f4ef;
+      --cream:  #ede9e1;
+      --gold:   #c9a84c;
+      --sage:   #4a6050;
+      --muted:  #7a7469;
+      --white:  #ffffff;
+      --radius: 4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--cream);
+    }
+
+    .logo {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .back-link {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--ink); }
+
+    /* ── Tab nav ── */
+    .tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 2.5rem 1.5rem 0;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1.5px solid var(--cream);
+      background: var(--white);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:first-child { border-radius: 6px 0 0 6px; }
+    .tab-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
+
+    .tab-btn.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--white);
+    }
+
+    /* ── Content ── */
+    .content-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    .doc { display: none; }
+    .doc.active { display: block; animation: fadeIn 0.25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Doc header ── */
+    .doc-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--cream);
+    }
+
+    .doc-kicker {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .doc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .doc-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .doc-intro {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 600px;
+    }
+
+    /* ── Sections ── */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-num {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    h3 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      margin-top: 1.25rem;
+      color: var(--ink);
+    }
+
+    p {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #3a3630;
+      margin-bottom: 0.85rem;
+      font-weight: 300;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    li {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #3a3630;
+      margin-bottom: 0.35rem;
+      font-weight: 300;
+    }
+
+    /* ── Highlight box ── */
+    .highlight-box {
+      background: var(--white);
+      border: 1.5px solid var(--cream);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      font-size: 0.88rem;
+    }
+
+    /* ── Warning box ── */
+    .warning-box {
+      background: rgba(201,168,76,0.06);
+      border: 1.5px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .warning-box p {
+      margin-bottom: 0;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    .warning-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--cream);
+      margin: 2rem 0;
+    }
+
+    /* ── Contact block ── */
+    .contact-block {
+      background: var(--white);
+      border: 1px solid var(--cream);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .contact-block h3 { margin-top: 0; }
+
+    .contact-block a {
+      color: var(--sage);
+      text-decoration: none;
+    }
+
+    .contact-block a:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--cream);
+    }
+
+    footer a { color: var(--muted); }
+
+    @media (max-width: 520px) {
+      header { padding: 1rem 1.25rem; }
+      .tab-btn { padding: 0.65rem 1.25rem; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/">⬡ ConveySelect</a>
+  <a class="back-link" href="/">← Back to home</a>
+</header>
+
+<!-- Tab nav -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showDoc('privacy', this)">Privacy Policy</button>
+  <button class="tab-btn" onclick="showDoc('terms', this)">Terms of Service</button>
+</div>
+
+<div class="content-wrap">
+
+  <!-- ══════════════════════════════════════════════
+       PRIVACY POLICY
+  ══════════════════════════════════════════════ -->
+  <div class="doc active" id="doc-privacy">
+
+    <div class="doc-header">
+      <div class="doc-kicker">Legal</div>
+      <div class="doc-title">Privacy Policy</div>
+      <div class="doc-meta">Last updated: April 2026 &nbsp;·&nbsp; Effective date: April 2026</div>
+      <p class="doc-intro">ConveySelect is committed to protecting your personal data. This policy explains what information we collect, how we use it, and your rights under UK GDPR and the Data Protection Act 2018.</p>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-title">Important notice</div>
+      <p>ConveySelect is a referral platform. When you submit an enquiry, your details will be shared with regulated conveyancing solicitors so they can provide you with quotes. Your referring estate agent may also receive confirmation that a referral was made.</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="section">
+      <div class="section-num">Section 1</div>
+      <h2>Who we are</h2>
+      <p>CorreConnections ("we", "us", "our") operates the ConveySelect platform at conveyselect.com. We are the data controller responsible for your personal data.</p>
+      <p>For data protection enquiries, contact us at: <strong>privacy@conveyselect.com</strong></p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 2 -->
+    <div class="section">
+      <div class="section-num">Section 2</div>
+      <h2>What data we collect</h2>
+
+      <h3>Data you provide directly</h3>
+      <ul>
+        <li>Full name</li>
+        <li>Email address</li>
+        <li>Phone number</li>
+        <li>Property postcode</li>
+        <li>Transaction type (buying, selling, remortgage)</li>
+        <li>Property type (freehold, leasehold)</li>
+        <li>Approximate property value</li>
+        <li>Preferred timeline</li>
+      </ul>
+
+      <h3>Data collected automatically</h3>
+      <ul>
+        <li>Date and time of enquiry</li>
+        <li>The estate agent who referred you (via URL parameter)</li>
+        <li>Basic browser and device information for security purposes</li>
+      </ul>
+
+      <p>We do not collect payment card details, passport numbers, or any special category data as defined under UK GDPR.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 3 -->
+    <div class="section">
+      <div class="section-num">Section 3</div>
+      <h2>How we use your data</h2>
+
+      <h3>To provide the referral service</h3>
+      <p>We use your data to match you with regulated conveyancing solicitors and licensed conveyancers who cover your area. This is the core purpose of the platform.</p>
+
+      <h3>Legal basis</h3>
+      <p>We process your data on the basis of <strong>contract</strong>: you submit an enquiry and we perform the service you requested. Where we have a legitimate interest (such as preventing fraud or improving our service) we rely on that basis, balanced against your rights.</p>
+
+      <h3>What we do not do</h3>
+      <ul>
+        <li>We do not sell your data to third parties</li>
+        <li>We do not use your data for automated decision-making that produces legal effects</li>
+        <li>We do not send unsolicited marketing without your consent</li>
+        <li>We do not transfer your data outside the UK or EEA without appropriate safeguards</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 4 -->
+    <div class="section">
+      <div class="section-num">Section 4</div>
+      <h2>Who we share your data with</h2>
+
+      <h3>Conveyancing firms</h3>
+      <p>Your enquiry details are shared with up to 3 regulated solicitors or licensed conveyancers so they can contact you with quotes. All firms on our panel are regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC).</p>
+
+      <h3>Referring estate agents</h3>
+      <p>The estate agent who referred you will receive confirmation that a referral was made and may receive a referral fee for successful introductions. This is disclosed on the enquiry form in compliance with the Estate Agents Act 1979.</p>
+
+      <h3>Service providers</h3>
+      <p>We use the following trusted third-party processors to operate our platform:</p>
+      <ul>
+        <li><strong>Cloudflare</strong> — hosting and infrastructure (servers in the EEA/UK)</li>
+        <li><strong>Resend</strong> — transactional email delivery</li>
+      </ul>
+      <p>All processors are bound by data processing agreements and may not use your data for their own purposes.</p>
+
+      <h3>Legal requirements</h3>
+      <p>We may disclose your data if required by law, court order, or to protect the rights and safety of ConveyLink, our users, or the public.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 5 -->
+    <div class="section">
+      <div class="section-num">Section 5</div>
+      <h2>How long we keep your data</h2>
+      <p>We retain your enquiry data for <strong>3 years</strong> from the date of submission. This allows us to resolve any disputes, respond to regulatory enquiries, and maintain accurate business records.</p>
+      <p>After this period your personal data is permanently deleted from our systems. Anonymised, aggregated data (such as lead volumes by region) may be retained indefinitely for business analysis.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 6 -->
+    <div class="section">
+      <div class="section-num">Section 6</div>
+      <h2>Your rights</h2>
+      <p>Under UK GDPR you have the following rights:</p>
+      <ul>
+        <li><strong>Right of access</strong> — request a copy of the personal data we hold about you</li>
+        <li><strong>Right to rectification</strong> — ask us to correct inaccurate data</li>
+        <li><strong>Right to erasure</strong> — ask us to delete your data ("right to be forgotten")</li>
+        <li><strong>Right to restrict processing</strong> — ask us to pause processing your data</li>
+        <li><strong>Right to data portability</strong> — receive your data in a machine-readable format</li>
+        <li><strong>Right to object</strong> — object to processing based on legitimate interests</li>
+      </ul>
+      <p>To exercise any of these rights, email us at <strong>privacy@conveyselect.com</strong>. We will respond within 30 days. There is no charge for reasonable requests.</p>
+
+      <div class="highlight-box">
+        <p>If you are unhappy with how we have handled your data, you have the right to complain to the Information Commissioner's Office (ICO) at ico.org.uk or by calling 0303 123 1113.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 7 -->
+    <div class="section">
+      <div class="section-num">Section 7</div>
+      <h2>Cookies</h2>
+      <p>ConveySelect uses only essential cookies necessary to operate the platform (such as maintaining your session during the enquiry form). We do not use advertising or tracking cookies. No cookie consent banner is required as we only use strictly necessary cookies.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 8 -->
+    <div class="section">
+      <div class="section-num">Section 8</div>
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy from time to time. When we make significant changes we will update the "last updated" date at the top of this page. We encourage you to review this policy periodically.</p>
+    </div>
+
+ <div class="contact-block">
+      <h3>Contact us</h3>
+      <p style="margin-bottom:0.35rem">CorreConnections Ltd<br>
+      General enquiries: <a href="mailto:hello@conveyselect.com">hello@conveyselect.com</a><br>
+      Complaints: <a href="mailto:complaints@conveyselect.com">complaints@conveyselect.com</a><br>
+      Privacy: <a href="mailto:privacy@conveyselect.com">privacy@conveyselect.com</a></p>
+    </div>
+
+  </div><!-- /privacy -->
+
+
+  <!-- ══════════════════════════════════════════════
+       TERMS OF SERVICE
+  ══════════════════════════════════════════════ -->
+  <div class="doc" id="doc-terms">
+
+    <div class="doc-header">
+      <div class="doc-kicker">Legal</div>
+      <div class="doc-title">Terms of Service</div>
+      <div class="doc-meta">Last updated: April 2026 &nbsp;·&nbsp; Effective date: April 2026</div>
+      <p class="doc-intro">Please read these terms carefully before using ConveySelect. By submitting an enquiry you agree to be bound by these terms.</p>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-title">Not legal advice</div>
+      <p>ConveySelect is an introduction and referral platform only. We are not a law firm and do not provide legal advice. Any legal advice you receive will come from the regulated solicitor or conveyancer you instruct, not from ConveySelect.</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="section">
+      <div class="section-num">Section 1</div>
+      <h2>About ConveySelect</h2>
+      <p>CorreConnections ( "we", "us") operates a lead generation and referral platform, ConveySelect, that connects individuals requiring conveyancing services with regulated solicitors and licensed conveyancers.</p>
+      <p>CorreConnections is not regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). We are a technology and marketing company, not a legal services provider.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 2 -->
+    <div class="section">
+      <div class="section-num">Section 2</div>
+      <h2>The service we provide</h2>
+      <p>When you submit an enquiry via the ConveySelect platform, we will:</p>
+      <ul>
+        <li>Review your enquiry details</li>
+        <li>Match you with up to 3 regulated conveyancing firms who cover your area</li>
+        <li>Share your contact details with those firms so they can contact you with quotes</li>
+      </ul>
+
+      <p>We do not guarantee:</p>
+      <ul>
+        <li>That any particular firm will be available or will contact you</li>
+        <li>The price, quality, or speed of any conveyancing service provided</li>
+        <li>That you will instruct any of the firms we introduce you to</li>
+        <li>A specific number of quotes or responses</li>
+      </ul>
+
+      <p>Our service is free of charge to you as the consumer. Conveyancing firms pay ConveySelect a referral fee for introductions.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 3 -->
+    <div class="section">
+      <div class="section-num">Section 3</div>
+      <h2>Referral fees and disclosure</h2>
+      <p>CorreConnections receives a referral fee from conveyancing firms for each introduction made through our platform. The estate agent who referred you to ConveySelect may also receive a fee for successful introductions.</p>
+      <p>In accordance with the Estate Agents Act 1979 and SRA transparency rules, all referral fee arrangements are disclosed. The payment of a referral fee does not affect the independence of the legal advice you receive from any solicitor you instruct.</p>
+      <p>You are under no obligation to instruct any solicitor we introduce you to, and you are free to seek conveyancing services elsewhere at any time.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 4 -->
+    <div class="section">
+      <div class="section-num">Section 4</div>
+      <h2>Your obligations</h2>
+      <p>By submitting an enquiry you confirm that:</p>
+      <ul>
+        <li>The information you provide is accurate and complete to the best of your knowledge</li>
+        <li>You are aged 18 or over</li>
+        <li>You are based in England or Wales (our service does not currently cover Scotland or Northern Ireland)</li>
+        <li>You consent to being contacted by regulated conveyancing firms regarding your enquiry</li>
+        <li>You will not submit speculative, fraudulent, or test enquiries</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 5 -->
+    <div class="section">
+      <div class="section-num">Section 5</div>
+      <h2>Limitation of liability</h2>
+      <p>ConveySelect acts as an introduction service only. Once we have introduced you to a conveyancing firm, the legal relationship and any contract for services is between you and that firm directly. CorreConnections has no responsibility for:</p>
+      <ul>
+        <li>The quality, timeliness, or outcome of any legal services provided</li>
+        <li>Any loss arising from a property transaction falling through</li>
+        <li>Any professional negligence by a firm we have introduced you to</li>
+        <li>Disputes between you and a conveyancing firm</li>
+      </ul>
+      <p>To the maximum extent permitted by law, CorreConnections' total liability to you in connection with our platform shall not exceed £100.</p>
+      <p>Nothing in these terms limits liability for death or personal injury caused by negligence, fraud, or any other liability that cannot be excluded by law.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 6 -->
+    <div class="section">
+      <div class="section-num">Section 6</div>
+      <h2>Complaints</h2>
+
+      <h3>Complaints about ConveySelect</h3>
+      <p>If you have a complaint about our service, please contact us at <strong>complaints@conveyselect.com</strong>. We aim to respond within 5 business days.</p>
+
+      <h3>Complaints about a conveyancing firm</h3>
+      <p>If you have a complaint about a solicitor or conveyancer we introduced you to, you should raise this directly with that firm in the first instance. If unresolved, you can contact:</p>
+      <ul>
+        <li><strong>Legal Ombudsman</strong> — legalombudsman.org.uk — for complaints about legal service quality</li>
+        <li><strong>Solicitors Regulation Authority (SRA)</strong> — sra.org.uk — for complaints about solicitor conduct</li>
+        <li><strong>Council for Licensed Conveyancers (CLC)</strong> — clc-uk.org — for complaints about licensed conveyancer conduct</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 7 -->
+    <div class="section">
+      <div class="section-num">Section 7</div>
+      <h2>Intellectual property</h2>
+      <p>All content on the ConveySelect platform, including text, design, code, and branding, is owned by CorreConnections and protected by intellectual property law. You may not copy, reproduce, or distribute any part of our platform without written permission.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 8 -->
+    <div class="section">
+      <div class="section-num">Section 8</div>
+      <h2>Governing law</h2>
+      <p>These terms are governed by the laws of England and Wales. Any disputes arising from these terms or your use of ConveySelect shall be subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 9 -->
+    <div class="section">
+      <div class="section-num">Section 9</div>
+      <h2>Changes to these terms</h2>
+      <p>We may update these terms from time to time. Continued use of the platform after changes are posted constitutes acceptance of the updated terms. We will always display the effective date at the top of this page.</p>
+    </div>
+
+    <div class="contact-block">
+      <h3>Contact us</h3>
+      <p style="margin-bottom:0.35rem">CorreConnections Ltd<br>
+      General enquiries: <a href="mailto:hello@conveyselect.com">hello@conveyselect.com</a><br>
+      Complaints: <a href="mailto:complaints@conveyselect.com">complaints@conveyselect.com</a><br>
+      Privacy: <a href="mailto:privacy@conveyselect.com">privacy@conveyselect.com</a></p>
+    </div>
+
+  </div><!-- /terms -->
+
+</div><!-- /content-wrap -->
+
+<footer>
+  <p>© 2025 CorreConnections Ltd · <a href="#" onclick="showDoc('privacy', document.querySelectorAll('.tab-btn')[0])">Privacy Policy</a> · <a href="#" onclick="showDoc('terms', document.querySelectorAll('.tab-btn')[1])">Terms of Service</a></p>
+</footer>
+
+<script>
+  function showDoc(name, btn) {
+    document.querySelectorAll('.doc').forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('doc-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
