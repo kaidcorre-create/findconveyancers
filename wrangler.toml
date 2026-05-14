@@ -1,0 +1,17 @@
+name = "conveyselect"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "conveyselect-db"
+database_id = "b1f419a1-b804-48fa-80c0-8a877214a006" 
+
+[vars]
+NOTIFY_EMAIL = "kai@correconnections.co.uk"
+ADMIN_PASSWORD = "pabloswim"
+
+[observability]
+enabled = false
+# Set secrets via CLI — never commit these:
+# wrangler secret put ADMIN_PASSWORD
