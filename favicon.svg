@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#2563eb"/>
+  
+  <!-- House icon in white -->
+  <g fill="#ffffff">
+    <!-- Roof -->
+    <path d="M16 6 L24 13 L23 13 L23 25 L20 25 L20 18 L12 18 L12 25 L9 25 L9 13 L8 13 Z"/>
+    
+    <!-- Door -->
+    <rect x="14" y="20" width="4" height="5" fill="#2563eb"/>
+    
+    <!-- Window -->
+    <rect x="14" y="14" width="4" height="3" rx="0.5" fill="#2563eb"/>
+  </g>
+  
+  <!-- Checkmark overlay (conveys "selected/found") -->
+  <circle cx="24" cy="24" r="5" fill="#10b981"/>
+  <path d="M21.5 24 L23 25.5 L26.5 22" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
