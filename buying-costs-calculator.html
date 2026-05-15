@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate the true total cost of buying a home in 2026. SDLT, conveyancing fees, Land Registry, survey, mortgage fees and more - all in one place.">
+  <title>Total Buying Costs Calculator 2026 | All Fees Included | FindConveyancers</title>
+  <link rel="canonical" href="https://findconveyancers.co.uk/buying-costs-calculator.html">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <meta property="og:title" content="Total Buying Costs Calculator 2026 - Every Fee Included">
+  <meta property="og:description" content="See the true cost of buying a home: SDLT, conveyancing, survey, Land Registry and more. Know exactly what cash you need before you start.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://findconveyancers.co.uk/og-image.jpg">
+  <meta property="og:url" content="https://findconveyancers.co.uk/buying-costs-calculator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Total Buying Costs Calculator 2026">
+  <meta name="twitter:description" content="Calculate SDLT, conveyancing fees, survey costs and more in one place.">
+  <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --primary:#3B82F6;--primary-dark:#1D4ED8;--primary-subtle:#EFF6FF;
+      --heading:#0F172A;--body:#374151;--muted:#6B7280;
+      --border:#E5E7EB;--bg:#F9FAFB;--bg-alt:#F3F4F6;--white:#fff;
+      --green:#059669;--green-bg:#ECFDF5;--green-dark:#065F46;
+      --orange:#D97706;--orange-bg:#FFFBEB;
+      --radius:12px;--shadow:0 4px 16px rgba(0,0,0,.08);
+    }
+    body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--body);line-height:1.6;background:var(--bg);-webkit-font-smoothing:antialiased}
+
+    .header{background:var(--white);border-bottom:1px solid var(--border);padding:1rem 0;position:sticky;top:0;z-index:100}
+    .hc{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;align-items:center;gap:.65rem;text-decoration:none}
+    .brand-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+    .brand-name{font-size:1.1rem;font-weight:700;color:var(--heading)}
+    .hnav{display:flex;align-items:center;gap:1.75rem}
+    .hnav a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .15s}
+    .hnav a:hover{color:var(--primary)}
+    .hnav .hbtn{background:var(--primary);color:#fff!important;padding:.55rem 1.2rem;border-radius:8px;font-weight:600;font-size:.875rem}
+    .hnav .hbtn:hover{background:var(--primary-dark)}
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:.5rem;color:var(--heading);border-radius:6px;line-height:0}
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
+    .mob-overlay.open{display:block}
+    .mob-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+    .mob-panel.open{transform:translateX(0)}
+    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .mob-close{background:none;border:none;cursor:pointer;padding:.25rem;color:var(--heading);line-height:0}
+    .mob-links{display:flex;flex-direction:column}
+    .mob-links a{display:block;padding:.9rem 0;font-size:1.05rem;font-weight:500;color:var(--heading);text-decoration:none;border-bottom:1px solid var(--border)}
+    .mob-links a:hover{color:var(--primary)}
+    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
+    @media(max-width:768px){.nav-hamburger{display:flex!important;align-items:center;justify-content:center}.hnav{display:none!important}}
+
+    .breadcrumb{max-width:1000px;margin:0 auto;padding:1rem 1.5rem;font-size:.85rem;color:var(--muted)}
+    .breadcrumb a{color:var(--primary);text-decoration:none}
+
+    .hero{background:linear-gradient(155deg,#EFF6FF 0%,var(--bg) 60%,#ECFDF5 100%);padding:3.5rem 1.5rem 2.5rem;border-bottom:1px solid var(--border)}
+    .hero-inner{max-width:720px;margin:0 auto;text-align:center}
+    .hero-badge{display:inline-block;background:var(--primary-subtle);color:var(--primary-dark);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .85rem;border-radius:100px;margin-bottom:1rem}
+    .hero h1{font-size:2.5rem;font-weight:800;color:var(--heading);line-height:1.15;margin-bottom:.75rem;letter-spacing:-1px}
+    .hero p{font-size:1.05rem;color:var(--muted)}
+
+    .page-wrap{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem 4rem;display:grid;grid-template-columns:380px 1fr;gap:1.75rem;align-items:start}
+    @media(max-width:800px){.page-wrap{grid-template-columns:1fr}}
+
+    .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;box-shadow:var(--shadow)}
+    .card-title{font-size:1rem;font-weight:700;color:var(--heading);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+
+    .form-label{display:block;font-size:.82rem;font-weight:600;color:var(--heading);margin-bottom:.4rem;margin-top:1.1rem}
+    .form-label:first-child{margin-top:0}
+    .price-wrap{position:relative}
+    .price-prefix{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-weight:600;color:var(--muted)}
+    .input{width:100%;padding:.75rem 1rem .75rem 2rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-weight:600;color:var(--heading);font-family:inherit;outline:none;transition:border-color .15s;background:var(--white)}
+    .input:focus{border-color:var(--primary)}
+    .input.no-prefix{padding-left:1rem}
+    select.input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--bg-alt)}
+    .toggle-row:last-child{border-bottom:none}
+    .toggle-label{font-size:.875rem;color:var(--body)}
+    .toggle{position:relative;display:inline-block;width:36px;height:20px}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;cursor:pointer;inset:0;background:#D1D5DB;border-radius:20px;transition:.2s}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+    input:checked + .toggle-slider{background:var(--primary)}
+    input:checked + .toggle-slider::before{transform:translateX(16px)}
+
+    /* Results */
+    .result-placeholder{padding:3rem 1rem;text-align:center;color:var(--muted)}
+    .result-placeholder svg{opacity:.2;margin:0 auto 1rem;display:block}
+
+    .summary-banner{background:var(--green-bg);border:1px solid #A7F3D0;border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    .summary-banner-label{font-size:.85rem;font-weight:600;color:var(--green-dark)}
+    .summary-banner-value{font-size:2rem;font-weight:800;color:var(--green-dark);letter-spacing:-1px}
+
+    .cost-section{margin-bottom:1.25rem}
+    .cost-section-title{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+    .cost-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--bg-alt)}
+    .cost-row:last-child{border-bottom:none}
+    .cost-row-label{font-size:.875rem;color:var(--body)}
+    .cost-row-label small{display:block;font-size:.75rem;color:var(--muted)}
+    .cost-row-value{font-size:.9rem;font-weight:600;color:var(--heading);white-space:nowrap;padding-left:1rem}
+    .cost-row-value.zero{color:var(--green)}
+    .cost-row-value.range{color:var(--muted);font-weight:400;font-size:.82rem}
+
+    .grand-total{border-top:2px solid var(--border);padding-top:1rem;margin-top:.5rem;display:flex;justify-content:space-between;align-items:center}
+    .grand-total-label{font-size:.925rem;font-weight:700;color:var(--heading)}
+    .grand-total-value{font-size:1.4rem;font-weight:800;color:var(--heading);letter-spacing:-0.5px}
+
+    .cash-needed{background:var(--primary-subtle);border-radius:10px;padding:1.25rem;margin-top:1.25rem}
+    .cash-needed-title{font-size:.8rem;font-weight:700;color:var(--primary-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem}
+    .cash-row{display:flex;justify-content:space-between;font-size:.875rem;padding:.3rem 0}
+    .cash-row strong{color:var(--heading)}
+    .cash-total{display:flex;justify-content:space-between;border-top:1px solid #BFDBFE;margin-top:.5rem;padding-top:.75rem;font-weight:700;color:var(--primary-dark)}
+    .cash-total span:last-child{font-size:1.1rem}
+
+    .disclaimer{font-size:.75rem;color:var(--muted);margin-top:1.25rem;padding:.75rem;background:var(--orange-bg);border-radius:8px;border-left:3px solid var(--orange);line-height:1.5}
+
+    .cta-strip{background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:var(--radius);padding:1.5rem;text-align:center;margin-top:1.5rem;color:#fff}
+    .cta-strip p{opacity:.9;font-size:.875rem;margin-bottom:1rem}
+    .cta-strip a{display:inline-block;background:#fff;color:var(--primary-dark);font-weight:700;padding:.75rem 1.5rem;border-radius:9px;text-decoration:none;font-size:.925rem}
+
+    .footer{background:#111827;color:#9CA3AF;padding:2.5rem 1.5rem;text-align:center;font-size:.85rem;margin-top:0}
+    .footer a{color:#93C5FD;text-decoration:none}
+    .footer p+p{margin-top:.5rem}
+
+    @media(max-width:480px){.hero h1{font-size:1.85rem}.summary-banner-value{font-size:1.5rem}}
+  </style>
+</head>
+<body>
+
+<div id="mOvl" class="mob-overlay" onclick="closeMNav()"></div>
+<script>function closeMNav(){document.getElementById('mNav').classList.remove('open');document.getElementById('mOvl').classList.remove('open');document.body.style.overflow=''}</script>
+<nav id="mNav" class="mob-panel" aria-label="Mobile navigation">
+  <div class="mob-head">
+    <a href="/" style="display:flex;align-items:center;gap:.75rem;text-decoration:none">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,#3B82F6,#2563EB);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">F</div>
+      <span style="font-weight:700;font-size:1.05rem;color:#0F172A">FindConveyancers</span>
+    </a>
+    <button class="mob-close" aria-label="Close menu" onclick="closeMNav()">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg>
+    </button>
+  </div>
+  <div class="mob-links">
+    <a href="/">Home</a>
+    <a href="/pages/guides/">Guides</a>
+    <a href="/stamp-duty-calculator.html">SDLT Calculator</a>
+    <a href="/buying-costs-calculator.html" style="color:var(--primary);font-weight:600">Buying Costs</a>
+    <a href="/get-quotes.html" class="mob-cta">Get Free Quotes</a>
+  </div>
+</nav>
+
+<header class="header">
+  <div class="hc">
+    <a href="/" class="brand"><div class="brand-icon">F</div><div class="brand-name">FindConveyancers</div></a>
+    <button class="nav-hamburger" aria-label="Open menu" onclick="document.getElementById('mNav').classList.add('open');document.getElementById('mOvl').classList.add('open');document.body.style.overflow='hidden'">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="5.5" x2="19" y2="5.5"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16.5" x2="19" y2="16.5"/></svg>
+    </button>
+    <nav class="hnav">
+      <a href="/">Home</a>
+      <a href="/pages/guides/">Guides</a>
+      <a href="/stamp-duty-calculator.html">SDLT Calculator</a>
+      <a href="/get-quotes.html" class="hbtn">Get Free Quotes</a>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumb"><a href="/">Home</a> / Buying Costs Calculator</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Free Tool</div>
+    <h1>Total Buying Costs Calculator</h1>
+    <p>See every fee involved in buying a home - stamp duty, conveyancing, survey, Land Registry and more. Know your real cash requirement before you start.</p>
+  </div>
+</section>
+
+<div class="page-wrap">
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">Your property details</div>
+
+    <label class="form-label" for="price">Property price</label>
+    <div class="price-wrap">
+      <span class="price-prefix">£</span>
+      <input id="price" class="input" type="text" placeholder="300,000" inputmode="numeric" autocomplete="off">
+    </div>
+
+    <label class="form-label" for="deposit-pct">Deposit</label>
+    <select id="deposit-pct" class="input no-prefix" style="padding-left:1rem">
+      <option value="5">5% deposit</option>
+      <option value="10" selected>10% deposit</option>
+      <option value="15">15% deposit</option>
+      <option value="20">20% deposit</option>
+      <option value="25">25% deposit</option>
+      <option value="40">40% deposit</option>
+    </select>
+
+    <label class="form-label" for="buyer-type">Buyer type</label>
+    <select id="buyer-type" class="input no-prefix" style="padding-left:1rem">
+      <option value="ftb">First-time buyer</option>
+      <option value="standard" selected>Standard buyer (home mover)</option>
+      <option value="additional">Additional property / buy-to-let</option>
+      <option value="nonresident">Non-UK resident</option>
+    </select>
+
+    <label class="form-label" for="property-type">Property type</label>
+    <select id="property-type" class="input no-prefix" style="padding-left:1rem">
+      <option value="freehold">Freehold house</option>
+      <option value="leasehold">Leasehold flat</option>
+      <option value="newbuild">New build</option>
+    </select>
+
+    <div style="margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1.25rem">
+      <div class="card-title" style="margin-bottom:.75rem">Include in estimate</div>
+      <div class="toggle-row">
+        <span class="toggle-label">Mortgage arrangement fee</span>
+        <label class="toggle"><input type="checkbox" id="tog-mortgage" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Survey / valuation</span>
+        <label class="toggle"><input type="checkbox" id="tog-survey" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Removal costs</span>
+        <label class="toggle"><input type="checkbox" id="tog-removal" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-panel">
+    <div class="card result-placeholder" id="empty-state">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="4"/><line x1="16" y1="20" x2="32" y2="20"/><line x1="16" y1="28" x2="26" y2="28"/></svg>
+      <p>Enter a property price to see your cost breakdown</p>
+    </div>
+    <div id="result-content" style="display:none"></div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>&copy; 2026 FindConveyancers Ltd. All rights reserved.</p>
+  <p><a href="/legal/privacy-policy.html">Privacy</a> | <a href="/legal/terms-and-conditions.html">Terms</a></p>
+</footer>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','GA_ID')</script>
+
+<script>
+// ── SDLT engine (same as standalone calculator) ─────────────────────────────
+const STANDARD_BANDS=[{from:0,to:125000,rate:0},{from:125000,to:250000,rate:.02},{from:250000,to:925000,rate:.05},{from:925000,to:1500000,rate:.10},{from:1500000,to:Infinity,rate:.12}];
+const ADDITIONAL_BANDS=[{from:0,to:125000,rate:.03},{from:125000,to:250000,rate:.05},{from:250000,to:925000,rate:.08},{from:925000,to:1500000,rate:.13},{from:1500000,to:Infinity,rate:.15}];
+const NONRESIDENT_BANDS=[{from:0,to:125000,rate:.02},{from:125000,to:250000,rate:.04},{from:250000,to:925000,rate:.07},{from:925000,to:1500000,rate:.12},{from:1500000,to:Infinity,rate:.14}];
+
+function calcBanded(price,bands){let t=0;for(const b of bands){if(price<=b.from)break;t+=(Math.min(price,b.to)-b.from)*b.rate}return t}
+
+function calcSDLT(price,type){
+  if(type==='ftb'){
+    if(price<=300000)return 0;
+    if(price<=500000)return(price-300000)*.05;
+    return calcBanded(price,STANDARD_BANDS);
+  }
+  if(type==='additional')return calcBanded(price,ADDITIONAL_BANDS);
+  if(type==='nonresident')return calcBanded(price,NONRESIDENT_BANDS);
+  return calcBanded(price,STANDARD_BANDS);
+}
+
+// ── Land Registry fees ───────────────────────────────────────────────────────
+function lrFee(price){
+  if(price<=80000)return 20;
+  if(price<=100000)return 40;
+  if(price<=200000)return 100;
+  if(price<=500000)return 150;
+  if(price<=1000000)return 295;
+  if(price<=2000000)return 500;
+  return 910;
+}
+
+// ── Conveyancing estimate ────────────────────────────────────────────────────
+function conveyancingRange(price,propType){
+  let lo,hi;
+  if(price<200000){lo=900;hi=1400}
+  else if(price<400000){lo=1100;hi=1700}
+  else if(price<700000){lo=1300;hi=2200}
+  else if(price<1000000){lo=1600;hi=2800}
+  else{lo=2000;hi=4000}
+  if(propType==='leasehold'){lo+=200;hi+=400}
+  if(propType==='newbuild'){lo+=250;hi+=500}
+  return{lo,hi,mid:Math.round((lo+hi)/2)}
+}
+
+// ── Survey ranges ────────────────────────────────────────────────────────────
+function surveyRange(price,propType){
+  if(propType==='newbuild')return{lo:300,hi:600,label:'Snagging inspection'}
+  if(price<300000)return{lo:400,hi:700,label:'Homebuyer survey'}
+  if(price<600000)return{lo:500,hi:900,label:'Homebuyer survey'}
+  return{lo:700,hi:1500,label:'Full structural survey'}
+}
+
+// ── Format helpers ───────────────────────────────────────────────────────────
+function fmt(n){return'£'+Math.round(n).toLocaleString('en-GB')}
+function fmtRange(lo,hi){return fmt(lo)+' - '+fmt(hi)}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function render(){
+  const price=parseInt(document.getElementById('price').value.replace(/[^0-9]/g,''),10)||0;
+  if(price<10000){
+    document.getElementById('empty-state').style.display='';
+    document.getElementById('result-content').style.display='none';
+    return;
+  }
+
+  const buyerType=document.getElementById('buyer-type').value;
+  const propType=document.getElementById('property-type').value;
+  const depositPct=parseInt(document.getElementById('deposit-pct').value,10);
+  const inclMortgage=document.getElementById('tog-mortgage').checked;
+  const inclSurvey=document.getElementById('tog-survey').checked;
+  const inclRemoval=document.getElementById('tog-removal').checked;
+
+  const sdlt=Math.round(calcSDLT(price,buyerType));
+  const lr=lrFee(price);
+  const conv=conveyancingRange(price,propType);
+  const survey=surveyRange(price,propType);
+  const deposit=Math.round(price*depositPct/100);
+  const mortgage=inclMortgage?999:0;
+  const mortgageRange=inclMortgage?{lo:500,hi:1500}:null;
+  const removalRange=inclRemoval?{lo:600,hi:2000}:null;
+  const removalMid=inclRemoval?1100:0;
+
+  const searchesMid=400;
+  const idFee=30;
+
+  // Fixed costs total (mid-point conveyancing)
+  const fixedTotal=sdlt+lr+conv.mid+searchesMid+idFee+(inclMortgage?999:0)+(inclSurvey?survey.hi:0)+(inclRemoval?1100:0);
+
+  const row=(label,sub,val,isRange=false,isZero=false)=>`
+    <div class="cost-row">
+      <div class="cost-row-label">${label}${sub?`<small>${sub}</small>`:''}
+      </div>
+      <div class="cost-row-value${isRange?' range':''}${isZero?' zero':''}">${val}</div>
+    </div>`;
+
+  const html=`
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="summary-banner">
+        <span class="summary-banner-label">Estimated additional costs (excl. deposit &amp; mortgage)</span>
+        <span class="summary-banner-value">${fmt(fixedTotal - deposit)}</span>
+      </div>
+
+      <div class="cost-section">
+        <div class="cost-section-title">Tax</div>
+        ${row('Stamp Duty Land Tax','SDLT',sdlt===0?'<span style="color:var(--green)">£0 - none to pay</span>':fmt(sdlt),'',sdlt===0)}
+      </div>
+
+      <div class="cost-section">
+        <div class="cost-section-title">Legal fees</div>
+        ${row('Conveyancing solicitor','Estimate for '+{freehold:'freehold house',leasehold:'leasehold flat',newbuild:'new build'}[propType],fmtRange(conv.lo,conv.hi),true)}
+        ${row('Searches','Local authority, drainage, environmental','~'+fmt(searchesMid))}
+        ${row('Land Registry fee','Registration of ownership',fmt(lr))}
+        ${row('ID verification &amp; bank transfer fees','',fmt(idFee))}
+      </div>
+
+      ${inclSurvey?`<div class="cost-section">
+        <div class="cost-section-title">Survey</div>
+        ${row(survey.label,'Typical range for this property value',fmtRange(survey.lo,survey.hi),true)}
+      </div>`:''}
+
+      ${inclMortgage?`<div class="cost-section">
+        <div class="cost-section-title">Mortgage</div>
+        ${row('Mortgage arrangement fee','Varies by lender - some are fee-free',fmtRange(mortgageRange.lo,mortgageRange.hi),true)}
+      </div>`:''}
+
+      ${inclRemoval?`<div class="cost-section">
+        <div class="cost-section-title">Moving</div>
+        ${row('Removal company','Depends on distance and volume',fmtRange(removalRange.lo,removalRange.hi),true)}
+      </div>`:''}
+
+      <div class="grand-total">
+        <span class="grand-total-label">Total additional costs</span>
+        <span class="grand-total-value">${fmt(fixedTotal - deposit)}</span>
+      </div>
+
+      <div class="cash-needed">
+        <div class="cash-needed-title">Total cash needed on completion day</div>
+        <div class="cash-row"><span>Deposit (${depositPct}%)</span><strong>${fmt(deposit)}</strong></div>
+        <div class="cash-row"><span>Additional costs</span><strong>${fmt(fixedTotal - deposit)}</strong></div>
+        <div class="cash-total"><span>Total cash required</span><span>${fmt(fixedTotal)}</span></div>
+      </div>
+
+      <div class="disclaimer">All figures are estimates for guidance only. Conveyancing fees vary between firms - getting quotes is the only way to know your actual costs. Rates correct for England and Northern Ireland.</div>
+    </div>
+
+    <div class="card cta-strip" style="padding:1.5rem;text-align:center;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none">
+      <p style="opacity:.9;font-size:.9rem;margin-bottom:1rem">Conveyancing is your biggest variable cost. Compare quotes to find the best price.</p>
+      <a href="/get-quotes.html" style="display:inline-block;background:#fff;color:var(--primary-dark);font-weight:700;padding:.8rem 1.75rem;border-radius:9px;text-decoration:none">Get Free Conveyancing Quotes</a>
+    </div>`;
+
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('result-content').style.display='block';
+  document.getElementById('result-content').innerHTML=html;
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+document.getElementById('price').addEventListener('input',function(){
+  const raw=this.value.replace(/[^0-9]/g,'');
+  const cursor=this.selectionStart,prev=this.value.length;
+  this.value=raw?parseInt(raw,10).toLocaleString('en-GB'):'';
+  const diff=this.value.length-prev;
+  this.setSelectionRange(cursor+diff,cursor+diff);
+  render();
+});
+['deposit-pct','buyer-type','property-type','tog-mortgage','tog-survey','tog-removal']
+  .forEach(id=>document.getElementById(id).addEventListener('change',render));
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Total Buying Costs Calculator 2026",
+  "description": "Calculate all costs involved in buying a home: stamp duty, conveyancing fees, Land Registry, survey, mortgage arrangement fee and moving costs.",
+  "url": "https://findconveyancers.co.uk/buying-costs-calculator.html",
+  "applicationCategory": "FinanceApplication",
+  "offers": {"@type":"Offer","price":"0","priceCurrency":"GBP"},
+  "provider": {"@type":"Organization","name":"FindConveyancers","url":"https://findconveyancers.co.uk"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://findconveyancers.co.uk/"},
+    {"@type":"ListItem","position":2,"name":"Buying Costs Calculator","item":"https://findconveyancers.co.uk/buying-costs-calculator.html"}
+  ]
+}
+</script>
+</body>
+</html>
