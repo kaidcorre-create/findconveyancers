@@ -78,6 +78,38 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Guide Pages -->
+  <url>
+    <loc>https://findconveyancers.co.uk/pages/guides/what-is-conveyancing.html</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://findconveyancers.co.uk/pages/guides/conveyancing-costs-2026.html</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://findconveyancers.co.uk/pages/guides/freehold-vs-leasehold-conveyancing.html</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://findconveyancers.co.uk/pages/guides/first-time-buyer-conveyancing.html</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://findconveyancers.co.uk/pages/guides/how-long-does-conveyancing-take.html</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Legal Pages -->
   <url>
     <loc>https://findconveyancers.co.uk/legal/privacy-policy.html</loc>
