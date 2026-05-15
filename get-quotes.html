@@ -519,7 +519,7 @@
 <div class="container">
   <!-- Progress Bar -->
   <div class="progress-section">
-    <div class="progress-label">Step <span class="current-step">1</span> of 4</div>
+    <div class="progress-label">Step <span class="current-step">1</span> of 3</div>
     <div class="progress-bar">
       <div class="progress-fill"></div>
     </div>
@@ -534,53 +534,30 @@
   <!-- Form Container -->
   <div class="form-container">
     <form id="quoteForm">
-      <!-- Step 1: Property Details -->
+      <!-- Step 1: Property & Transaction -->
       <div class="form-step active" data-step="1">
         <div class="step-header">
-          <h2 class="step-title">Tell Us About Your Property</h2>
-          <p class="step-description">Let's start with the basics about the property you're interested in</p>
+          <h2 class="step-title">About the Property</h2>
+          <p class="step-description">Tell us what you're buying, selling, or remortgaging</p>
         </div>
 
         <div class="form-group">
-          <label class="form-label">
-            Property Address
-            <span class="form-required">*</span>
-          </label>
-          <input
-            type="text"
-            name="propertyAddress"
-            class="form-input"
-            placeholder="e.g., 123 Main Street, London"
-            required
-          >
-          <div class="form-error">Please enter a valid property address</div>
+          <label class="form-label">Property Address <span class="form-required">*</span></label>
+          <input type="text" name="propertyAddress" class="form-input" placeholder="e.g., 123 High Street, Northampton" required>
+          <div class="form-error">Please enter the property address</div>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">
-              Property Price
-              <span class="form-required">*</span>
-            </label>
-            <input
-              type="number"
-              name="propertyPrice"
-              class="form-input"
-              placeholder="e.g., 250000"
-              min="0"
-              step="1000"
-              required
-            >
-            <div class="form-error">Please enter a valid property price</div>
+            <label class="form-label">Property Price <span class="form-required">*</span></label>
+            <input type="number" name="propertyPrice" class="form-input" placeholder="e.g., 250000" min="0" step="1000" required>
+            <div class="form-error">Please enter the property price</div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">
-              Property Type
-              <span class="form-required">*</span>
-            </label>
+            <label class="form-label">Property Type <span class="form-required">*</span></label>
             <select name="propertyType" class="form-select" required>
-              <option value="">Select property type</option>
+              <option value="">Select type</option>
               <option value="freehold-house">Freehold House</option>
               <option value="leasehold-flat">Leasehold Flat</option>
               <option value="leasehold-house">Leasehold House</option>
@@ -592,182 +569,91 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Freehold or Leasehold?</label>
-          <div class="choice-group">
-            <div class="choice-button">
-              <input type="radio" id="freehold" name="freehold" value="freehold">
-              <label for="freehold" class="choice-label">🏠 Freehold</label>
-            </div>
-            <div class="choice-button">
-              <input type="radio" id="leasehold" name="freehold" value="leasehold">
-              <label for="leasehold" class="choice-label">🏢 Leasehold</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Is this a new build property?</label>
-          <div class="choice-group">
-            <div class="choice-button">
-              <input type="radio" id="newbuild-yes" name="newBuild" value="yes">
-              <label for="newbuild-yes" class="choice-label">✨ Yes, New Build</label>
-            </div>
-            <div class="choice-button">
-              <input type="radio" id="newbuild-no" name="newBuild" value="no">
-              <label for="newbuild-no" class="choice-label">🔨 No, Existing</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 2: Transaction Type -->
-      <div class="form-step" data-step="2">
-        <div class="step-header">
-          <h2 class="step-title">What Are You Doing?</h2>
-          <p class="step-description">Tell us about your conveyancing transaction</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Transaction Type
-            <span class="form-required">*</span>
-          </label>
+          <label class="form-label">What do you need? <span class="form-required">*</span></label>
           <div class="choice-group">
             <div class="choice-button">
               <input type="radio" id="buying" name="transactionType" value="buying" required>
-              <label for="buying" class="choice-label">🛒 Buying</label>
+              <label for="buying" class="choice-label">Buying</label>
             </div>
             <div class="choice-button">
               <input type="radio" id="selling" name="transactionType" value="selling">
-              <label for="selling" class="choice-label">📦 Selling</label>
+              <label for="selling" class="choice-label">Selling</label>
             </div>
             <div class="choice-button">
               <input type="radio" id="both" name="transactionType" value="both">
-              <label for="both" class="choice-label">⇄ Buy & Sell</label>
+              <label for="both" class="choice-label">Buy & Sell</label>
             </div>
             <div class="choice-button">
               <input type="radio" id="remortgage" name="transactionType" value="remortgage">
-              <label for="remortgage" class="choice-label">💰 Remortgage</label>
+              <label for="remortgage" class="choice-label">Remortgage</label>
             </div>
           </div>
           <div class="form-error">Please select a transaction type</div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">
-            When Do You Need This Completed?
-            <span class="form-required">*</span>
-          </label>
-          <select name="timeline" class="form-select" required>
-            <option value="">Select timeline</option>
-            <option value="urgent">Urgent (4-6 weeks)</option>
-            <option value="soon">Soon (6-8 weeks)</option>
-            <option value="standard">Standard (8-12 weeks)</option>
+          <label class="form-label">When do you need to complete?</label>
+          <select name="timeline" class="form-select">
+            <option value="">No preference</option>
+            <option value="urgent">Urgent (4–6 weeks)</option>
+            <option value="soon">Soon (6–8 weeks)</option>
+            <option value="standard">Standard (8–12 weeks)</option>
             <option value="flexible">Flexible (12+ weeks)</option>
           </select>
-          <div class="form-error">Please select a timeline</div>
         </div>
       </div>
 
-      <!-- Step 3: Your Details -->
-      <div class="form-step" data-step="3">
+      <!-- Step 2: Contact Details -->
+      <div class="form-step" data-step="2">
         <div class="step-header">
           <h2 class="step-title">Your Contact Details</h2>
-          <p class="step-description">We'll use this to send you quotes from local solicitors</p>
+          <p class="step-description">Solicitors will use this to send you their quotes</p>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">
-              First Name
-              <span class="form-required">*</span>
-            </label>
-            <input
-              type="text"
-              name="firstName"
-              class="form-input"
-              placeholder="John"
-              required
-            >
-            <div class="form-error">Please enter a valid first name</div>
+            <label class="form-label">First Name <span class="form-required">*</span></label>
+            <input type="text" name="firstName" class="form-input" placeholder="John" required>
+            <div class="form-error">Please enter your first name</div>
           </div>
-
           <div class="form-group">
-            <label class="form-label">
-              Last Name
-              <span class="form-required">*</span>
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              class="form-input"
-              placeholder="Smith"
-              required
-            >
-            <div class="form-error">Please enter a valid last name</div>
+            <label class="form-label">Last Name <span class="form-required">*</span></label>
+            <input type="text" name="lastName" class="form-input" placeholder="Smith" required>
+            <div class="form-error">Please enter your last name</div>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">
-            Email Address
-            <span class="form-required">*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            class="form-input"
-            placeholder="john@example.com"
-            required
-          >
+          <label class="form-label">Email Address <span class="form-required">*</span></label>
+          <input type="email" name="email" class="form-input" placeholder="john@example.com" required>
           <div class="form-error">Please enter a valid email address</div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">
-            Phone Number
-            <span class="form-required">*</span>
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            class="form-input"
-            placeholder="020 1234 5678"
-            required
-          >
+          <label class="form-label">Phone Number <span class="form-required">*</span></label>
+          <input type="tel" name="phone" class="form-input" placeholder="07700 900000" required>
           <div class="form-error">Please enter a valid phone number</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">City/Town</label>
-          <input
-            type="text"
-            name="city"
-            class="form-input"
-            placeholder="e.g., London"
-          >
         </div>
       </div>
 
-      <!-- Step 4: Confirmation -->
-      <div class="form-step" data-step="4">
+      <!-- Step 3: Review & Submit -->
+      <div class="form-step" data-step="3">
         <div class="step-header">
-          <h2 class="step-title">Ready to Get Quotes?</h2>
-          <p class="step-description">Review your details and submit to receive quotes from solicitors</p>
+          <h2 class="step-title">Review & Submit</h2>
+          <p class="step-description">Check your details are correct before we send your request</p>
         </div>
 
-        <div style="background: var(--bg-lighter); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">Summary of Your Request:</h3>
-          <div id="summaryContent" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;"></div>
+        <div style="background: var(--bg-lighter); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+          <div id="summaryContent" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.9;"></div>
         </div>
 
-        <div style="background: #DBEAFE; border: 1px solid var(--primary-blue); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+        <div style="background: #DBEAFE; border: 1px solid var(--primary-blue); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
           <p style="font-size: 0.9rem; color: var(--primary-blue); line-height: 1.6;">
-            <strong>✓ Free & No Obligation:</strong> Your quote request is completely free. No hidden fees, and you're under no obligation to choose any of the solicitors.
+            <strong>Free & no obligation</strong> — solicitors send you quotes, you choose if and who to instruct. We never charge you a fee.
           </p>
         </div>
 
-        <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
           <input type="checkbox" id="termsCheckbox" name="terms" style="margin-top: 0.25rem;">
           <label for="termsCheckbox" style="font-size: 0.9rem; color: var(--text-secondary);">
             I agree to the <a href="/legal/terms-and-conditions.html" style="color: var(--primary-blue); text-decoration: none;">Terms & Conditions</a> and <a href="/legal/privacy-policy.html" style="color: var(--primary-blue); text-decoration: none;">Privacy Policy</a>
@@ -829,7 +715,7 @@
 <!-- Form Logic -->
 <script>
   let currentStep = 1;
-  const totalSteps = 4;
+  const totalSteps = 3;
   const form = document.getElementById('quoteForm');
   const formSteps = document.querySelectorAll('.form-step');
   const nextBtn = document.getElementById('nextBtn');
@@ -856,7 +742,7 @@
     updateNextButtonState();
 
     // Update summary on final step
-    if (step === 4) {
+    if (step === 3) {
       updateSummary();
     }
 
@@ -958,26 +844,21 @@
 
   function updateSummary() {
     const formData = new FormData(form);
-    const summary = `
-      <div style="margin-bottom: 1rem;">
-        <strong>Property Details:</strong><br>
-        Address: ${formData.get('propertyAddress')}<br>
-        Price: £${parseInt(formData.get('propertyPrice')).toLocaleString()}<br>
-        Type: ${formData.get('propertyType')}
-      </div>
-      <div style="margin-bottom: 1rem;">
-        <strong>Transaction:</strong><br>
-        Type: ${formData.get('transactionType')}<br>
-        Timeline: ${formData.get('timeline')}
-      </div>
-      <div>
-        <strong>Your Details:</strong><br>
-        ${formData.get('firstName')} ${formData.get('lastName')}<br>
-        ${formData.get('email')}<br>
-        ${formData.get('phone')}
-      </div>
-    `;
-    document.getElementById('summaryContent').innerHTML = summary;
+    const price = parseInt(formData.get('propertyPrice'));
+    const timeline = formData.get('timeline');
+    const rows = [
+      ['Address', formData.get('propertyAddress')],
+      ['Price', isNaN(price) ? '—' : '£' + price.toLocaleString('en-GB')],
+      ['Property type', formData.get('propertyType')],
+      ['Transaction', formData.get('transactionType')],
+      ...(timeline ? [['Timeline', timeline]] : []),
+      ['Name', `${formData.get('firstName')} ${formData.get('lastName')}`],
+      ['Email', formData.get('email')],
+      ['Phone', formData.get('phone')],
+    ];
+    document.getElementById('summaryContent').innerHTML = rows
+      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || '—'}</span></div>`)
+      .join('');
   }
 
   async function submitForm() {
@@ -1005,11 +886,7 @@
           propertyValue: formData.get('propertyPrice'),
           propertyType: formData.get('propertyType'),
           transactionTypes: [formData.get('transactionType')],
-          timeline: formData.get('timeline'),
-          postcode: formData.get('city') || 'UK',
-          city: formData.get('city'),
-          newBuild: formData.get('newBuild'),
-          freehold: formData.get('freehold')
+          timeline: formData.get('timeline') || '',
         })
       });
 
