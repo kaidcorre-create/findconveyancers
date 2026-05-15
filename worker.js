@@ -58,11 +58,11 @@ export default {
   }
 };
 
-// ── Submit a new lead ──────────────────────────────────────────────────────
+// ── Submit a new quote (FindConveyancers) ──────────────────────────────────
 async function handleLeadSubmission(request, env) {
   const body = await request.json();
 
-  const required = ['firstName', 'lastName', 'email', 'phone', 'postcode'];
+  const required = ['firstName', 'lastName', 'email', 'phone'];
   for (const field of required) {
     if (!body[field]) return jsonResponse({ error: `Missing field: ${field}` }, 400);
   }
@@ -70,6 +70,32 @@ async function handleLeadSubmission(request, env) {
   const id  = crypto.randomUUID();
   const now = new Date().toISOString();
 
+  // Save to quotes table (FindConveyancers)
+  await env.DB.prepare(`
+    INSERT INTO quotes (
+      id,
+      city, property_address, property_price, property_type,
+      freehold_leasehold, new_build, transaction_type,
+      first_name, last_name, email, phone,
+      status, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, ?)
+  `).bind(
+    id,
+    body.city || '',
+    body.propertyAddress || '',
+    body.propertyValue || 0,
+    body.propertyType || '',
+    body.freehold || '',
+    body.newBuild || 'no',
+    Array.isArray(body.transactionTypes) ? body.transactionTypes[0] : body.transactionType || '',
+    body.firstName,
+    body.lastName,
+    body.email.toLowerCase(),
+    body.phone,
+    now, now
+  ).run();
+
+  // Also save to legacy leads table for backward compatibility
   await env.DB.prepare(`
     INSERT INTO leads (
       id, agent_ref, agent_name,
@@ -80,12 +106,12 @@ async function handleLeadSubmission(request, env) {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, ?)
   `).bind(
     id,
-    body.agentRef  || 'direct',
-    body.agentName || 'Direct',
-    JSON.stringify(body.transactionTypes || []),
+    'findconveyancers',
+    'FindConveyancers',
+    JSON.stringify(body.transactionTypes || [body.transactionType] || []),
     body.propertyType  || '',
     body.propertyValue || 0,
-    body.postcode.toUpperCase(),
+    body.city || body.postcode || 'UK',
     body.timeline  || '',
     body.firstName,
     body.lastName,
@@ -95,7 +121,7 @@ async function handleLeadSubmission(request, env) {
   ).run();
 
   await sendNotifications(body, id, env);
-  return jsonResponse({ success: true, leadId: id }, 201);
+  return jsonResponse({ success: true, quoteId: id }, 201);
 }
 
 // ── Admin login ────────────────────────────────────────────────────────────
@@ -337,25 +363,35 @@ async function getAgentFromToken(request, env) {
 }
 
 // ── Email notifications ────────────────────────────────────────────────────
-async function sendNotifications(lead, leadId, env) {
+async function sendNotifications(quote, quoteId, env) {
   if (!env.NOTIFY_EMAIL) return;
 
-  const propertyValue = parseInt(lead.propertyValue || 0).toLocaleString('en-GB');
-  const types         = (lead.transactionTypes || []).join(', ');
+  const propertyValue = parseInt(quote.propertyValue || 0).toLocaleString('en-GB');
+  const transactionType = Array.isArray(quote.transactionTypes) ? quote.transactionTypes[0] : quote.transactionType;
 
   const emailBody = `
-New conveyancing lead received via ConveySelect
+New conveyancing quote request received via FindConveyancers
 
-Lead ID: ${leadId}
-Name: ${lead.firstName} ${lead.lastName}
-Email: ${lead.email}
-Phone: ${lead.phone}
-Postcode: ${lead.postcode}
-Transaction: ${types}
-Property type: ${lead.propertyType}
-Property value: £${propertyValue}
-Timeline: ${lead.timeline}
-Referred by: ${lead.agentName} (${lead.agentRef})
+Quote ID: ${quoteId}
+Name: ${quote.firstName} ${quote.lastName}
+Email: ${quote.email}
+Phone: ${quote.phone}
+City: ${quote.city || 'Not specified'}
+Property Address: ${quote.propertyAddress || 'Not specified'}
+Property Type: ${quote.propertyType || 'Not specified'}
+Property Price: £${propertyValue}
+Freehold/Leasehold: ${quote.freehold || 'Not specified'}
+New Build: ${quote.newBuild === 'yes' ? 'Yes' : 'No'}
+Transaction Type: ${transactionType || 'Not specified'}
+Required by: ${quote.timeline || 'Not specified'}
+
+Action required:
+1. Review quote request
+2. Verify customer details
+3. Prepare conveyancing quote
+4. Send quote to customer at ${quote.email}
+
+Thank you for using FindConveyancers!
   `.trim();
 
   try {
@@ -364,8 +400,8 @@ Referred by: ${lead.agentName} (${lead.agentRef})
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         personalizations: [{ to: [{ email: env.NOTIFY_EMAIL }] }],
-        from:    { email: 'leads@conveylink.co.uk', name: 'ConveyLink' },
-        subject: `New Lead: ${lead.firstName} ${lead.lastName} — ${lead.postcode}`,
+        from:    { email: 'quotes@findconveyancers.co.uk', name: 'FindConveyancers' },
+        subject: `New Quote Request: ${quote.firstName} ${quote.lastName} — ${quote.city || 'UK'}`,
         content: [{ type: 'text/plain', value: emailBody }]
       })
     });

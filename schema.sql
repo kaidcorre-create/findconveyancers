@@ -50,9 +50,37 @@ CREATE TABLE IF NOT EXISTS conveyancers (
   created_at   TEXT NOT NULL
 );
 
+-- ── Quotes (FindConveyancers) ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS quotes (
+  id                TEXT PRIMARY KEY,
+  city              TEXT NOT NULL DEFAULT '',
+  property_address  TEXT NOT NULL DEFAULT '',
+  property_price    INTEGER NOT NULL DEFAULT 0,
+  property_type     TEXT NOT NULL DEFAULT '',
+  freehold_leasehold TEXT NOT NULL DEFAULT '',
+  new_build         TEXT NOT NULL DEFAULT 'no',
+  transaction_type  TEXT NOT NULL DEFAULT '',
+
+  first_name        TEXT NOT NULL,
+  last_name         TEXT NOT NULL,
+  email             TEXT NOT NULL,
+  phone             TEXT NOT NULL,
+
+  status            TEXT NOT NULL DEFAULT 'new',
+  notes             TEXT NOT NULL DEFAULT '',
+  assigned_to       TEXT NOT NULL DEFAULT '',
+
+  created_at        TEXT NOT NULL,
+  updated_at        TEXT NOT NULL
+);
+
 -- ── Indexes ─────────────────────────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_leads_status     ON leads(status);
 CREATE INDEX IF NOT EXISTS idx_leads_agent_ref  ON leads(agent_ref);
 CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
 CREATE INDEX IF NOT EXISTS idx_leads_postcode   ON leads(postcode);
 CREATE INDEX IF NOT EXISTS idx_agents_ref       ON agents(ref);
+CREATE INDEX IF NOT EXISTS idx_quotes_status    ON quotes(status);
+CREATE INDEX IF NOT EXISTS idx_quotes_city      ON quotes(city);
+CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON quotes(created_at);
+CREATE INDEX IF NOT EXISTS idx_quotes_email     ON quotes(email);

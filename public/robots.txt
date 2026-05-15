@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://findconveyancers.co.uk/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 1
