@@ -62,6 +62,12 @@
       table { font-size: 0.9rem; }
       th, td { padding: 0.75rem; }
     }
+    .guides-nav { background: white; border-bottom: 1px solid var(--border-light); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .guides-nav-inner { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 0; }
+    .guides-nav-label { font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.8rem 1rem 0.8rem 0; border-right: 1px solid var(--border-light); margin-right: 0.5rem; flex-shrink: 0; white-space: nowrap; }
+    .gn-link { font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem 0.75rem; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; flex-shrink: 0; white-space: nowrap; }
+    .gn-link:hover { color: var(--text-primary); }
+    .gn-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -76,6 +82,16 @@
   <a href="/">Home</a> / <a href="/pages/guides/">Guides</a> / Timeline
 </div>
 
+<nav class="guides-nav" aria-label="Guides navigation">
+  <div class="guides-nav-inner">
+    <span class="guides-nav-label">Guides</span>
+    <a href="/pages/guides/conveyancing-costs-2026.html" class="gn-link">Costs 2026</a>
+    <a href="/pages/guides/first-time-buyer-conveyancing.html" class="gn-link">First-Time Buyers</a>
+    <a href="/pages/guides/freehold-vs-leasehold-conveyancing.html" class="gn-link">Freehold vs Leasehold</a>
+    <a href="/pages/guides/how-long-does-conveyancing-take.html" class="gn-link active" aria-current="page">Timeline &amp; Delays</a>
+    <a href="/pages/guides/what-is-conveyancing.html" class="gn-link">What Is Conveyancing</a>
+  </div>
+</nav>
 <section class="hero">
   <div class="hero-container">
     <h1>How Long Does Conveyancing Take? UK Timeline 2026</h1>

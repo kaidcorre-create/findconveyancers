@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free conveyancing guides for UK home buyers and sellers. Costs, timelines, freehold vs leasehold, first-time buyers and more — written in plain English.">
+  <title>Conveyancing Guides 2026: Free UK Property Advice | FindConveyancers</title>
+  <link rel="canonical" href="https://findconveyancers.co.uk/pages/guides/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --heading: #0F172A;
+      --text: #374151;
+      --muted: #6B7280;
+      --bg: #F9FAFB;
+      --bg-lighter: #F3F4F6;
+      --border: #E5E7EB;
+      --green: #059669;
+      --radius: 12px;
+    }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); line-height: 1.6; background: var(--bg); }
+
+    /* Header */
+    .header { background: white; border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+    .header-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--heading); }
+    .brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; }
+    .brand-name { font-size: 1.25rem; font-weight: 700; }
+    .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+    .header-nav a { color: var(--muted); text-decoration: none; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.95rem; transition: color 0.15s; }
+    .header-nav a:hover { color: var(--heading); }
+    .header-btn { background: var(--primary) !important; color: white !important; padding: 0.5rem 1.25rem !important; border-radius: 8px !important; font-weight: 600 !important; }
+    .header-btn:hover { background: var(--primary-dark) !important; }
+
+    /* Breadcrumb */
+    .breadcrumb { max-width: 900px; margin: 0 auto; padding: 1rem 1.5rem; font-size: 0.875rem; color: var(--muted); }
+    .breadcrumb a { color: var(--primary); text-decoration: none; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(16,185,129,0.04) 100%); padding: 3rem 1.5rem 2.5rem; border-bottom: 1px solid var(--border); }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .hero-label { display: inline-block; background: rgba(59,130,246,0.1); color: var(--primary-dark); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.35rem 0.85rem; border-radius: 100px; margin-bottom: 1rem; }
+    .hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--heading); line-height: 1.2; margin-bottom: 0.75rem; }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 600px; }
+
+    /* Guides grid */
+    .guides-section { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
+    .guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+    .guide-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
+    .guide-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .guide-card-tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem; }
+    .guide-card h2 { font-size: 1.2rem; font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; line-height: 1.35; }
+    .guide-card p { font-size: 0.95rem; color: var(--muted); line-height: 1.6; flex: 1; }
+    .guide-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--bg-lighter); }
+    .read-time { font-size: 0.8rem; color: var(--muted); }
+    .guide-arrow { width: 28px; height: 28px; background: var(--bg-lighter); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .guide-card:hover .guide-arrow { background: var(--primary); }
+    .guide-card:hover .guide-arrow svg { stroke: white; }
+    .guide-arrow svg { width: 14px; height: 14px; stroke: var(--muted); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* CTA */
+    .cta-section { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .cta-box { background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%); color: white; padding: 2.5rem 2rem; border-radius: 16px; text-align: center; }
+    .cta-box h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .cta-box p { opacity: 0.9; margin-bottom: 1.5rem; }
+    .cta-btn { display: inline-block; background: white; color: var(--primary-dark); font-weight: 700; padding: 0.85rem 2rem; border-radius: 10px; text-decoration: none; font-size: 1rem; transition: transform 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+    /* Footer */
+    .footer { background: #111827; color: #9CA3AF; padding: 2.5rem 1.5rem; text-align: center; font-size: 0.85rem; }
+    .footer a { color: #93C5FD; text-decoration: none; }
+    .footer p + p { margin-top: 0.5rem; }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.85rem; }
+      .guides-grid { grid-template-columns: 1fr; }
+      .header-nav a:not(.header-btn) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-container">
+    <a href="/" class="header-brand">
+      <div class="brand-icon">F</div>
+      <div class="brand-name">FindConveyancers</div>
+    </a>
+    <nav class="header-nav">
+      <a href="/">Home</a>
+      <a href="/pages/guides/" style="color: var(--heading); font-weight: 600;">Guides</a>
+      <a href="/get-quotes.html" class="header-btn">Get Free Quotes</a>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <a href="/">Home</a> / Guides
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Free Guides</div>
+    <h1>Conveyancing Guides</h1>
+    <p>Plain-English answers to the questions home buyers and sellers ask most — costs, timelines, property types and more.</p>
+  </div>
+</section>
+
+<section class="guides-section">
+  <div class="guides-grid">
+
+    <a href="/pages/guides/conveyancing-costs-2026.html" class="guide-card">
+      <div class="guide-card-tag">Costs &amp; Fees</div>
+      <h2>Conveyancing Costs 2026: What You'll Actually Pay</h2>
+      <p>Complete breakdown of solicitor fees, disbursements, Stamp Duty and hidden charges — with real UK averages.</p>
+      <div class="guide-card-footer">
+        <span class="read-time">8 min read</span>
+        <span class="guide-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a href="/pages/guides/first-time-buyer-conveyancing.html" class="guide-card">
+      <div class="guide-card-tag">First-Time Buyers</div>
+      <h2>First Time Buyer Conveyancing: Process, Costs &amp; Timeline</h2>
+      <p>Everything first-time buyers need to know about conveyancing — what happens, how long it takes and what it costs.</p>
+      <div class="guide-card-footer">
+        <span class="read-time">7 min read</span>
+        <span class="guide-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a href="/pages/guides/freehold-vs-leasehold-conveyancing.html" class="guide-card">
+      <div class="guide-card-tag">Property Types</div>
+      <h2>Freehold vs Leasehold Conveyancing: Key Differences &amp; Costs</h2>
+      <p>Understand how freehold and leasehold transactions differ in process, cost and complexity before you buy.</p>
+      <div class="guide-card-footer">
+        <span class="read-time">6 min read</span>
+        <span class="guide-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a href="/pages/guides/how-long-does-conveyancing-take.html" class="guide-card">
+      <div class="guide-card-tag">Timelines</div>
+      <h2>How Long Does Conveyancing Take? UK Timeline &amp; Delays</h2>
+      <p>The typical UK conveyancing timeline is 12–16 weeks. Find out what causes delays and how to keep things moving.</p>
+      <div class="guide-card-footer">
+        <span class="read-time">6 min read</span>
+        <span class="guide-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a href="/pages/guides/what-is-conveyancing.html" class="guide-card">
+      <div class="guide-card-tag">Getting Started</div>
+      <h2>What Is Conveyancing? The UK Property Transfer Process Explained</h2>
+      <p>New to buying or selling? This plain-English guide explains what conveyancing is, who does it and why it matters.</p>
+      <div class="guide-card-footer">
+        <span class="read-time">5 min read</span>
+        <span class="guide-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-box">
+    <h3>Ready to Get Quotes?</h3>
+    <p>Compare conveyancing quotes from regulated solicitors across the UK — free, no obligation.</p>
+    <a href="/get-quotes.html" class="cta-btn">Get Free Quotes Now</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>&copy; 2026 FindConveyancers Ltd. All rights reserved.</p>
+  <p><a href="/legal/privacy-policy.html">Privacy</a> | <a href="/legal/terms-and-conditions.html">Terms</a></p>
+</footer>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_ID');
+</script>
+
+</body>
+</html>
