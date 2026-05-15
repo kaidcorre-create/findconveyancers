@@ -649,7 +649,7 @@
 
         <div style="background: #DBEAFE; border: 1px solid var(--primary-blue); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
           <p style="font-size: 0.9rem; color: var(--primary-blue); line-height: 1.6;">
-            <strong>Free & no obligation</strong> — solicitors send you quotes, you choose if and who to instruct. We never charge you a fee.
+            <strong>Free & no obligation</strong> - solicitors send you quotes, you choose if and who to instruct. We never charge you a fee.
           </p>
         </div>
 
@@ -848,7 +848,7 @@
     const timeline = formData.get('timeline');
     const rows = [
       ['Address', formData.get('propertyAddress')],
-      ['Price', isNaN(price) ? '—' : '£' + price.toLocaleString('en-GB')],
+      ['Price', isNaN(price) ? ' - ' : '£' + price.toLocaleString('en-GB')],
       ['Property type', formData.get('propertyType')],
       ['Transaction', formData.get('transactionType')],
       ...(timeline ? [['Timeline', timeline]] : []),
@@ -857,7 +857,7 @@
       ['Phone', formData.get('phone')],
     ];
     document.getElementById('summaryContent').innerHTML = rows
-      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || '—'}</span></div>`)
+      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || ' - '}</span></div>`)
       .join('');
   }
 
