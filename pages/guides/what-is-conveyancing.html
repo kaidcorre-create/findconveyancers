@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Conveyancing is the legal process of transferring property ownership. Understand what conveyancers do, why you need one, and how the process works.">
   <title>What Is Conveyancing? UK Property Transfer Process Explained 2026</title>
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="What Is Conveyancing? UK Property Transfer Explained">
+  <meta property="og:description" content="Conveyancing is the legal process of transferring property ownership. Plain-English guide to what it is and why you need it.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://findconveyancers.co.uk/og-image.jpg">
+  <meta property="og:url" content="https://findconveyancers.co.uk/pages/guides/what-is-conveyancing.html">
+  <meta property="og:site_name" content="FindConveyancers">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What Is Conveyancing? UK Property Transfer Explained">
+  <meta name="twitter:description" content="Conveyancing is the legal process of transferring property ownership. Plain-English guide to what it is and why you need it.">
+  <meta name="twitter:image" content="https://findconveyancers.co.uk/og-image.jpg">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
   <link rel="canonical" href="https://findconveyancers.co.uk/pages/guides/what-is-conveyancing.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --primary-blue: #3B82F6; --bg-light: #F9FAFB; --bg-lighter: #F3F4F6; --border-light: #E5E7EB; --text-primary: #1F2937; --text-secondary: #6B7280; }
@@ -78,9 +96,51 @@
     .gn-link { font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem 0.75rem; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; flex-shrink: 0; white-space: nowrap; }
     .gn-link:hover { color: var(--text-primary); }
     .gn-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); font-weight: 600; }
+
+    /* ── Mobile nav ─────────────────── */
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-primary);border-radius:6px;line-height:0}
+    .nav-hamburger:hover{background:var(--bg-lighter)}
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
+    .mob-overlay.open{display:block}
+    .mob-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+    .mob-panel.open{transform:translateX(0)}
+    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light)}
+    .mob-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:var(--text-primary);line-height:0}
+    .mob-links{display:flex;flex-direction:column}
+    .mob-links a{display:block;padding:0.9rem 0;font-size:1.05rem;font-weight:500;color:var(--text-primary);text-decoration:none;border-bottom:1px solid var(--border-light)}
+    .mob-links a:hover{color:var(--primary-blue)}
+    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary-blue);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
+    .mob-cta:hover{background:#2563EB!important}
+    @media(max-width:768px){
+      .nav-hamburger{display:flex;align-items:center;justify-content:center}
+      .header-nav{display:none}
+      table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+    }
+
+    @media(max-width:480px){
+      .hero h1{font-size:1.65rem}
+      .hero p{font-size:1rem}
+      .section h2{font-size:1.3rem}
+      .cta-box{padding:2rem 1.25rem}
+    }
   </style>
 </head>
-<body>
+<div id="mOvl" class="mob-overlay" onclick="closeMNav()"></div>
+<script>function closeMNav(){document.getElementById('mNav').classList.remove('open');document.getElementById('mOvl').classList.remove('open');document.body.style.overflow=''}</script>
+<nav id="mNav" class="mob-panel" aria-label="Mobile navigation">
+  <div class="mob-head">
+    <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:var(--text-primary)">
+      <div class="brand-icon" style="width:32px;height:32px;background:linear-gradient(135deg,#3B82F6,#2563EB);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">F</div>
+      <span style="font-weight:700;font-size:1.05rem">FindConveyancers</span>
+    </a>
+    <button class="mob-close" aria-label="Close menu" onclick="closeMNav()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg></button>
+  </div>
+  <div class="mob-links">
+    <a href="/">Home</a>
+    <a href="/pages/guides/">Guides</a>
+    <a href="/get-quotes.html" class="mob-cta">Get Free Quotes</a>
+  </div>
+</nav>
 <header class="header">
   <div class="header-container">
     <a href="/" class="header-brand"><div class="brand-icon">F</div><div class="brand-name">FindConveyancers</div></a>
@@ -544,6 +604,32 @@
       "url": "https://findconveyancers.co.uk/logo.png"
     }
   }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://findconveyancers.co.uk/"},
+    {"@type":"ListItem","position":2,"name":"Guides","item":"https://findconveyancers.co.uk/pages/guides/"},
+    {"@type":"ListItem","position":3,"name":"What Is Conveyancing","item":"https://findconveyancers.co.uk/pages/guides/what-is-conveyancing.html"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Is conveyancing the same as the survey?","acceptedAnswer":{"@type":"Answer","text":"No. Conveyancing is the legal process handled by a solicitor or conveyancer. A survey is a property inspection handled by a surveyor. Both are important - conveyancing protects your legal interests, the survey protects your financial interests by revealing property condition."}},
+    {"@type":"Question","name":"What happens if I don't use a conveyancer?","acceptedAnswer":{"@type":"Answer","text":"Legally, you can't complete a property purchase without registered conveyancing. You must use a solicitor or licensed conveyancer. They're required by law to ensure proper legal transfer of property ownership. Costs are typically £1,200-£2,000 for straightforward transactions."}},
+    {"@type":"Question","name":"Can I switch conveyancers mid-transaction?","acceptedAnswer":{"@type":"Answer","text":"Technically yes, but it's not ideal. Switching involves transferring documents, updating lenders, and possible delays. It's better to choose carefully at the start. If you're unhappy with your conveyancer, discuss concerns before switching."}},
+    {"@type":"Question","name":"What if there's a problem after completion?","acceptedAnswer":{"@type":"Answer","text":"Most conveyancing issues are discovered before completion. After completion, you own the property \"as is.\" However, conveyancers carry professional indemnity insurance (required by law). If your conveyancer made a mistake causing loss, you may be able to claim against their insurance."}},
+    {"@type":"Question","name":"How are conveyancers regulated?","acceptedAnswer":{"@type":"Answer","text":"Solicitors are regulated by the Solicitors Regulation Authority (SRA). Licensed conveyancers are regulated by the Council for Licensed Conveyancers (CLC). Both regulators require professional indemnity insurance, ongoing training, and conduct rules. Always check your conveyancer is registered with the appropriate regulator."}}
+  ]
 }
 </script>
 </body>

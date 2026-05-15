@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Free conveyancing guides for UK home buyers and sellers. Costs, timelines, freehold vs leasehold, first-time buyers and more | written in plain English.">
   <title>Conveyancing Guides 2026: Free UK Property Advice | FindConveyancers</title>
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
   <link rel="canonical" href="https://findconveyancers.co.uk/pages/guides/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,9 +83,45 @@
       .guides-grid { grid-template-columns: 1fr; }
       .header-nav a:not(.header-btn) { display: none; }
     }
+
+    /* ── Mobile nav ─────────────────── */
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--heading);border-radius:6px;line-height:0}
+    .nav-hamburger:hover{background:var(--bg-lighter)}
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
+    .mob-overlay.open{display:block}
+    .mob-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+    .mob-panel.open{transform:translateX(0)}
+    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .mob-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:var(--heading);line-height:0}
+    .mob-links{display:flex;flex-direction:column}
+    .mob-links a{display:block;padding:0.9rem 0;font-size:1.05rem;font-weight:500;color:var(--heading);text-decoration:none;border-bottom:1px solid var(--border)}
+    .mob-links a:hover{color:var(--primary)}
+    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
+    .mob-cta:hover{background:var(--primary-dark)!important}
+    @media(max-width:640px){
+      .nav-hamburger{display:flex!important;align-items:center;justify-content:center}
+      .header-nav{display:none!important}
+    }
   </style>
 </head>
 <body>
+
+<div id="mOvl" class="mob-overlay" onclick="closeMNav()"></div>
+<script>function closeMNav(){document.getElementById('mNav').classList.remove('open');document.getElementById('mOvl').classList.remove('open');document.body.style.overflow=''}</script>
+<nav id="mNav" class="mob-panel" aria-label="Mobile navigation">
+  <div class="mob-head">
+    <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,#3B82F6,#2563EB);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">F</div>
+      <span style="font-weight:700;font-size:1.05rem;color:#0F172A">FindConveyancers</span>
+    </a>
+    <button class="mob-close" aria-label="Close menu" onclick="closeMNav()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg></button>
+  </div>
+  <div class="mob-links">
+    <a href="/">Home</a>
+    <a href="/pages/guides/">Guides</a>
+    <a href="/get-quotes.html" class="mob-cta">Get Free Quotes</a>
+  </div>
+</nav>
 
 <header class="header">
   <div class="header-container">
