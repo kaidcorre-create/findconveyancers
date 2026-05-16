@@ -1,6 +1,6 @@
 -- FindConveyancers – Migration: Quote Management System
 -- Run each statement in the Cloudflare D1 console
--- (Dashboard → D1 → conveyselect-db → Console)
+-- (Dashboard → D1 → findconveyancers-db → Console)
 
 -- ── 1. Conveyancer price quotes ────────────────────────────────────────────────
 -- Stores the actual fee quotes that conveyancers submit for each lead

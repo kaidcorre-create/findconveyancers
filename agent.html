@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ConveySelect - Agent Portal</title>
+  <title>FindConveyancers - Agent Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -524,7 +524,7 @@
 <!-- Login -->
 <div id="loginScreen">
   <div class="login-wrap">
-    <div class="login-logo">ConveySelect</div>
+    <div class="login-logo">FindConveyancers</div>
     <div class="login-sub">Agent portal - sign in to your account</div>
     <div class="login-card">
       <label class="field-label" for="inputRef">Agent ID</label>
@@ -541,7 +541,7 @@
 <!-- App -->
 <div id="app">
   <header class="header">
-    <div class="header-logo">ConveySelect</div>
+    <div class="header-logo">FindConveyancers</div>
     <div class="header-right">
       <span class="header-agent-name" id="headerAgentName"></span>
       <button class="signout-btn" id="signoutBtn">Sign out</button>
@@ -691,7 +691,7 @@
 
 <script>
   const API      = 'https://findconveyancers.kai-d-corre-ea2.workers.dev';
-  const SITE_URL = 'https://conveyselect.pages.dev';
+  const SITE_URL = 'https://findconveyancers.co.uk';
 
   let token        = localStorage.getItem('agent_token') || '';
   let agentRef     = localStorage.getItem('agent_ref')   || '';
