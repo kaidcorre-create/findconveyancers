@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Your Quotes – FindConveyancers</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+      <img src="/favicon.svg" alt="FindConveyancers" width="32" height="32">
+      <span class="font-bold text-gray-900 text-lg">FindConveyancers</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- Loading -->
+    <div id="loading" class="text-center py-20">
+      <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-500">Loading your quotes...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden text-center py-20">
+      <p class="text-red-600 font-semibold text-lg mb-2">Unable to load quotes</p>
+      <p id="error-msg" class="text-red-500 text-sm">The link may be invalid. Please check your email for the correct link.</p>
+    </div>
+
+    <!-- No quotes yet -->
+    <div id="no-quotes" class="hidden text-center py-20">
+      <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-5">
+        <svg class="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Quotes are being prepared</h2>
+      <p class="text-gray-500 max-w-md mx-auto">Conveyancers are working on your quotes. Check back in a few hours or we'll email you as soon as they're ready.</p>
+    </div>
+
+    <!-- Quotes view -->
+    <div id="quotes-view" class="hidden">
+
+      <!-- Lead summary -->
+      <div class="mb-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-6 py-5">
+          <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Conveyancing quotes for</p>
+          <h1 class="text-xl font-bold text-gray-900" id="lead-address">—</h1>
+          <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
+            <span id="lead-value" class="font-medium"></span>
+            <span id="lead-name"></span>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 mt-3 px-1">
+          <span id="quote-count-text"></span>
+          All firms are regulated by the SRA or CLC. <strong>No obligation</strong> – choose or walk away for free.
+        </p>
+      </div>
+
+      <!-- Quote cards -->
+      <div id="quote-cards" class="grid gap-5 md:grid-cols-2 lg:grid-cols-3"></div>
+
+      <!-- Trust strip -->
+      <div class="mt-8 bg-white rounded-xl border border-gray-200 shadow-sm px-6 py-5">
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-3">Why use FindConveyancers?</p>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm text-gray-600">
+          <div class="flex gap-2.5 items-start">
+            <span class="text-green-500 text-lg mt-0.5">✓</span>
+            <span>All firms vetted and SRA / CLC regulated</span>
+          </div>
+          <div class="flex gap-2.5 items-start">
+            <span class="text-green-500 text-lg mt-0.5">✓</span>
+            <span>No obligation – compare and choose freely</span>
+          </div>
+          <div class="flex gap-2.5 items-start">
+            <span class="text-green-500 text-lg mt-0.5">✓</span>
+            <span>Fixed-fee quotes – no hidden charges</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Confirm modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-1">Confirm your choice</h3>
+      <p class="text-gray-600 text-sm mb-4" id="modal-body">Are you sure you want to instruct <strong id="modal-firm"></strong>?</p>
+      <div class="bg-gray-50 rounded-xl px-4 py-3 mb-5">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-gray-500">Total quote</span>
+          <span class="font-bold text-gray-900" id="modal-total"></span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-500">Legal fee (inc. VAT)</span>
+          <span class="text-gray-700" id="modal-legal"></span>
+        </div>
+        <div class="flex justify-between text-sm mt-1">
+          <span class="text-gray-500">Disbursements</span>
+          <span class="text-gray-700" id="modal-disb"></span>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mb-4">They will contact you within 24 hours to begin your conveyancing.</p>
+      <div class="flex gap-3">
+        <button onclick="closeModal()" class="flex-1 py-3 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
+        <button id="confirm-btn" onclick="confirmInstruct()" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-colors">Yes, choose this firm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params   = new URLSearchParams(location.search);
+    const leadUuid = params.get('lead');
+    let selectedQuoteId = null;
+
+    function fmt(pence) {
+      return '£' + (pence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2 });
+    }
+    function fmtPrice(p) {
+      return '£' + parseInt(p || 0).toLocaleString('en-GB');
+    }
+
+    function show(id) {
+      ['loading','error','no-quotes','quotes-view'].forEach(i =>
+        document.getElementById(i).classList.toggle('hidden', i !== id)
+      );
+    }
+
+    function openModal(quote) {
+      selectedQuoteId = quote.id;
+      document.getElementById('modal-firm').textContent  = quote.firm_name;
+      document.getElementById('modal-total').textContent = fmt(quote.total_quote);
+      document.getElementById('modal-legal').textContent = fmt(quote.legal_fee + quote.vat_amount);
+      document.getElementById('modal-disb').textContent  = fmt(quote.disbursements);
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+      selectedQuoteId = null;
+    }
+
+    async function confirmInstruct() {
+      const btn = document.getElementById('confirm-btn');
+      btn.disabled = true;
+      btn.textContent = 'Confirming...';
+
+      try {
+        const res = await fetch('/api/instruct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lead_uuid: leadUuid, quote_id: selectedQuoteId }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to confirm');
+
+        location.href = `/instruct.html?lead=${leadUuid}&quote=${selectedQuoteId}`;
+      } catch (err) {
+        alert('Error: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Yes, choose this firm';
+      }
+    }
+
+    function buildCard(quote, index, isCheapest) {
+      const legalIncVat = quote.legal_fee + quote.vat_amount;
+      const notes = quote.breakdown_text
+        ? `<p class="text-xs text-gray-500 mt-3 border-t border-gray-100 pt-3 italic">"${quote.breakdown_text}"</p>`
+        : '';
+
+      const cheapBadge = isCheapest
+        ? `<span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full mb-3">
+             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+             Lowest quote
+           </span>`
+        : '';
+
+      const borderClass = isCheapest ? 'border-green-300 ring-1 ring-green-300' : 'border-gray-200';
+
+      return `
+        <div class="bg-white rounded-xl border ${borderClass} shadow-sm flex flex-col">
+          <div class="p-5 flex-1">
+            ${cheapBadge}
+            <h2 class="font-bold text-gray-900 text-base mb-1">${quote.firm_name}</h2>
+            <p class="text-xs text-gray-400 mb-4">SRA / CLC Regulated</p>
+
+            <div class="text-center bg-gray-50 rounded-xl py-4 mb-4">
+              <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Total Quote</p>
+              <p class="text-3xl font-black text-gray-900">${fmt(quote.total_quote)}</p>
+            </div>
+
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-500">Legal fee (ex VAT)</span>
+                <span class="font-medium text-gray-900">${fmt(quote.legal_fee)}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-500">VAT (20%)</span>
+                <span class="font-medium text-gray-900">${fmt(quote.vat_amount)}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-500">Search fees</span>
+                <span class="font-medium text-gray-900">${fmt(quote.searches)}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-500">Land Registry</span>
+                <span class="font-medium text-gray-900">${fmt(quote.land_registry)}</span>
+              </div>
+              ${quote.other_fees > 0 ? `
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-500">Other fees</span>
+                <span class="font-medium text-gray-900">${fmt(quote.other_fees)}</span>
+              </div>` : ''}
+            </div>
+            ${notes}
+          </div>
+          <div class="p-5 pt-0">
+            <button onclick='openModal(${JSON.stringify(quote)})'
+              class="w-full py-3.5 ${isCheapest ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold rounded-xl transition-colors text-sm min-h-[48px]">
+              Choose ${quote.firm_name}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadQuotes() {
+      if (!leadUuid) {
+        document.getElementById('error-msg').textContent = 'No lead ID in URL.';
+        return show('error');
+      }
+      try {
+        const res = await fetch(`/api/quotes?lead=${leadUuid}`);
+        if (!res.ok) throw new Error('Lead not found');
+        const { quotes, lead } = await res.json();
+
+        if (!quotes || quotes.length === 0) return show('no-quotes');
+
+        document.getElementById('lead-address').textContent = lead.property_address || 'Your property';
+        document.getElementById('lead-value').textContent   = fmtPrice(lead.property_value);
+        document.getElementById('lead-name').textContent    = `${lead.first_name} ${lead.last_name}`;
+        document.getElementById('quote-count-text').textContent =
+          `${quotes.length} quote${quotes.length !== 1 ? 's' : ''} received. `;
+
+        // Sorted cheapest first from API
+        const cards = quotes.map((q, i) => buildCard(q, i, i === 0)).join('');
+        document.getElementById('quote-cards').innerHTML = cards;
+
+        show('quotes-view');
+      } catch (e) {
+        document.getElementById('error-msg').textContent = e.message;
+        show('error');
+      }
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('modal')) closeModal();
+    });
+
+    loadQuotes();
+  </script>
+</body>
+</html>

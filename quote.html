@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Quote – FindConveyancers</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#2563eb', 'brand-dark': '#1d4ed8' } } }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
+      <img src="/favicon.svg" alt="FindConveyancers" width="32" height="32">
+      <span class="font-bold text-gray-900 text-lg">FindConveyancers</span>
+      <span class="ml-auto text-sm text-gray-500 font-medium">Conveyancer Portal</span>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 py-8">
+
+    <!-- Loading state -->
+    <div id="loading" class="text-center py-16">
+      <div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-500">Loading lead details...</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error" class="hidden bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+      <p class="text-red-700 font-semibold text-lg mb-2">Unable to load lead</p>
+      <p id="error-msg" class="text-red-600 text-sm">The link may be invalid or expired.</p>
+    </div>
+
+    <!-- Already submitted state -->
+    <div id="already-submitted" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+      <div class="text-4xl mb-3">⚠️</div>
+      <p class="text-amber-800 font-semibold text-lg">Quote already submitted</p>
+      <p class="text-amber-700 text-sm mt-2">You have already submitted a quote for this lead. Contact us if you need to amend it.</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="success" class="hidden text-center py-8">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Quote Submitted</h2>
+      <p class="text-gray-600">Thank you. Your quote has been received and will be presented to the client.</p>
+      <p class="text-gray-500 text-sm mt-4">You will receive an email if the client chooses your firm.</p>
+    </div>
+
+    <!-- Main form -->
+    <div id="main" class="hidden space-y-6">
+
+      <!-- Property card -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="bg-blue-600 px-6 py-4">
+          <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide mb-1">Quote Request</p>
+          <h1 class="text-white font-bold text-xl leading-tight" id="prop-address">Loading...</h1>
+        </div>
+        <div class="px-6 py-4 grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Property Value</p>
+            <p class="font-bold text-gray-900 text-lg" id="prop-value">—</p>
+          </div>
+          <div>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Property Type</p>
+            <p class="font-semibold text-gray-900 capitalize" id="prop-type">—</p>
+          </div>
+          <div>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Transaction</p>
+            <p class="font-semibold text-gray-900 capitalize" id="prop-tx">—</p>
+          </div>
+          <div>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Client</p>
+            <p class="font-semibold text-gray-900" id="prop-client">—</p>
+          </div>
+        </div>
+        <div class="px-6 pb-4">
+          <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 text-amber-800 text-sm font-medium">
+            ⏱ Submit within 24 hours – only a small number of firms received this lead
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote form -->
+      <form id="quote-form" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+
+        <div>
+          <h2 class="text-lg font-bold text-gray-900 mb-1">Your Quote</h2>
+          <p class="text-gray-500 text-sm">Enter your fees below. All amounts in <strong>pounds sterling (£)</strong> excluding VAT unless stated.</p>
+        </div>
+
+        <!-- Legal fee -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-1">
+            Legal Fee <span class="text-red-500">*</span>
+            <span class="font-normal text-gray-500">(ex VAT)</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">£</span>
+            <input type="number" id="legal-fee" min="0" step="0.01" placeholder="0.00"
+              class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              required oninput="recalc()">
+          </div>
+          <p class="text-xs text-gray-400 mt-1">Your professional legal fee, before VAT</p>
+        </div>
+
+        <!-- VAT (auto) -->
+        <div class="bg-gray-50 rounded-lg px-4 py-3 flex justify-between items-center">
+          <div>
+            <p class="text-sm font-semibold text-gray-700">VAT (20%)</p>
+            <p class="text-xs text-gray-400">Auto-calculated</p>
+          </div>
+          <p class="text-lg font-bold text-gray-900" id="vat-display">£0.00</p>
+        </div>
+
+        <!-- Disbursements -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-900 mb-3">Disbursements</h3>
+          <div class="space-y-3">
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Search fees</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">£</span>
+                <input type="number" id="searches" min="0" step="0.01" placeholder="0.00"
+                  class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  oninput="recalc()">
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Local authority, drainage, environmental etc.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Land Registry fee</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">£</span>
+                <input type="number" id="land-registry" min="0" step="0.01" placeholder="0.00"
+                  class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  oninput="recalc()">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Other fees</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">£</span>
+                <input type="number" id="other-fees" min="0" step="0.01" placeholder="0.00"
+                  class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  oninput="recalc()">
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Bank transfer, ID verification, etc.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl px-6 py-5">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <p class="text-xs text-blue-600 font-bold uppercase tracking-wide mb-1">Total Quote</p>
+              <p class="text-xs text-blue-500">Legal fee + VAT + Disbursements</p>
+            </div>
+            <p class="text-3xl font-black text-blue-700" id="total-display">£0.00</p>
+          </div>
+          <div class="border-t border-blue-200 pt-3 space-y-1.5 text-sm text-blue-600">
+            <div class="flex justify-between">
+              <span>Legal fee (inc. VAT)</span>
+              <span id="legal-inc-vat">£0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Total disbursements</span>
+              <span id="disb-display">£0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-1">
+            Additional information
+            <span class="font-normal text-gray-500">(optional)</span>
+          </label>
+          <textarea id="breakdown-text" rows="3" placeholder="Any conditions, notes about your service, or details about your firm..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"></textarea>
+        </div>
+
+        <!-- Error -->
+        <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm"></div>
+
+        <!-- Submit -->
+        <button type="submit" id="submit-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base py-4 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed min-h-[52px]">
+          Submit Quote
+        </button>
+        <p class="text-xs text-center text-gray-400">By submitting you agree to our terms of service</p>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const params        = new URLSearchParams(location.search);
+    const leadUuid      = params.get('lead');
+    const conveyancerId = params.get('conv');
+
+    function fmt(val) {
+      return '£' + (parseFloat(val) || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function recalc() {
+      const legal  = parseFloat(document.getElementById('legal-fee').value)    || 0;
+      const search = parseFloat(document.getElementById('searches').value)      || 0;
+      const lr     = parseFloat(document.getElementById('land-registry').value) || 0;
+      const other  = parseFloat(document.getElementById('other-fees').value)    || 0;
+      const vat    = legal * 0.2;
+      const disb   = search + lr + other;
+      const total  = legal + vat + disb;
+
+      document.getElementById('vat-display').textContent    = fmt(vat);
+      document.getElementById('legal-inc-vat').textContent  = fmt(legal + vat);
+      document.getElementById('disb-display').textContent   = fmt(disb);
+      document.getElementById('total-display').textContent  = fmt(total);
+    }
+
+    function show(id) {
+      ['loading','error','already-submitted','success','main'].forEach(i =>
+        document.getElementById(i).classList.toggle('hidden', i !== id)
+      );
+    }
+
+    async function loadLead() {
+      if (!leadUuid || !conveyancerId) {
+        document.getElementById('error-msg').textContent = 'Missing lead or conveyancer ID in URL.';
+        return show('error');
+      }
+      try {
+        const res = await fetch(`/api/lead?uuid=${leadUuid}`);
+        if (!res.ok) throw new Error('Lead not found');
+        const lead = await res.json();
+
+        document.getElementById('prop-address').textContent = lead.property_address || 'Address not specified';
+        document.getElementById('prop-value').textContent   = '£' + (parseInt(lead.property_value) || 0).toLocaleString('en-GB');
+        document.getElementById('prop-type').textContent    = lead.property_type || '—';
+        document.getElementById('prop-tx').textContent      = (lead.transaction_types || []).join(', ') || '—';
+        document.getElementById('prop-client').textContent  = lead.first_name + ' ' + lead.last_name;
+
+        show('main');
+      } catch (e) {
+        document.getElementById('error-msg').textContent = e.message;
+        show('error');
+      }
+    }
+
+    document.getElementById('quote-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errEl = document.getElementById('form-error');
+      errEl.classList.add('hidden');
+
+      const legal = parseFloat(document.getElementById('legal-fee').value);
+      if (!legal || legal <= 0) {
+        errEl.textContent = 'Please enter a valid legal fee.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch('/api/quote/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lead_uuid:      leadUuid,
+            conveyancer_id: conveyancerId,
+            legal_fee:      document.getElementById('legal-fee').value,
+            searches:       document.getElementById('searches').value,
+            land_registry:  document.getElementById('land-registry').value,
+            other_fees:     document.getElementById('other-fees').value,
+            breakdown_text: document.getElementById('breakdown-text').value,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.status === 409) return show('already-submitted');
+        if (!res.ok) throw new Error(data.error || 'Submission failed');
+
+        show('success');
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Submit Quote';
+      }
+    });
+
+    loadLead();
+  </script>
+</body>
+</html>
