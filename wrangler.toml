@@ -5,7 +5,7 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "findconveyancers-db"
-database_id = "b1f419a1-b804-48fa-80c0-8a877214a006" 
+database_id = "1627f142-0521-4fc5-9173-565ba675b89c" 
 
 [vars]
 NOTIFY_EMAIL = "kai@correconnections.co.uk"
