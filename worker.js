@@ -35,6 +35,9 @@ export default {
       if (path === '/api/instruct' && request.method === 'POST')
         return handleInstruct(request, env);
 
+      if (path === '/api/track' && request.method === 'POST')
+        return handleTrack(request, env);
+
       // ── Admin ───────────────────────────────────────────────────────────────
       if (path === '/api/admin/login' && request.method === 'POST')
         return handleAdminLogin(request, env);
@@ -398,24 +401,39 @@ async function handleUpdateLead(request, env, id) {
   return jsonResponse({ success: true });
 }
 
+// ── Funnel tracking ────────────────────────────────────────────────────────────
+async function handleTrack(request, env) {
+  const body = await request.json().catch(() => ({}));
+  const event = (body.event || '').trim().slice(0, 64);
+  if (!event) return jsonResponse({ error: 'Missing event' }, 400);
+  await env.DB.prepare(
+    'INSERT INTO page_events (event, created_at) VALUES (?, datetime("now"))'
+  ).bind(event).run();
+  return jsonResponse({ ok: true });
+}
+
 // ── Admin: stats ───────────────────────────────────────────────────────────────
 async function handleGetStats(request, env) {
   if (!isAdminAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
 
-  const [total, byStatus, recent, quoteCount, instructedCount] = await Promise.all([
+  const [total, byStatus, recent, quoteCount, instructedCount, buttonClicks, formSubmits] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads').first(),
     env.DB.prepare('SELECT status, COUNT(*) AS cnt FROM leads GROUP BY status').all(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads WHERE created_at > datetime("now","-7 days")').first(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM conveyancer_quotes').first(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads WHERE status = "instructed"').first(),
+    env.DB.prepare('SELECT COUNT(*) AS cnt FROM page_events WHERE event = "get_quotes_view"').first(),
+    env.DB.prepare('SELECT COUNT(*) AS cnt FROM page_events WHERE event = "form_submitted"').first(),
   ]);
 
   return jsonResponse({
-    total:        total.cnt,
-    thisWeek:     recent.cnt,
-    totalQuotes:  quoteCount.cnt,
-    instructed:   instructedCount.cnt,
-    byStatus:     byStatus.results,
+    total:         total.cnt,
+    thisWeek:      recent.cnt,
+    totalQuotes:   quoteCount.cnt,
+    instructed:    instructedCount.cnt,
+    byStatus:      byStatus.results,
+    buttonClicks:  buttonClicks.cnt,
+    formSubmits:   formSubmits.cnt,
   });
 }
 

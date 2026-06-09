@@ -82,7 +82,7 @@
     .page-sub   { font-size: 0.8rem; color: var(--subtle); margin-top: 0.2rem; }
 
     /* ── Stats ── */
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; box-shadow: var(--shadow-sm); }
     .stat-card.highlight { border-color: rgba(59,130,246,0.3); background: var(--primary-dim); }
     .stat-card.green     { border-color: rgba(5,150,105,0.25); }
@@ -300,6 +300,16 @@
             <div class="stat-label">Instructed</div>
             <div class="stat-value" id="statInstructed">—</div>
             <div class="stat-sub">clients placed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Get Quotes Clicks</div>
+            <div class="stat-value" id="statButtonClicks">—</div>
+            <div class="stat-sub">landed on form page</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Form Submissions</div>
+            <div class="stat-value" id="statFormSubmits">—</div>
+            <div class="stat-sub" id="statConversionRate">conversion rate</div>
           </div>
         </div>
 
@@ -634,10 +644,14 @@
     try {
       const data = await apiGet('/api/admin/stats');
 
-      document.getElementById('statTotal').textContent     = data.total ?? '—';
-      document.getElementById('statWeek').textContent      = data.thisWeek ?? '—';
-      document.getElementById('statQuotes').textContent    = data.totalQuotes ?? '—';
-      document.getElementById('statInstructed').textContent = data.instructed ?? '—';
+      document.getElementById('statTotal').textContent        = data.total ?? '—';
+      document.getElementById('statWeek').textContent         = data.thisWeek ?? '—';
+      document.getElementById('statQuotes').textContent       = data.totalQuotes ?? '—';
+      document.getElementById('statInstructed').textContent   = data.instructed ?? '—';
+      document.getElementById('statButtonClicks').textContent = data.buttonClicks ?? '—';
+      document.getElementById('statFormSubmits').textContent  = data.formSubmits ?? '—';
+      const rate = data.buttonClicks > 0 ? Math.round((data.formSubmits / data.buttonClicks) * 100) : 0;
+      document.getElementById('statConversionRate').textContent = data.buttonClicks > 0 ? `${rate}% conversion` : 'conversion rate';
 
       const newCount = (data.byStatus || []).find(s => s.status === 'new');
       document.getElementById('navBadgeNew').textContent = newCount?.cnt ?? newCount?.count ?? '0';
