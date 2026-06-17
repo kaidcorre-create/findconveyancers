@@ -760,6 +760,8 @@
 
 <!-- Form Logic -->
 <script>
+  fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
+
   let currentStep = 1;
   const totalSteps = 3;
   const form = document.getElementById('quoteForm');
@@ -947,6 +949,7 @@
           'event_category': 'quotes',
           'event_label': 'quote_request_submitted'
         });
+        fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'form_submitted' }) }).catch(() => {});
       } else {
         alert('Error submitting form. Please try again.');
         nextBtn.disabled = false;

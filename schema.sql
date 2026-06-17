@@ -74,6 +74,15 @@ CREATE TABLE IF NOT EXISTS quotes (
   updated_at        TEXT NOT NULL
 );
 
+-- ── Page Events (funnel tracking) ──────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS page_events (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  event      TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_page_events_event ON page_events(event);
+
 -- ── Indexes ─────────────────────────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_leads_status     ON leads(status);
 CREATE INDEX IF NOT EXISTS idx_leads_agent_ref  ON leads(agent_ref);

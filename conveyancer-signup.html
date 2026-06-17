@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join FindConveyancers and receive conveyancing leads directly. Register your firm to start receiving client enquiries.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#2563eb">
+  <title>Join FindConveyancers – Receive Conveyancing Leads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary:     #2563eb;
+      --primary-dk:  #1d4ed8;
+      --primary-dim: rgba(37,99,235,0.07);
+      --green:       #059669;
+      --green-dim:   rgba(5,150,105,0.08);
+      --text:        #111827;
+      --muted:       #6b7280;
+      --subtle:      #9ca3af;
+      --border:      #e5e7eb;
+      --surface:     #ffffff;
+      --bg:          #f9fafb;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+      --radius:      10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .logo-icon {
+      width: 32px; height: 32px; background: var(--primary); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+    .logo-text { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .logo-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
+    .hero p { font-size: 1.05rem; opacity: 0.88; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── Benefits bar ── */
+    .benefits {
+      background: rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin-top: 2rem;
+      padding: 1.25rem 1.5rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .benefit-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; font-weight: 600; opacity: 0.92;
+      padding-bottom: 1.25rem;
+    }
+    .benefit-item svg { width: 16px; height: 16px; stroke: #86efac; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Layout ── */
+    .page-body {
+      flex: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      width: 100%;
+    }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.25rem;
+      box-shadow: var(--shadow-md);
+    }
+    .form-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .form-card .subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; }
+
+    .form-section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--subtle);
+      margin: 1.75rem 0 1rem;
+    }
+    .form-section-label:first-of-type { margin-top: 0; }
+
+    .field { margin-bottom: 1.25rem; }
+    .field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+    .field label .req { color: var(--primary); margin-left: 2px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--surface);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field .hint { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
+    .field.error input, .field.error select { border-color: #ef4444; }
+    .field .err-msg { font-size: 0.76rem; color: #ef4444; margin-top: 0.35rem; display: none; }
+    .field.error .err-msg { display: block; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .checkbox-row {
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      margin-bottom: 1.5rem; margin-top: 0.5rem;
+    }
+    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 3px; accent-color: var(--primary); }
+    .checkbox-row label { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .checkbox-row label a { color: var(--primary); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .submit-btn:hover:not(:disabled) { background: var(--primary-dk); }
+    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
+    .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .loading-ring {
+      width: 16px; height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Success panel ── */
+    .success-panel {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-panel.show { display: block; }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: var(--green-dim);
+      border: 2px solid rgba(5,150,105,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .success-icon svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .success-panel h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .success-panel p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+    .success-steps {
+      margin: 1.75rem auto 0;
+      max-width: 380px;
+      text-align: left;
+    }
+    .success-steps h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 0.75rem; }
+    .success-step {
+      display: flex; gap: 0.85rem; align-items: flex-start;
+      margin-bottom: 0.9rem;
+    }
+    .step-num {
+      width: 24px; height: 24px; flex-shrink: 0;
+      background: var(--primary-dim);
+      border-radius: 50%;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; padding-top: 3px; }
+
+    /* ── Trust section ── */
+    .trust-row {
+      display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center;
+      margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid var(--border);
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.78rem; color: var(--muted); font-weight: 500;
+    }
+    .trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Error alert ── */
+    .alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #dc2626;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+    .alert.show { display: block; }
+
+    @media (max-width: 480px) {
+      .form-card { padding: 1.5rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .benefits { gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">FindConveyancers</div>
+      <div class="logo-sub">Partner Portal</div>
+    </div>
+  </a>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">For Solicitors &amp; Licensed Conveyancers</div>
+  <h1>Receive Conveyancing Leads Directly</h1>
+  <p>Register your firm and we'll send you client enquiries matched to your regions. No subscription fee — you only pay per lead.</p>
+  <div class="benefits">
+    <div class="benefit-item">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Qualified buyer &amp; seller leads
+    </div>
+    <div class="benefit-item">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      No monthly subscription
+    </div>
+    <div class="benefit-item">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      You set your own quotes
+    </div>
+  </div>
+</div>
+
+<div class="page-body">
+  <div class="form-card">
+
+    <!-- Success panel -->
+    <div class="success-panel" id="successPanel">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Application Received</h2>
+      <p>Thanks for registering. We'll review your details and be in touch within 1 working day to get you set up.</p>
+      <div class="success-steps">
+        <h3>What happens next</h3>
+        <div class="success-step">
+          <div class="step-num">1</div>
+          <div class="step-text">We review your application and activate your account</div>
+        </div>
+        <div class="success-step">
+          <div class="step-num">2</div>
+          <div class="step-text">You'll receive an email when new leads matching your regions come in</div>
+        </div>
+        <div class="success-step">
+          <div class="step-num">3</div>
+          <div class="step-text">Submit your quote via a private link — the client compares and chooses</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign-up form -->
+    <div id="formWrap">
+      <h2>Register Your Firm</h2>
+      <p class="subtitle">Fill in the form below and we'll be in touch within 1 working day.</p>
+
+      <div class="alert" id="errorAlert"></div>
+
+      <div class="form-section-label">Firm details</div>
+
+      <div class="field" id="f-firmName">
+        <label>Firm name <span class="req">*</span></label>
+        <input type="text" id="firmName" placeholder="e.g. Smith & Co Solicitors" autocomplete="organization">
+        <div class="err-msg">Please enter your firm name</div>
+      </div>
+
+      <div class="field" id="f-regType">
+        <label>Regulated by <span class="req">*</span></label>
+        <select id="regType">
+          <option value="">Select regulator…</option>
+          <option value="SRA">SRA (Solicitors Regulation Authority)</option>
+          <option value="CLC">CLC (Council for Licensed Conveyancers)</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="err-msg">Please select your regulator</div>
+      </div>
+
+      <div class="form-section-label">Your contact details</div>
+
+      <div class="field-row">
+        <div class="field" id="f-contactName">
+          <label>Your name <span class="req">*</span></label>
+          <input type="text" id="contactName" placeholder="First & last name" autocomplete="name">
+          <div class="err-msg">Please enter your name</div>
+        </div>
+        <div class="field" id="f-role">
+          <label>Your role</label>
+          <input type="text" id="role" placeholder="e.g. Partner, Manager" autocomplete="organization-title">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="f-email">
+          <label>Email address <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="you@firm.co.uk" autocomplete="email">
+          <div class="err-msg">Please enter a valid email</div>
+        </div>
+        <div class="field" id="f-phone">
+          <label>Phone number <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="01234 567890" autocomplete="tel">
+          <div class="err-msg">Please enter a phone number</div>
+        </div>
+      </div>
+
+      <div class="form-section-label">Coverage &amp; capacity</div>
+
+      <div class="field" id="f-regions">
+        <label>Regions covered <span class="req">*</span></label>
+        <textarea id="regions" placeholder="e.g. Greater London, Surrey, Kent, Essex"></textarea>
+        <div class="hint">List the counties, regions, or cities you cover. Separate with commas.</div>
+        <div class="err-msg">Please enter at least one region</div>
+      </div>
+
+      <div class="field">
+        <label>Anything else you'd like us to know?</label>
+        <textarea id="notes" placeholder="e.g. specialisms, typical volume, geographic focus…"></textarea>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="termsCheck">
+        <label for="termsCheck">
+          I confirm this firm is regulated and I agree to FindConveyancers'
+          <a href="/legal.html" target="_blank">terms of service</a>.
+          We'll only use your details to send you relevant leads.
+        </label>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+        Submit Application
+      </button>
+
+      <div class="trust-row">
+        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Free to register</div>
+        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> No subscription</div>
+        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Pay only per lead</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function setError(fieldId, show) {
+    document.getElementById(fieldId).classList.toggle('error', show);
+  }
+
+  function validate() {
+    let ok = true;
+    const checks = [
+      ['f-firmName',    document.getElementById('firmName').value.trim()],
+      ['f-regType',     document.getElementById('regType').value],
+      ['f-contactName', document.getElementById('contactName').value.trim()],
+      ['f-email',       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
+      ['f-phone',       document.getElementById('phone').value.trim()],
+      ['f-regions',     document.getElementById('regions').value.trim()],
+    ];
+    checks.forEach(([id, val]) => {
+      const err = !val;
+      setError(id, err);
+      if (err) ok = false;
+    });
+    return ok;
+  }
+
+  async function handleSubmit() {
+    const alert = document.getElementById('errorAlert');
+    alert.classList.remove('show');
+
+    if (!document.getElementById('termsCheck').checked) {
+      alert.textContent = 'Please confirm you agree to the terms before submitting.';
+      alert.classList.add('show');
+      return;
+    }
+    if (!validate()) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-ring"></div> Submitting…';
+
+    const regions = document.getElementById('regions').value
+      .split(',').map(r => r.trim()).filter(Boolean);
+
+    const payload = {
+      name:         document.getElementById('firmName').value.trim(),
+      regulated_by: document.getElementById('regType').value,
+      contact_name: document.getElementById('contactName').value.trim(),
+      role:         document.getElementById('role').value.trim(),
+      email:        document.getElementById('email').value.trim().toLowerCase(),
+      phone:        document.getElementById('phone').value.trim(),
+      regions,
+      notes:        document.getElementById('notes').value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/conveyancer/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('successPanel').classList.add('show');
+      } else if (res.status === 409) {
+        alert.textContent = 'That email address is already registered. Please contact us if you need help.';
+        alert.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Application';
+      } else {
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (e) {
+      alert.textContent = 'Something went wrong. Please try again or email us directly.';
+      alert.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = 'Submit Application';
+    }
+  }
+</script>
+
+</body>
+</html>

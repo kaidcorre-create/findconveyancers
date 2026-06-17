@@ -35,6 +35,12 @@ export default {
       if (path === '/api/instruct' && request.method === 'POST')
         return handleInstruct(request, env);
 
+      if (path === '/api/track' && request.method === 'POST')
+        return handleTrack(request, env);
+
+      if (path === '/api/conveyancer/signup' && request.method === 'POST')
+        return handleConveyancerSignup(request, env);
+
       // ── Admin ───────────────────────────────────────────────────────────────
       if (path === '/api/admin/login' && request.method === 'POST')
         return handleAdminLogin(request, env);
@@ -398,25 +404,93 @@ async function handleUpdateLead(request, env, id) {
   return jsonResponse({ success: true });
 }
 
+// ── Funnel tracking ────────────────────────────────────────────────────────────
+async function handleTrack(request, env) {
+  const body = await request.json().catch(() => ({}));
+  const event = (body.event || '').trim().slice(0, 64);
+  if (!event) return jsonResponse({ error: 'Missing event' }, 400);
+  await env.DB.prepare(
+    'INSERT INTO page_events (event, created_at) VALUES (?, datetime("now"))'
+  ).bind(event).run();
+  return jsonResponse({ ok: true });
+}
+
 // ── Admin: stats ───────────────────────────────────────────────────────────────
 async function handleGetStats(request, env) {
   if (!isAdminAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
 
-  const [total, byStatus, recent, quoteCount, instructedCount] = await Promise.all([
+  const [total, byStatus, recent, quoteCount, instructedCount, buttonClicks, formSubmits] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads').first(),
     env.DB.prepare('SELECT status, COUNT(*) AS cnt FROM leads GROUP BY status').all(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads WHERE created_at > datetime("now","-7 days")').first(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM conveyancer_quotes').first(),
     env.DB.prepare('SELECT COUNT(*) AS cnt FROM leads WHERE status = "instructed"').first(),
+    env.DB.prepare('SELECT COUNT(*) AS cnt FROM page_events WHERE event = "get_quotes_view"').first(),
+    env.DB.prepare('SELECT COUNT(*) AS cnt FROM page_events WHERE event = "form_submitted"').first(),
   ]);
 
   return jsonResponse({
-    total:        total.cnt,
-    thisWeek:     recent.cnt,
-    totalQuotes:  quoteCount.cnt,
-    instructed:   instructedCount.cnt,
-    byStatus:     byStatus.results,
+    total:         total.cnt,
+    thisWeek:      recent.cnt,
+    totalQuotes:   quoteCount.cnt,
+    instructed:    instructedCount.cnt,
+    byStatus:      byStatus.results,
+    buttonClicks:  buttonClicks.cnt,
+    formSubmits:   formSubmits.cnt,
   });
+}
+
+// ── Public: conveyancer self-signup ────────────────────────────────────────────
+async function handleConveyancerSignup(request, env) {
+  const body = await request.json().catch(() => ({}));
+
+  const name         = (body.name         || '').trim();
+  const email        = (body.email        || '').trim().toLowerCase();
+  const phone        = (body.phone        || '').trim();
+  const contact_name = (body.contact_name || '').trim();
+  const regulated_by = (body.regulated_by || '').trim();
+  const regions      = Array.isArray(body.regions) ? body.regions : [];
+  const notes        = (body.notes        || '').trim();
+  const role         = (body.role         || '').trim();
+
+  if (!name || !email || !phone || !contact_name || !regulated_by || regions.length === 0) {
+    return jsonResponse({ error: 'Missing required fields' }, 400);
+  }
+
+  const id  = crypto.randomUUID();
+  const now = new Date().toISOString();
+
+  try {
+    await env.DB.prepare(`
+      INSERT INTO conveyancers (id, name, email, phone, regions, active, fee_per_lead, created_at)
+      VALUES (?, ?, ?, ?, ?, 0, 0, ?)
+    `).bind(id, name, email, phone, JSON.stringify(regions), now).run();
+  } catch (err) {
+    if (err.message?.includes('UNIQUE')) {
+      return jsonResponse({ error: 'Email already registered' }, 409);
+    }
+    throw err;
+  }
+
+  // Notify admin
+  await sendEmail(
+    env.NOTIFY_EMAIL,
+    `New conveyancer signup: ${name}`,
+    `<p>A new firm has applied to join FindConveyancers.</p>
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Firm</td><td>${name}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regulated by</td><td>${regulated_by}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Contact</td><td>${contact_name}${role ? ` (${role})` : ''}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Email</td><td>${email}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Phone</td><td>${phone}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regions</td><td>${regions.join(', ')}</td></tr>
+      ${notes ? `<tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Notes</td><td>${notes}</td></tr>` : ''}
+    </table>
+    <p style="margin-top:16px">Log in to the <a href="https://findconveyancers.co.uk/admin.html">admin dashboard</a> to activate this firm.</p>`,
+    env
+  );
+
+  return jsonResponse({ success: true, id }, 201);
 }
 
 // ── Admin: list conveyancers ───────────────────────────────────────────────────
