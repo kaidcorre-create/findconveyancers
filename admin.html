@@ -845,7 +845,7 @@
           <td><div class="td-name">${escHtml(c.name)}</div></td>
           <td class="td-mono" style="font-size:0.8rem">${escHtml(c.email)}</td>
           <td style="font-size:0.82rem">${escHtml(c.phone||'—')}</td>
-          <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-lost'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+          <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-new'}">${c.active ? 'Active' : 'Pending'}</span></td>
           <td class="td-mono" style="color:var(--muted)">${formatDate(c.created_at)}</td>
         </tr>
       `).join('');
