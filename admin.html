@@ -609,6 +609,7 @@
       showView(btn.dataset.view);
       if (btn.dataset.filter) setFilter(btn.dataset.filter);
       if (btn.dataset.view === 'conveyancers') loadConveyancers();
+      if (btn.dataset.view === 'agents') loadAgents();
     });
   });
 
@@ -703,14 +704,14 @@
         transaction_types: Array.isArray(l.transaction_types) ? l.transaction_types : JSON.parse(l.transaction_types || '[]')
       }));
       renderLeads();
-      // Populate agent breakdown
-      buildAgentList();
+      // Populate dashboard agent breakdown
+      buildAgentBreakdown();
     } catch {
       document.getElementById('leadsTable').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Could not load leads.</div></div></td></tr>`;
     }
   }
 
-  function buildAgentList() {
+  function buildAgentBreakdown() {
     const agentMap = {};
     allLeads.forEach(l => {
       const ref = l.agent_ref || 'direct';
@@ -731,7 +732,34 @@
         .join('')
       : '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="empty-text">No agent data</div></div>';
     document.getElementById('agentBreakdown').innerHTML = html;
-    document.getElementById('agentsList').innerHTML = html;
+  }
+
+  async function loadAgents() {
+    document.getElementById('agentsList').innerHTML = '<div class="loading">Loading…</div>';
+    try {
+      const data = await apiGet('/api/admin/agents');
+      const agents = (data.agents || []);
+      if (!agents.length) {
+        document.getElementById('agentsList').innerHTML =
+          '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="empty-text">No agent partners yet. Add your first agent.</div></div>';
+        return;
+      }
+      const max = Math.max(...agents.map(a => a.lead_count), 1);
+      document.getElementById('agentsList').innerHTML = agents.map(a => `
+        <div class="agent-row">
+          <div class="agent-ref">${escHtml(a.ref)}</div>
+          <div class="agent-full-name">
+            <div>${escHtml(a.name)}</div>
+            <div class="td-sub">${escHtml(a.email)}</div>
+          </div>
+          <div class="agent-bar-wrap"><div class="agent-bar" style="width:${Math.round(a.lead_count/max*100)}%"></div></div>
+          <div class="agent-count">${a.lead_count} lead${a.lead_count!==1?'s':''}</div>
+          <span class="badge ${a.active ? 'badge-instructed' : 'badge-lost'}">${a.active ? 'Active' : 'Inactive'}</span>
+        </div>`).join('');
+    } catch {
+      document.getElementById('agentsList').innerHTML =
+        '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Failed to load agents.</div></div>';
+    }
   }
 
   function renderLeads() {

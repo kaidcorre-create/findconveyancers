@@ -60,6 +60,9 @@ export default {
       if (path === '/api/admin/conveyancers' && request.method === 'POST')
         return handleAddConveyancer(request, env);
 
+      if (path === '/api/admin/agents' && request.method === 'GET')
+        return handleGetAgents(request, env);
+
       if (path === '/api/admin/agents' && request.method === 'POST')
         return handleAddAgent(request, env);
 
@@ -537,6 +540,20 @@ async function handleAddConveyancer(request, env) {
     }
     throw err;
   }
+}
+
+/// ── Admin: list agents ────────────────────────────────────────────────────────
+async function handleGetAgents(request, env) {
+  if (!isAdminAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
+  const { results } = await env.DB.prepare(
+    'SELECT id, ref, name, email, phone, fee_per_lead, active, created_at FROM agents ORDER BY name ASC'
+  ).all();
+  // Attach lead counts
+  const { results: counts } = await env.DB.prepare(
+    'SELECT agent_ref, COUNT(*) AS cnt FROM leads GROUP BY agent_ref'
+  ).all();
+  const countMap = Object.fromEntries(counts.map(c => [c.agent_ref, c.cnt]));
+  return jsonResponse({ agents: results.map(a => ({ ...a, lead_count: countMap[a.ref] || 0 })) });
 }
 
 // ── Admin: add agent ──────────────────────────────────────────────────────────
