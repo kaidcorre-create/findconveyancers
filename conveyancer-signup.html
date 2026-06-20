@@ -228,6 +228,15 @@
       color: var(--muted);
       margin-bottom: 1.5rem;
     }
+    .agreement-scroll h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 1.5rem 0 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .agreement-scroll h2:first-child { margin-top: 0; }
     .agreement-scroll h3 {
       font-size: 0.85rem;
       font-weight: 700;
@@ -238,6 +247,24 @@
     .agreement-scroll p { margin-bottom: 0.6rem; }
     .agreement-scroll ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
     .agreement-scroll li { margin-bottom: 0.25rem; }
+    .agreement-scroll table {
+      width: 100%; border-collapse: collapse; margin-bottom: 0.8rem; font-size: 0.82rem;
+    }
+    .agreement-scroll table th, .agreement-scroll table td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+    }
+    .agreement-scroll table th { background: var(--bg); font-weight: 700; color: var(--text); }
+    .agreement-scroll table td:first-child { font-weight: 600; color: var(--text); width: 45%; }
+    .agreement-scroll .agr-intro { font-size: 0.88rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; }
+    .agreement-scroll hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .agreement-scroll .agr-sign { font-style: italic; font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+
+    /* ── Transaction type checkboxes ── */
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem; }
+    .check-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text); cursor: pointer; }
+    .check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
 
     .agree-row {
       display: flex; align-items: flex-start; gap: 0.75rem;
@@ -485,15 +512,21 @@
         <div class="err-msg">Please enter your firm name</div>
       </div>
 
-      <div class="field" id="f-regType">
-        <label>Regulated by <span class="req">*</span></label>
-        <select id="regType">
-          <option value="">Select regulator…</option>
-          <option value="SRA">SRA (Solicitors Regulation Authority)</option>
-          <option value="CLC">CLC (Council for Licensed Conveyancers)</option>
-          <option value="Other">Other</option>
-        </select>
-        <div class="err-msg">Please select your regulator</div>
+      <div class="field-row">
+        <div class="field" id="f-regType">
+          <label>Regulated by <span class="req">*</span></label>
+          <select id="regType">
+            <option value="">Select regulator…</option>
+            <option value="SRA">SRA (Solicitors Regulation Authority)</option>
+            <option value="CLC">CLC (Council for Licensed Conveyancers)</option>
+          </select>
+          <div class="err-msg">Please select your regulator</div>
+        </div>
+        <div class="field" id="f-regNumber">
+          <label>SRA / CLC number <span class="req">*</span></label>
+          <input type="text" id="regNumber" placeholder="e.g. 123456">
+          <div class="err-msg">Please enter your authorisation number</div>
+        </div>
       </div>
 
       <div class="section-label">Your contact details</div>
@@ -512,7 +545,7 @@
 
       <div class="field-row">
         <div class="field" id="f-email">
-          <label>Email address <span class="req">*</span></label>
+          <label>Your email address <span class="req">*</span></label>
           <input type="email" id="email" placeholder="you@firm.co.uk" autocomplete="email">
           <div class="err-msg">Please enter a valid email</div>
         </div>
@@ -523,18 +556,48 @@
         </div>
       </div>
 
-      <div class="section-label">Coverage</div>
+      <div class="field" id="f-deliveryEmail">
+        <label>Referral delivery email <span class="req">*</span></label>
+        <input type="email" id="deliveryEmail" placeholder="leads@firm.co.uk" autocomplete="email">
+        <div class="hint">Lead notifications will be sent here. Can be the same as above or a shared inbox.</div>
+        <div class="err-msg">Please enter a valid delivery email</div>
+      </div>
+
+      <div class="section-label">Coverage &amp; preferences</div>
 
       <div class="field" id="f-regions">
-        <label>Regions covered <span class="req">*</span></label>
+        <label>Geographic area covered <span class="req">*</span></label>
         <textarea id="regions" placeholder="e.g. Greater London, Surrey, Kent, Essex"></textarea>
         <div class="hint">List the counties, regions, or cities you cover, separated by commas.</div>
         <div class="err-msg">Please enter at least one region</div>
       </div>
 
+      <div class="field" id="f-txTypes">
+        <label>Transaction types <span class="req">*</span></label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="txType" value="Purchase"> Purchase</label>
+          <label class="check-item"><input type="checkbox" name="txType" value="Sale"> Sale</label>
+          <label class="check-item"><input type="checkbox" name="txType" value="Sale and purchase"> Sale &amp; purchase</label>
+          <label class="check-item"><input type="checkbox" name="txType" value="New build (purchase)"> New build (purchase)</label>
+          <label class="check-item"><input type="checkbox" name="txType" value="Remortgage"> Remortgage</label>
+        </div>
+        <div class="err-msg" id="txTypesErr" style="display:none;">Please select at least one transaction type</div>
+      </div>
+
+      <div class="field">
+        <label>Weekly referral cap</label>
+        <select id="weeklyCap">
+          <option value="No limit">No limit</option>
+          <option value="1–2 per week">1–2 per week</option>
+          <option value="3–5 per week">3–5 per week</option>
+          <option value="6–10 per week">6–10 per week</option>
+        </select>
+        <div class="hint">Maximum number of referrals we'll send you in a week.</div>
+      </div>
+
       <div class="field">
         <label>Anything else you'd like us to know?</label>
-        <textarea id="notes" placeholder="e.g. specialisms, preferred transaction types, typical volume…"></textarea>
+        <textarea id="notes" placeholder="e.g. specialisms, capacity, languages spoken…"></textarea>
       </div>
     </div>
 
@@ -553,52 +616,76 @@
       <div class="card-title">Referral Supply Agreement</div>
       <div class="card-subtitle">Please read the agreement below, then tick to confirm your acceptance before submitting.</div>
 
-      <div class="agreement-scroll">
-        <h3>1. The service</h3>
-        <p>FindConveyancers (operated by Corre Connections) will supply you with conveyancing referrals — consumer enquiries matched to your geographic area and transaction types. Each referral consists of the client's contact details, property information, and transaction type.</p>
+      <div class="agreement-scroll" id="agreementScroll">
+        <p class="agr-intro"><strong>FindConveyancers.co.uk</strong>, operated by Corre Connections, agrees to send you conveyancing referrals on the following terms. Please review your details and this agreement before accepting.</p>
 
-        <h3>2. Pay on completion</h3>
-        <p>This agreement operates on a <strong>pay-per-completion</strong> basis. No fee is due on delivery of a referral, and no fee is due if a referred matter does not proceed to completion. The completion fee is only payable once the conveyancing transaction legally completes.</p>
-        <p>The agreed completion fee will be confirmed in writing before your account is activated. Fees are exclusive of VAT.</p>
+        <h2>Your Details</h2>
+        <table>
+          <tr><td>Firm name</td><td id="agr-firmName">—</td></tr>
+          <tr><td>SRA / CLC number</td><td id="agr-regNumber">—</td></tr>
+          <tr><td>Contact name</td><td id="agr-contactName">—</td></tr>
+          <tr><td>Email</td><td id="agr-email">—</td></tr>
+          <tr><td>Referral delivery email</td><td id="agr-deliveryEmail">—</td></tr>
+          <tr><td>Geographic area</td><td id="agr-counties">—</td></tr>
+          <tr><td>Transaction types</td><td id="agr-txTypes">—</td></tr>
+          <tr><td>Weekly referral cap</td><td id="agr-weeklyCap">—</td></tr>
+        </table>
 
-        <h3>3. Responding to leads</h3>
-        <p>You agree to contact each referred client within <strong>24 hours</strong> of receiving their details. Failure to respond promptly may result in suspension from the platform.</p>
+        <h2>Your Fees</h2>
+        <p>You pay on completion only, at the following rates:</p>
+        <table>
+          <tr><th>Transaction type</th><th>Completion fee (ex-VAT)</th></tr>
+          <tr><td>New build (purchase)</td><td>To be confirmed</td></tr>
+          <tr><td>Purchase (estate agent referral)</td><td>To be confirmed</td></tr>
+          <tr><td>Sale</td><td>To be confirmed</td></tr>
+          <tr><td>Sale and purchase</td><td>To be confirmed</td></tr>
+          <tr><td>Remortgage</td><td>To be confirmed</td></tr>
+        </table>
+        <p>Completion fees will be confirmed in writing when your account is activated. Fees are exclusive of VAT.</p>
 
-        <h3>4. Reporting completion</h3>
-        <p>You must notify FindConveyancers of each completion within <strong>5 business days</strong> of the completion date. We may independently verify completions via HM Land Registry records. Failure to notify may result in late payment interest being applied.</p>
+        <h2>Referrals</h2>
+        <p>Each referral we send you includes the client's name, contact details, property address, indicative value, transaction type, and referral source. We warrant that each referral contains accurate contact details and relates to a genuine enquiry.</p>
+        <p>If a referral has demonstrably wrong contact details, or is a duplicate of one already sent to you for the same property, you can reject it within 5 working days by emailing us with the referral reference number. We'll review and issue a credit if the rejection is valid. You cannot reject a referral on the grounds that the client didn't instruct you.</p>
 
-        <h3>5. Your obligations</h3>
+        <h2>Your Obligations</h2>
         <ul>
-          <li>You must hold a current practising certificate or licence from the SRA or CLC at all times.</li>
-          <li>You must maintain adequate professional indemnity insurance.</li>
-          <li>You must comply with UK GDPR and the Data Protection Act 2018 in handling client data.</li>
-          <li>You must not represent yourself as affiliated with or endorsed by FindConveyancers.</li>
-          <li>You must deal with clients professionally and in accordance with your regulatory obligations.</li>
+          <li>You must hold a current SRA or CLC authorisation. Tell us immediately if that changes.</li>
+          <li>Respond to each referral with a fee quote within 24 hours (excluding weekends and bank holidays). If you don't respond in time we may offer the referral to another firm. No refund applies.</li>
+          <li>Deal with clients professionally and in line with your regulatory obligations.</li>
+          <li>Keep your profile on the platform accurate.</li>
         </ul>
 
-        <h3>6. What we warrant</h3>
-        <p>We warrant that each referral delivered will contain genuine contact details submitted by a real client, relate to a genuine conveyancing enquiry, and not be a duplicate of a referral previously delivered to you for the same property within the preceding 6 months.</p>
-        <p>We do not warrant that any referral will result in an instruction or that any transaction will proceed to completion.</p>
+        <h2>Payment</h2>
+        <p><strong>You pay on completion only.</strong> No fee is due on delivery of a referral. No fee is due if the client doesn't instruct you. No fee is due if the transaction falls through before completion.</p>
+        <p><strong>You must report every completion</strong> that originated from one of our referrals within 5 working days of the completion date, providing the referral reference number, property address, completion date, and transaction value.</p>
+        <p><strong>We verify independently.</strong> We check completions against HM Land Registry data. If we identify a completion you haven't reported, we'll invoice you for it.</p>
+        <p><strong>The fee applies however the instruction came about.</strong> If we sent you a referral for a client and that client's transaction completes — whether or not they used our quote comparison, and regardless of how you describe the resulting instruction — the completion fee is owed. What matters is that the client and property match a referral we delivered to you.</p>
+        <p>Payment is due within 14 days of invoice. Late payments accrue interest at 8% above the Bank of England base rate under the Late Payment of Commercial Debts (Interest) Act 1998. We may suspend your account if an invoice is more than 21 days overdue.</p>
 
-        <h3>7. Rejection of referrals</h3>
-        <p>You may reject a referral and request a credit within 5 business days of delivery if: the client's contact details are demonstrably non-functional; the referral is a verified duplicate; or the referral falls outside the geographic area or transaction types you have specified.</p>
+        <h2>What We're Not Responsible For</h2>
+        <p>We are not a party to your retainer with any client and have no responsibility for the legal services you provide. We are not liable if a referral doesn't convert to an instruction or if a transaction falls through before completion.</p>
+        <p>Our total liability to you for anything arising from this agreement is capped at the total fees you have paid us in the 3 months before the relevant event.</p>
 
-        <h3>8. Liability</h3>
-        <p>FindConveyancers is not responsible for the quality or outcome of legal services you provide. Our total liability to you under this agreement shall not exceed the amount of fees paid by you in the 3 months preceding the claim.</p>
+        <h2>Data</h2>
+        <p>You will receive personal data about prospective clients (name, contact details, property address, transaction details). Use it only to provide a quote and, if instructed, to carry out the conveyancing. You must comply with UK GDPR and be registered with the ICO. We are each independent data controllers.</p>
 
-        <h3>9. Termination</h3>
-        <p>Either party may terminate this agreement on 30 days' written notice. We may terminate immediately if you lose your SRA or CLC authorisation, or commit a material breach that is not remedied within 14 days of notice.</p>
+        <h2>Ending the Agreement</h2>
+        <p>Either party can end this agreement with 30 days' notice. We can end it immediately if you lose your SRA or CLC authorisation, or materially breach these terms and don't remedy it within 14 days of being notified.</p>
+        <p>Completion fees for referrals already delivered remain payable after termination.</p>
 
-        <h3>10. Data protection</h3>
-        <p>Each party is an independent data controller. We will share client personal data with you solely for the purpose of providing conveyancing services to that client. You must not use the data for any other purpose and must comply with all applicable data protection legislation.</p>
+        <h2>General</h2>
+        <p>This agreement is governed by English law and subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+        <p>We may update these terms with 30 days' notice via the platform. Continued use after the notice period constitutes acceptance.</p>
+        <p>These terms, together with the fees and preferences set out above, form the entire agreement between us regarding the supply of referrals.</p>
 
-        <h3>11. Governing law</h3>
-        <p>This agreement is governed by the laws of England and Wales. Any disputes are subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+        <hr>
+        <p class="agr-sign">By clicking <strong>I agree</strong>, <span id="agr-signName">the contact named above</span> confirms they have authority to bind <span id="agr-signFirm">their firm</span> to these terms.</p>
+        <p class="agr-sign">Agreed on behalf of <span id="agr-signFirm2">the firm</span> on <span id="agr-signDate"></span>.</p>
       </div>
 
       <div class="agree-row">
         <input type="checkbox" id="agreeCheck">
-        <label for="agreeCheck">I have read and agree to the Referral Supply Agreement above. I confirm that this firm is regulated by the SRA or CLC and that I am authorised to enter into this agreement on the firm's behalf.</label>
+        <label for="agreeCheck">I have read and agree to the Referral Supply Agreement above. I confirm that I am authorised to enter into this agreement on behalf of my firm.</label>
       </div>
 
       <div class="alert" id="errorAlert3"></div>
@@ -665,15 +752,22 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function getSelectedTxTypes() {
+    return Array.from(document.querySelectorAll('input[name="txType"]:checked')).map(cb => cb.value);
+  }
+
   function validateStep2() {
     let ok = true;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const checks = [
-      ['f-firmName',    document.getElementById('firmName').value.trim()],
-      ['f-regType',     document.getElementById('regType').value],
-      ['f-contactName', document.getElementById('contactName').value.trim()],
-      ['f-email',       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
-      ['f-phone',       document.getElementById('phone').value.trim()],
-      ['f-regions',     document.getElementById('regions').value.trim()],
+      ['f-firmName',      document.getElementById('firmName').value.trim()],
+      ['f-regType',       document.getElementById('regType').value],
+      ['f-regNumber',     document.getElementById('regNumber').value.trim()],
+      ['f-contactName',   document.getElementById('contactName').value.trim()],
+      ['f-email',         emailRe.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
+      ['f-deliveryEmail', emailRe.test(document.getElementById('deliveryEmail').value.trim()) ? 'ok' : ''],
+      ['f-phone',         document.getElementById('phone').value.trim()],
+      ['f-regions',       document.getElementById('regions').value.trim()],
     ];
     checks.forEach(([id, val]) => {
       const el = document.getElementById(id);
@@ -681,7 +775,41 @@
       el.classList.toggle('error', err);
       if (err) ok = false;
     });
+    // Transaction types
+    const txTypes = getSelectedTxTypes();
+    const txErr = document.getElementById('txTypesErr');
+    const txField = document.getElementById('f-txTypes');
+    if (txTypes.length === 0) {
+      txErr.style.display = 'block';
+      txField.classList.add('error');
+      ok = false;
+    } else {
+      txErr.style.display = 'none';
+      txField.classList.remove('error');
+    }
     return ok;
+  }
+
+  function populateAgreement() {
+    const firmName    = document.getElementById('firmName').value.trim();
+    const contactName = document.getElementById('contactName').value.trim();
+    const today       = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    document.getElementById('agr-firmName').textContent     = firmName;
+    document.getElementById('agr-regNumber').textContent    = document.getElementById('regNumber').value.trim();
+    document.getElementById('agr-contactName').textContent  = contactName;
+    document.getElementById('agr-email').textContent        = document.getElementById('email').value.trim();
+    document.getElementById('agr-deliveryEmail').textContent= document.getElementById('deliveryEmail').value.trim();
+    document.getElementById('agr-counties').textContent     = document.getElementById('regions').value.trim();
+    document.getElementById('agr-txTypes').textContent      = getSelectedTxTypes().join(', ');
+    document.getElementById('agr-weeklyCap').textContent    = document.getElementById('weeklyCap').value;
+    document.getElementById('agr-signName').textContent     = contactName || 'the contact named above';
+    document.getElementById('agr-signFirm').textContent     = firmName || 'their firm';
+    document.getElementById('agr-signFirm2').textContent    = firmName || 'the firm';
+    document.getElementById('agr-signDate').textContent     = today;
+
+    // Scroll agreement back to top
+    document.getElementById('agreementScroll').scrollTop = 0;
   }
 
   function validateAndNext() {
@@ -692,6 +820,7 @@
       alert.classList.add('show');
       return;
     }
+    populateAgreement();
     goTo(3);
   }
 
@@ -713,14 +842,18 @@
       .split(',').map(r => r.trim()).filter(Boolean);
 
     const payload = {
-      name:         document.getElementById('firmName').value.trim(),
-      regulated_by: document.getElementById('regType').value,
-      contact_name: document.getElementById('contactName').value.trim(),
-      role:         document.getElementById('role').value.trim(),
-      email:        document.getElementById('email').value.trim().toLowerCase(),
-      phone:        document.getElementById('phone').value.trim(),
+      name:           document.getElementById('firmName').value.trim(),
+      regulated_by:   document.getElementById('regType').value,
+      reg_number:     document.getElementById('regNumber').value.trim(),
+      contact_name:   document.getElementById('contactName').value.trim(),
+      role:           document.getElementById('role').value.trim(),
+      email:          document.getElementById('email').value.trim().toLowerCase(),
+      delivery_email: document.getElementById('deliveryEmail').value.trim().toLowerCase(),
+      phone:          document.getElementById('phone').value.trim(),
       regions,
-      notes:        document.getElementById('notes').value.trim(),
+      transaction_types: getSelectedTxTypes(),
+      weekly_cap:     document.getElementById('weeklyCap').value,
+      notes:          document.getElementById('notes').value.trim(),
     };
 
     try {
