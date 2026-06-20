@@ -57,69 +57,129 @@
     }
     .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; }
     .logo-text { font-size: 1rem; font-weight: 700; color: var(--text); }
-    .logo-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+    .logo-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
 
-    /* ── Hero ── */
-    .hero {
-      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-      color: white;
-      padding: 3.5rem 1.5rem;
-      text-align: center;
+    /* ── Progress bar ── */
+    .progress-wrap {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
     }
-    .hero-eyebrow {
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 100px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.9rem;
-      margin-bottom: 1.25rem;
-    }
-    .hero h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
-    .hero p { font-size: 1.05rem; opacity: 0.88; max-width: 520px; margin: 0 auto; line-height: 1.6; }
-
-    /* ── Benefits bar ── */
-    .benefits {
-      background: rgba(255,255,255,0.1);
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin-top: 2rem;
-      padding: 1.25rem 1.5rem 0;
+    .progress-steps {
+      max-width: 720px;
+      margin: 0 auto;
       display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      flex-wrap: wrap;
+      align-items: stretch;
     }
-    .benefit-item {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.85rem; font-weight: 600; opacity: 0.92;
-      padding-bottom: 1.25rem;
+    .progress-step {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 1rem 0;
+      border-bottom: 2px solid transparent;
+      cursor: default;
+      transition: border-color 0.2s;
     }
-    .benefit-item svg { width: 16px; height: 16px; stroke: #86efac; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .progress-step.active { border-bottom-color: var(--primary); }
+    .progress-step-num {
+      width: 24px; height: 24px; flex-shrink: 0;
+      border-radius: 50%;
+      font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--border);
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+    }
+    .progress-step.active   .progress-step-num { background: var(--primary); color: white; }
+    .progress-step.complete .progress-step-num { background: var(--green);   color: white; }
+    .progress-step-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--subtle);
+      line-height: 1.3;
+    }
+    .progress-step.active   .progress-step-label { color: var(--primary); }
+    .progress-step.complete .progress-step-label { color: var(--green); }
+    .progress-divider {
+      width: 24px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--border);
+      font-size: 1rem;
+    }
 
-    /* ── Layout ── */
+    /* ── Page body ── */
     .page-body {
       flex: 1;
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 4rem;
       width: 100%;
     }
 
-    /* ── Form card ── */
-    .form-card {
+    /* ── Step panels ── */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fadeUp 0.25s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card ── */
+    .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 2.25rem;
       box-shadow: var(--shadow-md);
+      margin-bottom: 1rem;
     }
-    .form-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .form-card .subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; }
+    .card-title    { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .card-subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.5; }
 
-    .form-section-label {
+    /* ── How it works ── */
+    .how-section { margin-bottom: 2rem; }
+    .how-section:last-child { margin-bottom: 0; }
+    .how-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+    .how-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .how-step:last-child { border-bottom: none; padding-bottom: 0; }
+    .how-step-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--primary-dim);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .how-step-icon svg { width: 18px; height: 18px; stroke: var(--primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .how-step-body h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .how-step-body p  { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    .info-box {
+      background: var(--primary-dim);
+      border: 1px solid rgba(37,99,235,0.15);
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      margin-top: 1.5rem;
+    }
+    .info-box p { font-size: 0.85rem; color: var(--text); line-height: 1.6; }
+    .info-box strong { color: var(--primary); }
+
+    /* ── Form fields ── */
+    .section-label {
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -127,7 +187,7 @@
       color: var(--subtle);
       margin: 1.75rem 0 1rem;
     }
-    .form-section-label:first-of-type { margin-top: 0; }
+    .section-label:first-child { margin-top: 0; }
 
     .field { margin-bottom: 1.25rem; }
     .field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
@@ -149,23 +209,67 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
     .field textarea { resize: vertical; min-height: 90px; }
-    .field .hint { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
-    .field.error input, .field.error select { border-color: #ef4444; }
+    .field .hint    { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
+    .field.error input, .field.error select, .field.error textarea { border-color: #ef4444; }
     .field .err-msg { font-size: 0.76rem; color: #ef4444; margin-top: 0.35rem; display: none; }
     .field.error .err-msg { display: block; }
-
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-    .checkbox-row {
-      display: flex; align-items: flex-start; gap: 0.65rem;
-      margin-bottom: 1.5rem; margin-top: 0.5rem;
+    /* ── Agreement text ── */
+    .agreement-scroll {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      height: 340px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
     }
-    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 3px; accent-color: var(--primary); }
-    .checkbox-row label { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-    .checkbox-row label a { color: var(--primary); }
+    .agreement-scroll h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.25rem 0 0.4rem;
+    }
+    .agreement-scroll h3:first-child { margin-top: 0; }
+    .agreement-scroll p { margin-bottom: 0.6rem; }
+    .agreement-scroll ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
+    .agreement-scroll li { margin-bottom: 0.25rem; }
 
-    .submit-btn {
-      width: 100%;
+    .agree-row {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .agree-row:has(input:checked) { border-color: var(--primary); background: var(--primary-dim); }
+    .agree-row input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--primary); cursor: pointer; }
+    .agree-row label { font-size: 0.875rem; color: var(--text); line-height: 1.5; cursor: pointer; font-weight: 500; }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; gap: 0.75rem; justify-content: space-between; align-items: center; }
+    .btn-back {
+      padding: 0.75rem 1.25rem;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-back:hover { border-color: var(--text); color: var(--text); }
+    .btn-next, .btn-submit {
+      flex: 1;
       padding: 0.85rem;
       background: var(--primary);
       color: white;
@@ -178,9 +282,9 @@
       transition: background 0.15s, transform 0.1s;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     }
-    .submit-btn:hover:not(:disabled) { background: var(--primary-dk); }
-    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
-    .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-next:hover, .btn-submit:hover { background: var(--primary-dk); }
+    .btn-next:active, .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
     .loading-ring {
       width: 16px; height: 16px;
@@ -191,13 +295,18 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Success panel ── */
-    .success-panel {
-      display: none;
-      text-align: center;
-      padding: 1rem 0;
+    /* ── Alert ── */
+    .alert {
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; padding: 0.75rem 1rem;
+      font-size: 0.85rem; color: #dc2626;
+      margin-bottom: 1.25rem; display: none;
     }
-    .success-panel.show { display: block; }
+    .alert.show { display: block; }
+
+    /* ── Success ── */
+    .success-panel { display: none; text-align: center; padding: 2rem 0; }
+    .success-panel.show { display: block; animation: fadeUp 0.3s ease; }
     .success-icon {
       width: 64px; height: 64px;
       background: var(--green-dim);
@@ -208,55 +317,28 @@
     }
     .success-icon svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .success-panel h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; }
-    .success-panel p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 400px; margin: 0 auto; }
-    .success-steps {
-      margin: 1.75rem auto 0;
-      max-width: 380px;
+    .success-panel p  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+    .success-next-steps {
+      margin: 2rem auto 0;
+      max-width: 420px;
       text-align: left;
     }
-    .success-steps h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 0.75rem; }
-    .success-step {
-      display: flex; gap: 0.85rem; align-items: flex-start;
-      margin-bottom: 0.9rem;
-    }
-    .step-num {
+    .success-next-steps h3 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 0.9rem; }
+    .next-step { display: flex; gap: 0.85rem; align-items: flex-start; margin-bottom: 0.9rem; }
+    .next-num {
       width: 24px; height: 24px; flex-shrink: 0;
-      background: var(--primary-dim);
-      border-radius: 50%;
-      font-size: 0.72rem; font-weight: 700;
-      color: var(--primary);
+      background: var(--primary-dim); border-radius: 50%;
+      font-size: 0.72rem; font-weight: 700; color: var(--primary);
       display: flex; align-items: center; justify-content: center;
     }
-    .step-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; padding-top: 3px; }
+    .next-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; padding-top: 3px; }
 
-    /* ── Trust section ── */
-    .trust-row {
-      display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center;
-      margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid var(--border);
-    }
-    .trust-item {
-      display: flex; align-items: center; gap: 0.45rem;
-      font-size: 0.78rem; color: var(--muted); font-weight: 500;
-    }
-    .trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-    /* ── Error alert ── */
-    .alert {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.85rem;
-      color: #dc2626;
-      margin-bottom: 1.25rem;
-      display: none;
-    }
-    .alert.show { display: block; }
-
-    @media (max-width: 480px) {
-      .form-card { padding: 1.5rem; }
+    @media (max-width: 500px) {
+      .card { padding: 1.5rem; }
       .field-row { grid-template-columns: 1fr; }
-      .benefits { gap: 1.25rem; }
+      .progress-step-label { display: none; }
+      .btn-row { flex-direction: column-reverse; }
+      .btn-back { width: 100%; }
     }
   </style>
 </head>
@@ -274,65 +356,132 @@
   </a>
 </header>
 
-<div class="hero">
-  <div class="hero-eyebrow">For Solicitors &amp; Licensed Conveyancers</div>
-  <h1>Receive Conveyancing Leads Directly</h1>
-  <p>Register your firm and we'll send you client enquiries matched to your regions. No subscription — you only pay on completion.</p>
-  <div class="benefits">
-    <div class="benefit-item">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      Qualified buyer &amp; seller leads
+<!-- Progress indicator -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-steps">
+    <div class="progress-step active" id="ps1">
+      <div class="progress-step-num">1</div>
+      <div class="progress-step-label">How it works</div>
     </div>
-    <div class="benefit-item">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      No monthly subscription
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps2">
+      <div class="progress-step-num">2</div>
+      <div class="progress-step-label">Your details</div>
     </div>
-    <div class="benefit-item">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      Pay on completion only
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps3">
+      <div class="progress-step-num">3</div>
+      <div class="progress-step-label">Agreement</div>
     </div>
   </div>
 </div>
 
 <div class="page-body">
-  <div class="form-card">
 
-    <!-- Success panel -->
-    <div class="success-panel" id="successPanel">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <!-- ── Step 1: How it works ── -->
+  <div class="step-panel active" id="step1">
+    <div class="card">
+      <div class="card-title">How FindConveyancers works</div>
+      <div class="card-subtitle">Everything you need to know before registering — read this first.</div>
+
+      <div class="how-section">
+        <div class="how-section-title">Step 1 — Receiving leads</div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8A16 16 0 0 0 15.2 16.1l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 23 17z"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>We send you the lead by email</h3>
+              <p>When a client submits an enquiry that matches your region and transaction type, we send their details to your nominated email address straight away.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>Respond within 24 hours</h3>
+              <p>You are required to contact the client within 24 hours of receiving the lead. Speed matters — clients on our platform are comparing multiple firms.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <h2>Application Received</h2>
-      <p>Thanks for registering. We'll review your details and be in touch within 1 working day to get you set up.</p>
-      <div class="success-steps">
-        <h3>What happens next</h3>
-        <div class="success-step">
-          <div class="step-num">1</div>
-          <div class="step-text">We review your application and activate your account</div>
+
+      <div class="how-section">
+        <div class="how-section-title">Step 2 — Submitting your quote</div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>Submit your fee quote via a private link</h3>
+              <p>Each lead email includes a unique link to our quoting portal. Enter your legal fee, VAT, and disbursements. The client sees a clear breakdown and compares your quote against others.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>Client chooses and instructs you directly</h3>
+              <p>If the client selects your quote, they instruct you through the platform. You then handle the matter in the usual way — we play no further role in the transaction.</p>
+            </div>
+          </div>
         </div>
-        <div class="success-step">
-          <div class="step-num">2</div>
-          <div class="step-text">You'll receive an email when new leads matching your regions come in</div>
+      </div>
+
+      <div class="how-section">
+        <div class="how-section-title">Step 3 — Reporting completion &amp; paying</div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>Let us know when the matter completes</h3>
+              <p>Within 5 business days of completion, notify us by email. We may independently verify completion against HM Land Registry records.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="how-step-body">
+              <h3>Pay on completion — nothing upfront</h3>
+              <p>Our completion fee is only due once the transaction completes. There are no monthly fees, no subscription costs, and no charge for leads that don't convert.</p>
+            </div>
+          </div>
         </div>
-        <div class="success-step">
-          <div class="step-num">3</div>
-          <div class="step-text">Submit your quote via a private link — the client compares and chooses</div>
-        </div>
+      </div>
+
+      <div class="info-box">
+        <p><strong>No risk to join.</strong> Registration is free. You only pay when a matter completes — and only for matters that came through FindConveyancers. Completion fees are agreed in the supply agreement you'll review on the next step.</p>
       </div>
     </div>
 
-    <!-- Sign-up form -->
-    <div id="formWrap">
-      <h2>Register Your Firm</h2>
-      <p class="subtitle">Fill in the form below and we'll be in touch within 1 working day.</p>
+    <div class="btn-row">
+      <button class="btn-next" onclick="goTo(2)">
+        Continue — Register your firm
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
 
-      <div class="alert" id="errorAlert"></div>
+  <!-- ── Step 2: Your details ── -->
+  <div class="step-panel" id="step2">
+    <div class="card">
+      <div class="card-title">Register your firm</div>
+      <div class="card-subtitle">We'll use these details to set up your account and match you with the right leads.</div>
 
-      <div class="form-section-label">Firm details</div>
+      <div class="alert" id="errorAlert2"></div>
+
+      <div class="section-label">Firm details</div>
 
       <div class="field" id="f-firmName">
         <label>Firm name <span class="req">*</span></label>
-        <input type="text" id="firmName" placeholder="e.g. Smith & Co Solicitors" autocomplete="organization">
+        <input type="text" id="firmName" placeholder="e.g. Smith &amp; Co Solicitors" autocomplete="organization">
         <div class="err-msg">Please enter your firm name</div>
       </div>
 
@@ -347,12 +496,12 @@
         <div class="err-msg">Please select your regulator</div>
       </div>
 
-      <div class="form-section-label">Your contact details</div>
+      <div class="section-label">Your contact details</div>
 
       <div class="field-row">
         <div class="field" id="f-contactName">
           <label>Your name <span class="req">*</span></label>
-          <input type="text" id="contactName" placeholder="First & last name" autocomplete="name">
+          <input type="text" id="contactName" placeholder="First &amp; last name" autocomplete="name">
           <div class="err-msg">Please enter your name</div>
         </div>
         <div class="field" id="f-role">
@@ -374,49 +523,149 @@
         </div>
       </div>
 
-      <div class="form-section-label">Coverage &amp; capacity</div>
+      <div class="section-label">Coverage</div>
 
       <div class="field" id="f-regions">
         <label>Regions covered <span class="req">*</span></label>
         <textarea id="regions" placeholder="e.g. Greater London, Surrey, Kent, Essex"></textarea>
-        <div class="hint">List the counties, regions, or cities you cover. Separate with commas.</div>
+        <div class="hint">List the counties, regions, or cities you cover, separated by commas.</div>
         <div class="err-msg">Please enter at least one region</div>
       </div>
 
       <div class="field">
         <label>Anything else you'd like us to know?</label>
-        <textarea id="notes" placeholder="e.g. specialisms, typical volume, geographic focus…"></textarea>
-      </div>
-
-      <div class="checkbox-row">
-        <input type="checkbox" id="termsCheck">
-        <label for="termsCheck">
-          I confirm this firm is regulated and I agree to FindConveyancers'
-          <a href="/legal.html" target="_blank">terms of service</a>.
-          We'll only use your details to send you relevant leads.
-        </label>
-      </div>
-
-      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
-        Submit Application
-      </button>
-
-      <div class="trust-row">
-        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Free to register</div>
-        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> No subscription</div>
-        <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Pay on completion only</div>
+        <textarea id="notes" placeholder="e.g. specialisms, preferred transaction types, typical volume…"></textarea>
       </div>
     </div>
 
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">Back</button>
+      <button class="btn-next" onclick="validateAndNext()">
+        Continue — Review agreement
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
   </div>
+
+  <!-- ── Step 3: Agreement ── -->
+  <div class="step-panel" id="step3">
+    <div class="card">
+      <div class="card-title">Referral Supply Agreement</div>
+      <div class="card-subtitle">Please read the agreement below, then tick to confirm your acceptance before submitting.</div>
+
+      <div class="agreement-scroll">
+        <h3>1. The service</h3>
+        <p>FindConveyancers (operated by Corre Connections) will supply you with conveyancing referrals — consumer enquiries matched to your geographic area and transaction types. Each referral consists of the client's contact details, property information, and transaction type.</p>
+
+        <h3>2. Pay on completion</h3>
+        <p>This agreement operates on a <strong>pay-per-completion</strong> basis. No fee is due on delivery of a referral, and no fee is due if a referred matter does not proceed to completion. The completion fee is only payable once the conveyancing transaction legally completes.</p>
+        <p>The agreed completion fee will be confirmed in writing before your account is activated. Fees are exclusive of VAT.</p>
+
+        <h3>3. Responding to leads</h3>
+        <p>You agree to contact each referred client within <strong>24 hours</strong> of receiving their details. Failure to respond promptly may result in suspension from the platform.</p>
+
+        <h3>4. Reporting completion</h3>
+        <p>You must notify FindConveyancers of each completion within <strong>5 business days</strong> of the completion date. We may independently verify completions via HM Land Registry records. Failure to notify may result in late payment interest being applied.</p>
+
+        <h3>5. Your obligations</h3>
+        <ul>
+          <li>You must hold a current practising certificate or licence from the SRA or CLC at all times.</li>
+          <li>You must maintain adequate professional indemnity insurance.</li>
+          <li>You must comply with UK GDPR and the Data Protection Act 2018 in handling client data.</li>
+          <li>You must not represent yourself as affiliated with or endorsed by FindConveyancers.</li>
+          <li>You must deal with clients professionally and in accordance with your regulatory obligations.</li>
+        </ul>
+
+        <h3>6. What we warrant</h3>
+        <p>We warrant that each referral delivered will contain genuine contact details submitted by a real client, relate to a genuine conveyancing enquiry, and not be a duplicate of a referral previously delivered to you for the same property within the preceding 6 months.</p>
+        <p>We do not warrant that any referral will result in an instruction or that any transaction will proceed to completion.</p>
+
+        <h3>7. Rejection of referrals</h3>
+        <p>You may reject a referral and request a credit within 5 business days of delivery if: the client's contact details are demonstrably non-functional; the referral is a verified duplicate; or the referral falls outside the geographic area or transaction types you have specified.</p>
+
+        <h3>8. Liability</h3>
+        <p>FindConveyancers is not responsible for the quality or outcome of legal services you provide. Our total liability to you under this agreement shall not exceed the amount of fees paid by you in the 3 months preceding the claim.</p>
+
+        <h3>9. Termination</h3>
+        <p>Either party may terminate this agreement on 30 days' written notice. We may terminate immediately if you lose your SRA or CLC authorisation, or commit a material breach that is not remedied within 14 days of notice.</p>
+
+        <h3>10. Data protection</h3>
+        <p>Each party is an independent data controller. We will share client personal data with you solely for the purpose of providing conveyancing services to that client. You must not use the data for any other purpose and must comply with all applicable data protection legislation.</p>
+
+        <h3>11. Governing law</h3>
+        <p>This agreement is governed by the laws of England and Wales. Any disputes are subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+      </div>
+
+      <div class="agree-row">
+        <input type="checkbox" id="agreeCheck">
+        <label for="agreeCheck">I have read and agree to the Referral Supply Agreement above. I confirm that this firm is regulated by the SRA or CLC and that I am authorised to enter into this agreement on the firm's behalf.</label>
+      </div>
+
+      <div class="alert" id="errorAlert3"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">Back</button>
+      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+        Submit application
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap: round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Success ── -->
+  <div class="success-panel" id="successPanel">
+    <div class="card" style="text-align:center; padding: 3rem 2rem;">
+      <div class="success-icon" style="margin: 0 auto 1.5rem;">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:0.6rem;">Application received</h2>
+      <p style="color:var(--muted); font-size:0.9rem; line-height:1.6; max-width:400px; margin:0 auto;">Thanks for registering. We'll review your details and be in touch within 1 working day to confirm your account and completion fee.</p>
+      <div class="success-next-steps" style="margin: 2rem auto 0; max-width:400px; text-align:left;">
+        <h3 style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--subtle); margin-bottom:0.9rem;">What happens next</h3>
+        <div class="next-step">
+          <div class="next-num">1</div>
+          <div class="next-text">We review your application and activate your account</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">2</div>
+          <div class="next-text">You'll receive an email confirming your completion fee and account details</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">3</div>
+          <div class="next-text">New leads matching your region will be sent to your nominated email address</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">4</div>
+          <div class="next-text">Quote via the private link in each lead email — you only pay when the matter completes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  function setError(fieldId, show) {
-    document.getElementById(fieldId).classList.toggle('error', show);
+  let currentStep = 1;
+
+  function goTo(step) {
+    // Update panels
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+
+    // Update progress indicators
+    [1, 2, 3].forEach(n => {
+      const ps = document.getElementById('ps' + n);
+      ps.classList.remove('active', 'complete');
+      if (n < step)      ps.classList.add('complete');
+      else if (n === step) ps.classList.add('active');
+    });
+
+    currentStep = step;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function validate() {
+  function validateStep2() {
     let ok = true;
     const checks = [
       ['f-firmName',    document.getElementById('firmName').value.trim()],
@@ -427,23 +676,34 @@
       ['f-regions',     document.getElementById('regions').value.trim()],
     ];
     checks.forEach(([id, val]) => {
+      const el = document.getElementById(id);
       const err = !val;
-      setError(id, err);
+      el.classList.toggle('error', err);
       if (err) ok = false;
     });
     return ok;
   }
 
-  async function handleSubmit() {
-    const alert = document.getElementById('errorAlert');
+  function validateAndNext() {
+    const alert = document.getElementById('errorAlert2');
     alert.classList.remove('show');
-
-    if (!document.getElementById('termsCheck').checked) {
-      alert.textContent = 'Please confirm you agree to the terms before submitting.';
+    if (!validateStep2()) {
+      alert.textContent = 'Please fill in all required fields before continuing.';
       alert.classList.add('show');
       return;
     }
-    if (!validate()) return;
+    goTo(3);
+  }
+
+  async function handleSubmit() {
+    const alert = document.getElementById('errorAlert3');
+    alert.classList.remove('show');
+
+    if (!document.getElementById('agreeCheck').checked) {
+      alert.textContent = 'Please read and tick the agreement box to continue.';
+      alert.classList.add('show');
+      return;
+    }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -464,7 +724,7 @@
     };
 
     try {
-      const res = await fetch('/api/conveyancer/signup', {
+      const res  = await fetch('/api/conveyancer/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -472,13 +732,15 @@
       const data = await res.json();
 
       if (res.ok) {
-        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('progressWrap').style.display = 'none';
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('successPanel').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (res.status === 409) {
         alert.textContent = 'That email address is already registered. Please contact us if you need help.';
         alert.classList.add('show');
         btn.disabled = false;
-        btn.innerHTML = 'Submit Application';
+        btn.innerHTML = 'Submit application <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
       } else {
         throw new Error(data.error || 'Unknown error');
       }
@@ -486,7 +748,7 @@
       alert.textContent = 'Something went wrong. Please try again or email us directly.';
       alert.classList.add('show');
       btn.disabled = false;
-      btn.innerHTML = 'Submit Application';
+      btn.innerHTML = 'Submit application';
     }
   }
 </script>
