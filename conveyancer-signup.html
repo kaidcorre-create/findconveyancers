@@ -822,7 +822,7 @@
       dd.innerHTML = '<div class="county-no-results">No counties match</div>';
     } else {
       dd.innerHTML = filtered.map(c =>
-        '<div class="county-opt' + (selectedCounties.has(c) ? ' selected' : '') + '" onclick="toggleCounty(\'' + c.replace(/'/g,"\\'") + '\')">' + c + '</div>'
+        '<div class="county-opt' + (selectedCounties.has(c) ? ' selected' : '') + '" data-county="' + c.replace(/"/g,'&quot;') + '">' + c + '</div>'
       ).join('');
     }
   }
@@ -832,24 +832,33 @@
     else selectedCounties.add(c);
     renderCountyTags();
     renderCountyDropdown(document.getElementById('countyInput').value);
-    document.getElementById('countyInput').focus();
   }
 
   function initCountyDropdown() {
     const input = document.getElementById('countyInput');
     const dd = document.getElementById('countyDropdown');
+    const tagsEl = document.getElementById('countyTags');
+
     input.addEventListener('focus', () => {
       renderCountyDropdown(input.value);
       dd.classList.add('open');
-      document.getElementById('countyTags').classList.add('open');
+      tagsEl.classList.add('open');
     });
     input.addEventListener('input', () => renderCountyDropdown(input.value));
-    document.addEventListener('click', e => {
-      if (!document.getElementById('countyWrap').contains(e.target)) {
+
+    // mousedown fires before blur — preventDefault keeps focus on the input
+    dd.addEventListener('mousedown', e => {
+      e.preventDefault();
+      const opt = e.target.closest('.county-opt');
+      if (opt) toggleCounty(opt.dataset.county);
+    });
+
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
         dd.classList.remove('open');
-        document.getElementById('countyTags').classList.remove('open');
+        tagsEl.classList.remove('open');
         input.value = '';
-      }
+      }, 150);
     });
   }
 
