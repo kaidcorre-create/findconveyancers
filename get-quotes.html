@@ -1066,9 +1066,11 @@
 
       if (response.ok) {
         // Hide form, show success
-        formContainer.style.display = 'none';
+        form.style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
+        document.querySelector('.progress-section').style.display = 'none';
         successPanel.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'form_submitted' }) }).catch(() => {});
       } else {
         const errData = await response.json().catch(() => ({}));
