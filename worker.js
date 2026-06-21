@@ -149,10 +149,11 @@ async function handleLeadSubmission(request, env) {
     now, now
   ).run();
 
-  // Email all active conveyancers + admin
+  // Email conveyancers, admin, and confirm to client
   await Promise.all([
     emailConveyancers(body, id, env),
     sendEmail(env.NOTIFY_EMAIL, `New lead: ${body.firstName} ${body.lastName}`, emailAdminNewLead(body, id), env),
+    sendEmail(body.email.toLowerCase(), 'We\'ve received your conveyancing quote request', emailClientConfirmation(body, id), env),
   ]);
 
   return jsonResponse({ success: true, quoteId: id }, 201);
@@ -264,17 +265,34 @@ async function handleQuoteSubmit(request, env) {
   ).bind(lead_uuid).first();
   const count = row?.cnt || 0;
 
-  // When 3+ quotes received, email consumer the comparison link
+  const qr = await env.DB.prepare('SELECT property_address FROM quotes WHERE id = ?').bind(lead_uuid).first();
+  const address = qr?.property_address || lead.postcode;
+  const compareLink = `https://findconveyancers.co.uk/compare.html?uuid=${lead_uuid}`;
+
   if (count >= 3 && lead.status === 'new') {
+    // All quotes in — update status and send comparison email
     await env.DB.prepare(
       'UPDATE leads SET status = ?, quotes_sent_at = ?, updated_at = ? WHERE id = ?'
     ).bind('quotes_sent', now, now, lead_uuid).run();
 
-    const qr = await env.DB.prepare('SELECT property_address FROM quotes WHERE id = ?').bind(lead_uuid).first();
     await sendEmail(
       lead.email,
-      'Your conveyancing quotes are ready',
-      emailConsumerQuotesReady(lead, qr?.property_address || lead.postcode, lead_uuid),
+      'Your conveyancing quotes are ready to compare',
+      emailConsumerQuotesReady(lead, address, lead_uuid),
+      env
+    );
+  } else if (lead.status === 'new') {
+    // Notify client a new quote has arrived
+    await sendEmail(
+      lead.email,
+      `Quote ${count} received for your conveyancing request`,
+      emailWrap('A new quote has arrived', `
+        <h2>You have ${count} quote${count !== 1 ? 's' : ''} so far</h2>
+        <p>Hi ${lead.first_name}, a conveyancing firm has submitted a quote for your property at <strong>${address}</strong>.</p>
+        <p>We're collecting quotes from additional firms. Once we have a selection ready, we'll send you a link to compare them all side by side.</p>
+        <div class="note">You don't need to do anything right now — we'll be in touch as soon as your comparison is ready.</div>
+        <p style="font-size:13px;color:#6b7280">If you have any questions in the meantime, reply to this email or contact us at <a href="mailto:hello@findconveyancers.co.uk">hello@findconveyancers.co.uk</a>.</p>
+      `),
       env
     );
   }
@@ -967,6 +985,25 @@ function emailWrap(title, content) {
 
 function fmt(pence) { return '£' + (pence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function fmtPrice(p) { return '£' + parseInt(p || 0).toLocaleString('en-GB'); }
+
+function emailClientConfirmation(body, leadUuid) {
+  const tx = Array.isArray(body.transactionTypes) ? body.transactionTypes.join(', ') : (body.transactionType || '');
+  return emailWrap('Quote request received', `
+    <h2>We've received your request</h2>
+    <p>Hi ${body.firstName}, thanks for using FindConveyancers. We've received your quote request and are sending it to regulated conveyancing firms in your area now.</p>
+    <table class="data">
+      <tr><td>Property</td><td>${body.propertyAddress || body.city || 'As provided'}</td></tr>
+      <tr><td>Transaction</td><td>${tx}</td></tr>
+      <tr><td>Property value</td><td>${fmtPrice(body.propertyValue)}</td></tr>
+      ${body.propertyType ? `<tr><td>Property type</td><td>${body.propertyType}</td></tr>` : ''}
+    </table>
+    <div class="note">All firms on FindConveyancers are regulated by the SRA or CLC. You are under no obligation to instruct anyone — quotes are completely free.</div>
+    <h2 style="margin-top:24px">What happens next</h2>
+    <p>Conveyancing firms will review your request and submit their quotes. We'll email you as each quote comes in, and send you a link to compare them all side by side once we have a selection ready.</p>
+    <p>If you have any questions, reply to this email or contact us at <a href="mailto:hello@findconveyancers.co.uk">hello@findconveyancers.co.uk</a>.</p>
+    <div class="ftr" style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;font-size:12px;color:#9ca3af">Your reference: ${leadUuid}</div>
+  `);
+}
 
 function emailConveyancerNewLead(body, leadUuid, conv, quoteLink) {
   const price = fmtPrice(body.propertyValue);
