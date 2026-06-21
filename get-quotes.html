@@ -522,6 +522,16 @@
     .autofill-row.visible { display:grid; }
     .postcode-field { text-transform: uppercase; }
     .postcode-field::placeholder { text-transform: none; }
+    .county-wrap { position: relative; margin-top: 0.75rem; }
+    .county-search { width:100%; padding:0.9rem 1rem; border:2px solid var(--border-light); border-radius:10px; font-family:inherit; font-size:1rem; color:var(--text-primary); transition:all 0.2s; }
+    .county-search:focus { outline:none; border-color:var(--primary-blue); box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+    .county-search::placeholder { color:var(--text-muted); }
+    .county-dd { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50; background:#fff; border:2px solid var(--primary-blue); border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; }
+    .county-dd.open { display:block; }
+    .county-opt { padding:0.6rem 1rem; font-size:0.9rem; cursor:pointer; color:var(--text-primary); }
+    .county-opt:hover { background:#DBEAFE; color:var(--primary-blue); }
+    .county-opt.selected { font-weight:700; color:var(--primary-blue); }
+    .county-no-match { padding:0.6rem 1rem; font-size:0.9rem; color:var(--text-muted); }
 
     /* ── Mobile nav ─────────────────── */
     .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-primary);border-radius:6px;line-height:0}
@@ -635,6 +645,11 @@
               </div>
             </div>
           </div>
+          <div class="county-wrap">
+            <input type="text" id="buyCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <div class="county-dd" id="buyCountyDd"></div>
+          </div>
+          <input type="hidden" id="buyCounty" name="buyCounty">
           <input type="hidden" id="buyAddress" name="propertyAddress">
         </div>
 
@@ -652,6 +667,11 @@
               </div>
             </div>
           </div>
+          <div class="county-wrap">
+            <input type="text" id="sellCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <div class="county-dd" id="sellCountyDd"></div>
+          </div>
+          <input type="hidden" id="sellCounty" name="sellCounty">
           <input type="hidden" id="sellAddress" name="saleAddress">
         </div>
 
@@ -669,6 +689,11 @@
               </div>
             </div>
           </div>
+          <div class="county-wrap">
+            <input type="text" id="remCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <div class="county-dd" id="remCountyDd"></div>
+          </div>
+          <input type="hidden" id="remCounty" name="remCounty">
           <input type="hidden" id="remAddress" name="propertyAddress">
         </div>
 
@@ -826,6 +851,50 @@
   fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
 
   // ── Address lookup helper ────────────────────────────────────────────────────
+  const UK_COUNTIES = [
+    'Bedfordshire','Berkshire','Bristol','Buckinghamshire','Cambridgeshire','Cheshire',
+    'City of London','Cornwall','Cumbria','Derbyshire','Devon','Dorset','Durham',
+    'East Riding of Yorkshire','East Sussex','Essex','Gloucestershire','Greater London',
+    'Greater Manchester','Hampshire','Herefordshire','Hertfordshire','Isle of Wight',
+    'Kent','Lancashire','Leicestershire','Lincolnshire','Merseyside','Norfolk',
+    'North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire',
+    'Rutland','Shropshire','Somerset','South Yorkshire','Staffordshire','Suffolk',
+    'Surrey','Tyne and Wear','Warwickshire','West Midlands','West Sussex',
+    'West Yorkshire','Wiltshire','Worcestershire'
+  ];
+
+  function setupCountyDropdown(searchId, dropdownId, hiddenId) {
+    const input  = document.getElementById(searchId);
+    const dd     = document.getElementById(dropdownId);
+    const hidden = document.getElementById(hiddenId);
+
+    function render(query) {
+      const q = query.toLowerCase();
+      const matches = UK_COUNTIES.filter(c => c.toLowerCase().includes(q));
+      if (!matches.length) {
+        dd.innerHTML = '<div class="county-no-match">No matches</div>';
+      } else {
+        dd.innerHTML = matches.map(c =>
+          `<div class="county-opt${hidden.value === c ? ' selected' : ''}" data-val="${c}">${c}</div>`
+        ).join('');
+      }
+    }
+
+    input.addEventListener('focus', () => { render(input.value); dd.classList.add('open'); });
+    input.addEventListener('input', () => render(input.value));
+
+    dd.addEventListener('mousedown', e => {
+      e.preventDefault();
+      const opt = e.target.closest('.county-opt');
+      if (!opt) return;
+      hidden.value = opt.dataset.val;
+      input.value  = opt.dataset.val;
+      dd.classList.remove('open');
+    });
+
+    input.addEventListener('blur', () => setTimeout(() => dd.classList.remove('open'), 150));
+  }
+
   function setupPostcodeLookup(streetId, postcodeId, spinnerId, hiddenId) {
     const pcInput = document.getElementById(postcodeId);
     const spinner = document.getElementById(spinnerId);
@@ -887,6 +956,9 @@
     setupPostcodeLookup('buyStreet','buyPostcode','buySpinner','buyAddress');
     setupPostcodeLookup('sellStreet','sellPostcode','sellSpinner','sellAddress');
     setupPostcodeLookup('remStreet','remPostcode','remSpinner','remAddress');
+    setupCountyDropdown('buyCountySearch','buyCountyDd','buyCounty');
+    setupCountyDropdown('sellCountySearch','sellCountyDd','sellCounty');
+    setupCountyDropdown('remCountySearch','remCountyDd','remCounty');
     setupSlider('buyPriceSlider','buyPriceDisplay','buyPrice');
     setupSlider('sellPriceSlider','sellPriceDisplay','sellPrice');
   });
@@ -1098,7 +1170,9 @@
           email: formData.get('email'),
           phone: formData.get('phone'),
           propertyAddress: document.getElementById('buyAddress')?.value || document.getElementById('remAddress')?.value || '',
+          propertyCounty: document.getElementById('buyCounty')?.value || document.getElementById('remCounty')?.value || '',
           saleAddress: document.getElementById('sellAddress')?.value || '',
+          saleCounty: document.getElementById('sellCounty')?.value || '',
           propertyValue: document.getElementById('buyPrice').value,
           saleValue: document.getElementById('sellPrice')?.value || '',
           propertyType: formData.get('propertyType'),
