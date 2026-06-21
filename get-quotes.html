@@ -633,16 +633,6 @@
               </div>
             </div>
           </div>
-          <div class="autofill-row" id="buyAutofill">
-            <div class="form-group">
-              <label class="form-label">Town / City</label>
-              <input type="text" id="buyTown" class="form-input" placeholder="Town" autocomplete="address-level2">
-            </div>
-            <div class="form-group">
-              <label class="form-label">County</label>
-              <input type="text" id="buyCounty" class="form-input" placeholder="County" autocomplete="address-level1">
-            </div>
-          </div>
           <input type="hidden" id="buyAddress" name="propertyAddress">
         </div>
 
@@ -660,16 +650,6 @@
               </div>
             </div>
           </div>
-          <div class="autofill-row" id="sellAutofill">
-            <div class="form-group">
-              <label class="form-label">Town / City</label>
-              <input type="text" id="sellTown" class="form-input" placeholder="Town" autocomplete="address-level2">
-            </div>
-            <div class="form-group">
-              <label class="form-label">County</label>
-              <input type="text" id="sellCounty" class="form-input" placeholder="County" autocomplete="address-level1">
-            </div>
-          </div>
           <input type="hidden" id="sellAddress" name="saleAddress">
         </div>
 
@@ -685,16 +665,6 @@
               <div id="remSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
                 <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
               </div>
-            </div>
-          </div>
-          <div class="autofill-row" id="remAutofill">
-            <div class="form-group">
-              <label class="form-label">Town / City</label>
-              <input type="text" id="remTown" class="form-input" placeholder="Town" autocomplete="address-level2">
-            </div>
-            <div class="form-group">
-              <label class="form-label">County</label>
-              <input type="text" id="remCounty" class="form-input" placeholder="County" autocomplete="address-level1">
             </div>
           </div>
           <input type="hidden" id="remAddress" name="propertyAddress">
@@ -854,10 +824,9 @@
   fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
 
   // ── Address lookup helper ────────────────────────────────────────────────────
-  function setupPostcodeLookup(streetId, postcodeId, spinnerId, townId, countyId, hiddenId, autofillRowId) {
+  function setupPostcodeLookup(streetId, postcodeId, spinnerId, hiddenId) {
     const pcInput = document.getElementById(postcodeId);
     const spinner = document.getElementById(spinnerId);
-    const autofillRow = document.getElementById(autofillRowId);
 
     async function lookup() {
       const pc = pcInput.value.trim().toUpperCase().replace(/\s+/g,'');
@@ -866,29 +835,20 @@
       try {
         const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
         const data = await res.json();
-        if (data.status === 200) {
-          const r = data.result;
-          document.getElementById(townId).value = r.admin_district || r.parish || '';
-          document.getElementById(countyId).value = r.admin_county || r.region || '';
-          pcInput.value = r.postcode;
-          autofillRow.classList.add('visible');
-          buildHidden(streetId, postcodeId, townId, countyId, hiddenId);
-        }
-      } catch(_) { autofillRow.classList.add('visible'); }
-      finally { spinner.style.display = 'none'; }
+        if (data.status === 200) pcInput.value = data.result.postcode;
+      } catch(_) {}
+      finally { spinner.style.display = 'none'; buildHidden(streetId, postcodeId, hiddenId); }
     }
 
     let timer;
     pcInput.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(lookup, 600); });
     pcInput.addEventListener('blur', lookup);
-    [streetId, townId, countyId].forEach(id => document.getElementById(id).addEventListener('input', () => buildHidden(streetId, postcodeId, townId, countyId, hiddenId)));
+    document.getElementById(streetId).addEventListener('input', () => buildHidden(streetId, postcodeId, hiddenId));
   }
 
-  function buildHidden(streetId, postcodeId, townId, countyId, hiddenId) {
+  function buildHidden(streetId, postcodeId, hiddenId) {
     const parts = [
       document.getElementById(streetId).value.trim(),
-      document.getElementById(townId).value.trim(),
-      document.getElementById(countyId).value.trim(),
       document.getElementById(postcodeId).value.trim().toUpperCase(),
     ].filter(Boolean);
     document.getElementById(hiddenId).value = parts.join(', ');
@@ -922,9 +882,9 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    setupPostcodeLookup('buyStreet','buyPostcode','buySpinner','buyTown','buyCounty','buyAddress','buyAutofill');
-    setupPostcodeLookup('sellStreet','sellPostcode','sellSpinner','sellTown','sellCounty','sellAddress','sellAutofill');
-    setupPostcodeLookup('remStreet','remPostcode','remSpinner','remTown','remCounty','remAddress','remAutofill');
+    setupPostcodeLookup('buyStreet','buyPostcode','buySpinner','buyAddress');
+    setupPostcodeLookup('sellStreet','sellPostcode','sellSpinner','sellAddress');
+    setupPostcodeLookup('remStreet','remPostcode','remSpinner','remAddress');
     setupSlider('buyPriceSlider','buyPriceDisplay','buyPrice');
     setupSlider('sellPriceSlider','sellPriceDisplay','sellPrice');
   });
