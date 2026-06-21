@@ -266,6 +266,50 @@
     .check-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text); cursor: pointer; }
     .check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
 
+    /* County searchable dropdown */
+    .county-wrap { position: relative; }
+    .county-tags {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      min-height: 42px; padding: 0.4rem 0.6rem;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--surface); cursor: text;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .county-tags.open, .county-tags:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .field.error .county-tags { border-color: #ef4444; }
+    .county-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--primary-dim); color: var(--primary);
+      border-radius: 5px; padding: 0.2rem 0.5rem; font-size: 0.8rem; font-weight: 600;
+    }
+    .county-tag button {
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: var(--primary); font-size: 1rem; line-height: 1; display: flex; align-items: center;
+    }
+    .county-search-input {
+      border: none; outline: none; font-family: inherit; font-size: 0.9rem;
+      color: var(--text); background: transparent; min-width: 120px; flex: 1;
+      padding: 0.15rem 0.1rem;
+    }
+    .county-dropdown {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100;
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1); max-height: 220px; overflow-y: auto;
+      display: none;
+    }
+    .county-dropdown.open { display: block; }
+    .county-opt {
+      padding: 0.55rem 0.9rem; font-size: 0.875rem; cursor: pointer;
+      display: flex; align-items: center; gap: 0.5rem; color: var(--text);
+    }
+    .county-opt:hover { background: var(--primary-dim); }
+    .county-opt.selected { color: var(--primary); font-weight: 600; }
+    .county-opt.selected::after { content: '✓'; margin-left: auto; font-size: 0.8rem; }
+    .county-no-results { padding: 0.6rem 0.9rem; font-size: 0.875rem; color: var(--muted); }
+
     .agree-row {
       display: flex; align-items: flex-start; gap: 0.75rem;
       background: var(--surface);
@@ -564,55 +608,11 @@
 
       <div class="field" id="f-regions">
         <label>Counties covered <span class="req">*</span></label>
-        <div class="check-grid">
-          <label class="check-item"><input type="checkbox" name="county" value="Bedfordshire"> Bedfordshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Berkshire"> Berkshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Bristol"> Bristol</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Buckinghamshire"> Buckinghamshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Cambridgeshire"> Cambridgeshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Cheshire"> Cheshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="City of London"> City of London</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Cornwall"> Cornwall</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Cumbria"> Cumbria</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Derbyshire"> Derbyshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Devon"> Devon</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Dorset"> Dorset</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Durham"> Durham</label>
-          <label class="check-item"><input type="checkbox" name="county" value="East Riding of Yorkshire"> East Riding of Yorkshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="East Sussex"> East Sussex</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Essex"> Essex</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Gloucestershire"> Gloucestershire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Greater London"> Greater London</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Greater Manchester"> Greater Manchester</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Hampshire"> Hampshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Herefordshire"> Herefordshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Hertfordshire"> Hertfordshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Isle of Wight"> Isle of Wight</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Kent"> Kent</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Lancashire"> Lancashire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Leicestershire"> Leicestershire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Lincolnshire"> Lincolnshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Merseyside"> Merseyside</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Norfolk"> Norfolk</label>
-          <label class="check-item"><input type="checkbox" name="county" value="North Yorkshire"> North Yorkshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Northamptonshire"> Northamptonshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Northumberland"> Northumberland</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Nottinghamshire"> Nottinghamshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Oxfordshire"> Oxfordshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Rutland"> Rutland</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Shropshire"> Shropshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Somerset"> Somerset</label>
-          <label class="check-item"><input type="checkbox" name="county" value="South Yorkshire"> South Yorkshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Staffordshire"> Staffordshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Suffolk"> Suffolk</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Surrey"> Surrey</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Tyne and Wear"> Tyne and Wear</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Warwickshire"> Warwickshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="West Midlands"> West Midlands</label>
-          <label class="check-item"><input type="checkbox" name="county" value="West Sussex"> West Sussex</label>
-          <label class="check-item"><input type="checkbox" name="county" value="West Yorkshire"> West Yorkshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Wiltshire"> Wiltshire</label>
-          <label class="check-item"><input type="checkbox" name="county" value="Worcestershire"> Worcestershire</label>
+        <div class="county-wrap" id="countyWrap">
+          <div class="county-tags" id="countyTags" onclick="document.getElementById('countyInput').focus()">
+            <input type="text" id="countyInput" class="county-search-input" placeholder="Search and select counties…" autocomplete="off">
+          </div>
+          <div class="county-dropdown" id="countyDropdown"></div>
         </div>
         <div class="err-msg" id="regionsErr" style="display:none;">Please select at least one county</div>
       </div>
@@ -668,17 +668,15 @@
         <p>You pay on completion only, at the following rates:</p>
         <table>
           <tr><th>Transaction type</th><th>Completion fee (ex-VAT)</th></tr>
-          <tr><td>New Build</td><td>To be confirmed</td></tr>
-          <tr><td>Purchase</td><td>To be confirmed</td></tr>
-          <tr><td>Sale</td><td>To be confirmed</td></tr>
-          
-          <tr><td>Remortgage</td><td>To be confirmed</td></tr>
+          <tr><td>Purchase</td><td>£200</td></tr>
+          <tr><td>Sale</td><td>£200</td></tr>
+          <tr><td>New Build</td><td>£200</td></tr>
+          <tr><td>Remortgage</td><td>£100</td></tr>
         </table>
-        <p>Completion fees will be confirmed in writing when your account is activated. Fees are exclusive of VAT.</p>
+        <p>Fees are exclusive of VAT.</p>
 
         <h2>Referrals</h2>
         <p>Each referral we send you includes the client's name, contact details, property address, indicative value, transaction type, and referral source. We warrant that each referral contains accurate contact details and relates to a genuine enquiry.</p>
-        <p>If a referral has demonstrably wrong contact details, or is a duplicate of one already sent to you for the same property, you can reject it within 5 working days by emailing us with the referral reference number. We'll review and issue a credit if the rejection is valid. You cannot reject a referral on the grounds that the client didn't instruct you.</p>
 
         <h2>Your Obligations</h2>
         <ul>
@@ -691,7 +689,7 @@
         <h2>Payment</h2>
         <p><strong>You pay on completion only.</strong> No fee is due on delivery of a referral. No fee is due if the client doesn't instruct you. No fee is due if the transaction falls through before completion.</p>
         <p><strong>You must report every completion</strong> that originated from one of our referrals within 5 working days of the completion date, providing the referral reference number, property address, completion date, and transaction value.</p>
-        <p><strong>We verify independently.</strong> We check completions against HM Land Registry data. If we identify a completion you haven't reported, we'll invoice you for it.</p>
+        <p><strong>We verify independently.</strong> We may verify transaction completion through the client, the estate agent involved, or HM Land Registry records. If we identify a completion you haven't reported, we'll invoice you for it.</p>
         <p><strong>The fee applies however the instruction came about.</strong> If we sent you a referral for a client and that client's transaction completes whether or not they used our quote comparison, and regardless of how you describe the resulting instruction the completion fee is owed. What matters is that the client and property match a referral we delivered to you.</p>
         <p>Payment is due within 14 days of invoice. Late payments accrue interest at 8% above the Bank of England base rate under the Late Payment of Commercial Debts (Interest) Act 1998. We may suspend your account if an invoice is more than 21 days overdue.</p>
 
@@ -703,7 +701,7 @@
         <p>You will receive personal data about prospective clients (name, contact details, property address, transaction details). Use it only to provide a quote and, if instructed, to carry out the conveyancing. You must comply with UK GDPR and be registered with the ICO. We are each independent data controllers.</p>
 
         <h2>Ending the Agreement</h2>
-        <p>Either party can end this agreement with 30 days' notice. We can end it immediately if you lose your SRA or CLC authorisation, or materially breach these terms and don't remedy it within 14 days of being notified.</p>
+        <p>Either party can end this agreement with 24 hours' prior written notice. We can end it immediately if you lose your SRA or CLC authorisation, or materially breach these terms and don't remedy it within 14 days of being notified.</p>
         <p>Completion fees for referrals already delivered remain payable after termination.</p>
 
         <h2>General</h2>
@@ -785,8 +783,78 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  const ALL_COUNTIES = [
+    'Bedfordshire','Berkshire','Bristol','Buckinghamshire','Cambridgeshire','Cheshire',
+    'City of London','Cornwall','Cumbria','Derbyshire','Devon','Dorset','Durham',
+    'East Riding of Yorkshire','East Sussex','Essex','Gloucestershire','Greater London',
+    'Greater Manchester','Hampshire','Herefordshire','Hertfordshire','Isle of Wight',
+    'Kent','Lancashire','Leicestershire','Lincolnshire','Merseyside','Norfolk',
+    'North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire',
+    'Rutland','Shropshire','Somerset','South Yorkshire','Staffordshire','Suffolk',
+    'Surrey','Tyne and Wear','Warwickshire','West Midlands','West Sussex',
+    'West Yorkshire','Wiltshire','Worcestershire'
+  ];
+  let selectedCounties = new Set();
+
+  function renderCountyTags() {
+    const tags = document.getElementById('countyTags');
+    const input = document.getElementById('countyInput');
+    Array.from(tags.querySelectorAll('.county-tag')).forEach(t => t.remove());
+    selectedCounties.forEach(c => {
+      const tag = document.createElement('span');
+      tag.className = 'county-tag';
+      tag.innerHTML = c + '<button type="button" aria-label="Remove ' + c + '" onclick="removeCounty(\'' + c.replace(/'/g,"\\'") + '\')">×</button>';
+      tags.insertBefore(tag, input);
+    });
+    input.placeholder = selectedCounties.size ? '' : 'Search and select counties…';
+  }
+
+  function removeCounty(c) {
+    selectedCounties.delete(c);
+    renderCountyTags();
+    renderCountyDropdown(document.getElementById('countyInput').value);
+  }
+
+  function renderCountyDropdown(query) {
+    const dd = document.getElementById('countyDropdown');
+    const filtered = ALL_COUNTIES.filter(c => c.toLowerCase().includes(query.toLowerCase()));
+    if (filtered.length === 0) {
+      dd.innerHTML = '<div class="county-no-results">No counties match</div>';
+    } else {
+      dd.innerHTML = filtered.map(c =>
+        '<div class="county-opt' + (selectedCounties.has(c) ? ' selected' : '') + '" onclick="toggleCounty(\'' + c.replace(/'/g,"\\'") + '\')">' + c + '</div>'
+      ).join('');
+    }
+  }
+
+  function toggleCounty(c) {
+    if (selectedCounties.has(c)) selectedCounties.delete(c);
+    else selectedCounties.add(c);
+    renderCountyTags();
+    renderCountyDropdown(document.getElementById('countyInput').value);
+    document.getElementById('countyInput').focus();
+  }
+
+  function initCountyDropdown() {
+    const input = document.getElementById('countyInput');
+    const dd = document.getElementById('countyDropdown');
+    input.addEventListener('focus', () => {
+      renderCountyDropdown(input.value);
+      dd.classList.add('open');
+      document.getElementById('countyTags').classList.add('open');
+    });
+    input.addEventListener('input', () => renderCountyDropdown(input.value));
+    document.addEventListener('click', e => {
+      if (!document.getElementById('countyWrap').contains(e.target)) {
+        dd.classList.remove('open');
+        document.getElementById('countyTags').classList.remove('open');
+        input.value = '';
+      }
+    });
+  }
+
   function getSelectedCounties() {
-    return Array.from(document.querySelectorAll('input[name="county"]:checked')).map(cb => cb.value);
+    return Array.from(selectedCounties);
   }
 
   function getSelectedTxTypes() {
@@ -924,6 +992,8 @@
       btn.innerHTML = 'Submit application';
     }
   }
+
+  initCountyDropdown();
 </script>
 
 </body>
