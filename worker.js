@@ -41,6 +41,9 @@ export default {
       if (path === '/api/conveyancer/signup' && request.method === 'POST')
         return handleConveyancerSignup(request, env);
 
+      if (path === '/api/estate-agent/signup' && request.method === 'POST')
+        return handleEstateAgentSignup(request, env);
+
       // ── Admin ───────────────────────────────────────────────────────────────
       if (path === '/api/admin/login' && request.method === 'POST')
         return handleAdminLogin(request, env);
@@ -490,6 +493,44 @@ async function handleConveyancerSignup(request, env) {
       ${notes ? `<tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Notes</td><td>${notes}</td></tr>` : ''}
     </table>
     <p style="margin-top:16px">Log in to the <a href="https://findconveyancers.co.uk/admin.html">admin dashboard</a> to activate this firm.</p>`,
+    env
+  );
+
+  return jsonResponse({ success: true, id }, 201);
+}
+
+// ── Public: estate agent signup ───────────────────────────────────────────────
+async function handleEstateAgentSignup(request, env) {
+  const body = await request.json().catch(() => ({}));
+
+  const name     = (body.name     || '').trim();
+  const business = (body.business || '').trim();
+  const email    = (body.email    || '').trim().toLowerCase();
+  const phone    = (body.phone    || '').trim();
+
+  if (!name || !business || !email || !phone) {
+    return jsonResponse({ error: 'Missing required fields' }, 400);
+  }
+
+  const id  = crypto.randomUUID();
+  const now = new Date().toISOString();
+
+  await env.DB.prepare(`
+    INSERT INTO estate_agent_leads (id, name, business, email, phone, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).bind(id, name, business, email, phone, now).run();
+
+  await sendEmail(
+    env.NOTIFY_EMAIL,
+    `New estate agent partnership enquiry: ${business}`,
+    `<p>An estate agent has expressed interest in partnering with FindConveyancers.</p>
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Name</td><td>${name}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Agency</td><td>${business}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Email</td><td>${email}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Phone</td><td>${phone}</td></tr>
+    </table>
+    <p style="margin-top:16px">Follow up within 24 hours to discuss the referral partnership scheme.</p>`,
     env
   );
 

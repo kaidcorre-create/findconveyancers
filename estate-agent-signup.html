@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Partner with FindConveyancers as an estate agent — offer your clients a free conveyancing comparison service.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#2563eb">
+  <title>Estate Agent Partnership – FindConveyancers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary:     #2563eb;
+      --primary-dk:  #1d4ed8;
+      --primary-dim: rgba(37,99,235,0.07);
+      --green:       #059669;
+      --green-dim:   rgba(5,150,105,0.08);
+      --text:        #111827;
+      --muted:       #6b7280;
+      --subtle:      #9ca3af;
+      --border:      #e5e7eb;
+      --surface:     #ffffff;
+      --bg:          #f9fafb;
+      --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .logo-icon {
+      width: 32px; height: 32px; background: var(--primary); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+    .logo-text { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .logo-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .page-body {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.25rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1rem;
+    }
+    .card-title    { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .card-subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+    /* ── Benefit strips ── */
+    .benefits { display: flex; flex-direction: column; gap: 0; margin-bottom: 2rem; }
+    .benefit {
+      display: flex; gap: 0.9rem; align-items: flex-start;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .benefit:last-child { border-bottom: none; padding-bottom: 0; }
+    .benefit-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: var(--primary-dim); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .benefit-icon svg { width: 17px; height: 17px; stroke: var(--primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .benefit-body h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .benefit-body p  { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Form ── */
+    .section-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--subtle); margin: 1.75rem 0 1rem;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    .field { margin-bottom: 1.25rem; }
+    .field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+    .field label .req { color: var(--primary); margin-left: 2px; }
+    .field input {
+      width: 100%; padding: 0.65rem 0.85rem;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; color: var(--text);
+      background: var(--surface); outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .field.error input { border-color: #ef4444; }
+    .field .err-msg { font-size: 0.76rem; color: #ef4444; margin-top: 0.35rem; display: none; }
+    .field.error .err-msg { display: block; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .alert {
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; padding: 0.75rem 1rem;
+      font-size: 0.85rem; color: #dc2626;
+      margin-bottom: 1.25rem; display: none;
+    }
+    .alert.show { display: block; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--primary);
+      color: white; border: none; border-radius: 9px;
+      font-family: inherit; font-size: 1rem; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .btn-submit:hover { background: var(--primary-dk); }
+    .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .loading-ring {
+      width: 16px; height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Success ── */
+    .success-panel { display: none; text-align: center; padding: 1rem 0 2rem; }
+    .success-panel.show { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: var(--green-dim); border: 2px solid rgba(5,150,105,0.25);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .success-icon svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .success-panel h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .success-panel p  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+
+    @media (max-width: 500px) {
+      .card { padding: 1.5rem; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/partner.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">FindConveyancers</div>
+      <div class="logo-sub">Partner Portal</div>
+    </div>
+  </a>
+</header>
+
+<div class="page-body">
+
+  <div class="card" id="formCard">
+    <div class="card-title">Estate agent partnership</div>
+    <div class="card-subtitle">Tell us a little about your agency and we'll be in touch within 24 hours to discuss our referral partnership scheme.</div>
+
+    <div class="benefits">
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="benefit-body">
+          <h3>Add value for your clients</h3>
+          <p>Offer buyers and sellers an instant, free conveyancing comparison as part of your service — at no cost to you.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="benefit-body">
+          <h3>A revenue share for your referrals</h3>
+          <p>We pay a referral fee for every matter that completes through your introduction. We'll discuss rates when we call.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="benefit-body">
+          <h3>Simple, trackable referrals</h3>
+          <p>We give you a unique referral link — no paperwork, no complicated processes, just a link to share.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Your details</div>
+
+    <div class="alert" id="errorAlert"></div>
+
+    <div class="field-row">
+      <div class="field" id="f-name">
+        <label>Your name <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="First &amp; last name" autocomplete="name">
+        <div class="err-msg">Please enter your name</div>
+      </div>
+      <div class="field" id="f-business">
+        <label>Agency name <span class="req">*</span></label>
+        <input type="text" id="business" placeholder="e.g. Smith &amp; Co Estate Agents" autocomplete="organization">
+        <div class="err-msg">Please enter your agency name</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-email">
+        <label>Email address <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="you@agency.co.uk" autocomplete="email">
+        <div class="err-msg">Please enter a valid email</div>
+      </div>
+      <div class="field" id="f-phone">
+        <label>Phone number <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="01234 567890" autocomplete="tel">
+        <div class="err-msg">Please enter a phone number</div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+      Express interest
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+
+  <div class="success-panel" id="successPanel">
+    <div class="card" style="text-align:center; padding: 3rem 2rem;">
+      <div class="success-icon" style="margin: 0 auto 1.5rem;">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Thanks — we'll be in touch</h2>
+      <p>We've received your details. A member of the team will contact you within 24 hours to discuss how a partnership would work for your agency.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function validate() {
+    let ok = true;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const checks = [
+      ['f-name',     document.getElementById('name').value.trim()],
+      ['f-business', document.getElementById('business').value.trim()],
+      ['f-email',    emailRe.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
+      ['f-phone',    document.getElementById('phone').value.trim()],
+    ];
+    checks.forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      el.classList.toggle('error', !val);
+      if (!val) ok = false;
+    });
+    return ok;
+  }
+
+  async function handleSubmit() {
+    const alertEl = document.getElementById('errorAlert');
+    alertEl.classList.remove('show');
+
+    if (!validate()) {
+      alertEl.textContent = 'Please fill in all required fields.';
+      alertEl.classList.add('show');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-ring"></div> Sending…';
+
+    const payload = {
+      name:     document.getElementById('name').value.trim(),
+      business: document.getElementById('business').value.trim(),
+      email:    document.getElementById('email').value.trim().toLowerCase(),
+      phone:    document.getElementById('phone').value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/estate-agent/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        document.getElementById('formCard').style.display = 'none';
+        document.getElementById('successPanel').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (e) {
+      alertEl.textContent = 'Something went wrong. Please try again or email us directly.';
+      alertEl.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = 'Express interest <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    }
+  }
+</script>
+
+</body>
+</html>
