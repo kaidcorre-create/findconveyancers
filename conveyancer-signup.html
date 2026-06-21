@@ -412,14 +412,14 @@
       <div class="card-subtitle">Everything you need to know before registering</div>
 
       <div class="how-section">
-        <div class="how-section-title">Step 1 — Receiving leads</div>
+        <div class="how-section-title">Step 1 Receiving referrals</div>
         <div class="how-steps">
           <div class="how-step">
             <div class="how-step-icon">
               <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8A16 16 0 0 0 15.2 16.1l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 23 17z"/></svg>
             </div>
             <div class="how-step-body">
-              <h3>We send you the lead by email</h3>
+              <h3>We send you the referral by email</h3>
               <p>When a client submits an enquiry that matches your preferences, we contact you through your nominated email address straight away.</p>
             </div>
           </div>
@@ -429,14 +429,14 @@
             </div>
             <div class="how-step-body">
               <h3>Respond within 24 hours</h3>
-              <p>You are required to contact the client within 24 hours of receiving the lead. Speed matters, clients on our platform are comparing multiple firms.</p>
+              <p>You are required to contact the client within 24 hours of receiving the referral. Speed matters, clients on our platform are comparing multiple firms.</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="how-section">
-        <div class="how-section-title">Step 2 — Submitting your quote</div>
+        <div class="how-section-title">Step 2 Submitting your quote</div>
         <div class="how-steps">
           <div class="how-step">
             <div class="how-step-icon">
@@ -444,7 +444,7 @@
             </div>
             <div class="how-step-body">
               <h3>Submit your fee quote via a private link</h3>
-              <p>Each lead email includes a unique link to our quoting portal. Enter your legal fee, VAT, and disbursements. The client sees a clear breakdown and compares your quote against others.</p>
+              <p>Each referral email includes a unique link to our quoting portal. Enter your legal fee, VAT, and disbursements. The client sees a clear breakdown and compares your quote against others.</p>
             </div>
           </div>
           <div class="how-step">
@@ -460,7 +460,7 @@
       </div>
 
       <div class="how-section">
-        <div class="how-section-title">Step 3 — Reporting completion &amp; paying</div>
+        <div class="how-section-title">Step 3 Reporting completion &amp; paying</div>
         <div class="how-steps">
           <div class="how-step">
             <div class="how-step-icon">
@@ -477,7 +477,7 @@
             </div>
             <div class="how-step-body">
               <h3>Pay only on completion and nothing upfront</h3>
-              <p>Our completion fee is only due once the transaction completes. There are no monthly fees, no subscription costs, and no charge for leads that don't convert.</p>
+              <p>Our completion fee is only due once the transaction completes. There are no monthly fees, no subscription costs, and no charge for referrals that don't convert.</p>
             </div>
           </div>
         </div>
@@ -497,7 +497,7 @@
   <div class="step-panel" id="step2">
     <div class="card">
       <div class="card-title">Register your firm</div>
-      <div class="card-subtitle">We'll use these details to set up your account and match you with the right leads.</div>
+      <div class="card-subtitle">We'll use these details to set up your account and match you with the right referrals.</div>
 
       <div class="alert" id="errorAlert2"></div>
 
@@ -555,18 +555,21 @@
 
       <div class="field" id="f-deliveryEmail">
         <label>Referral delivery email <span class="req">*</span></label>
-        <input type="email" id="deliveryEmail" placeholder="leads@firm.co.uk" autocomplete="email">
-        <div class="hint">Lead notifications will be sent here. Can be the same as above or a shared inbox.</div>
+        <input type="email" id="deliveryEmail" placeholder="referrals@firm.co.uk" autocomplete="email">
+        <div class="hint">Referral notifications will be sent here. Can be the same as above or a shared inbox.</div>
         <div class="err-msg">Please enter a valid delivery email</div>
       </div>
 
-      <div class="section-label">Coverage &amp; preferences</div>
+      <div class="section-label">Coverage</div>
 
       <div class="field" id="f-regions">
-        <label>Geographic area covered <span class="req">*</span></label>
-        <textarea id="regions" placeholder="e.g. Greater London, Surrey, Kent, Essex"></textarea>
-        <div class="hint">List the counties, regions, or cities you cover, separated by commas.</div>
-        <div class="err-msg">Please enter at least one region</div>
+        <label>Counties covered <span class="req">*</span></label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="county" value="Northamptonshire"> Northamptonshire</label>
+          <label class="check-item"><input type="checkbox" name="county" value="Bedfordshire"> Bedfordshire</label>
+          <label class="check-item"><input type="checkbox" name="county" value="Buckinghamshire"> Buckinghamshire</label>
+        </div>
+        <div class="err-msg" id="regionsErr" style="display:none;">Please select at least one county</div>
       </div>
 
       <div class="field" id="f-txTypes">
@@ -574,22 +577,10 @@
         <div class="check-grid">
           <label class="check-item"><input type="checkbox" name="txType" value="Purchase"> Purchase</label>
           <label class="check-item"><input type="checkbox" name="txType" value="Sale"> Sale</label>
-          <label class="check-item"><input type="checkbox" name="txType" value="Sale and purchase"> Sale &amp; purchase</label>
-          <label class="check-item"><input type="checkbox" name="txType" value="New build (purchase)"> New build (purchase)</label>
+          <label class="check-item"><input type="checkbox" name="txType" value="New Build"> New Build</label>
           <label class="check-item"><input type="checkbox" name="txType" value="Remortgage"> Remortgage</label>
         </div>
         <div class="err-msg" id="txTypesErr" style="display:none;">Please select at least one transaction type</div>
-      </div>
-
-      <div class="field">
-        <label>Weekly referral cap</label>
-        <select id="weeklyCap">
-          <option value="No limit">No limit</option>
-          <option value="1–2 per week">1–2 per week</option>
-          <option value="3–5 per week">3–5 per week</option>
-          <option value="6–10 per week">6–10 per week</option>
-        </select>
-        <div class="hint">Maximum number of referrals we'll send you in a week.</div>
       </div>
 
       <div class="field">
@@ -623,19 +614,19 @@
           <tr><td>Contact name</td><td id="agr-contactName">—</td></tr>
           <tr><td>Email</td><td id="agr-email">—</td></tr>
           <tr><td>Referral delivery email</td><td id="agr-deliveryEmail">—</td></tr>
-          <tr><td>Geographic area</td><td id="agr-counties">—</td></tr>
+          <tr><td>Counties covered</td><td id="agr-counties"></td></tr>
           <tr><td>Transaction types</td><td id="agr-txTypes">—</td></tr>
-          <tr><td>Weekly referral cap</td><td id="agr-weeklyCap">—</td></tr>
+          
         </table>
 
         <h2>Your Fees</h2>
         <p>You pay on completion only, at the following rates:</p>
         <table>
           <tr><th>Transaction type</th><th>Completion fee (ex-VAT)</th></tr>
-          <tr><td>New build (purchase)</td><td>To be confirmed</td></tr>
-          <tr><td>Purchase (estate agent referral)</td><td>To be confirmed</td></tr>
+          <tr><td>New Build</td><td>To be confirmed</td></tr>
+          <tr><td>Purchase</td><td>To be confirmed</td></tr>
           <tr><td>Sale</td><td>To be confirmed</td></tr>
-          <tr><td>Sale and purchase</td><td>To be confirmed</td></tr>
+          
           <tr><td>Remortgage</td><td>To be confirmed</td></tr>
         </table>
         <p>Completion fees will be confirmed in writing when your account is activated. Fees are exclusive of VAT.</p>
@@ -656,7 +647,7 @@
         <p><strong>You pay on completion only.</strong> No fee is due on delivery of a referral. No fee is due if the client doesn't instruct you. No fee is due if the transaction falls through before completion.</p>
         <p><strong>You must report every completion</strong> that originated from one of our referrals within 5 working days of the completion date, providing the referral reference number, property address, completion date, and transaction value.</p>
         <p><strong>We verify independently.</strong> We check completions against HM Land Registry data. If we identify a completion you haven't reported, we'll invoice you for it.</p>
-        <p><strong>The fee applies however the instruction came about.</strong> If we sent you a referral for a client and that client's transaction completes — whether or not they used our quote comparison, and regardless of how you describe the resulting instruction — the completion fee is owed. What matters is that the client and property match a referral we delivered to you.</p>
+        <p><strong>The fee applies however the instruction came about.</strong> If we sent you a referral for a client and that client's transaction completes whether or not they used our quote comparison, and regardless of how you describe the resulting instruction the completion fee is owed. What matters is that the client and property match a referral we delivered to you.</p>
         <p>Payment is due within 14 days of invoice. Late payments accrue interest at 8% above the Bank of England base rate under the Late Payment of Commercial Debts (Interest) Act 1998. We may suspend your account if an invoice is more than 21 days overdue.</p>
 
         <h2>What We're Not Responsible For</h2>
@@ -717,11 +708,11 @@
         </div>
         <div class="next-step">
           <div class="next-num">3</div>
-          <div class="next-text">New leads matching your region will be sent to your nominated email address</div>
+          <div class="next-text">New referrals matching your counties will be sent to your nominated email address</div>
         </div>
         <div class="next-step">
           <div class="next-num">4</div>
-          <div class="next-text">Quote via the private link in each lead email — you only pay when the matter completes</div>
+          <div class="next-text">Quote via the private link in each referral email you only pay when the matter completes</div>
         </div>
       </div>
     </div>
@@ -749,6 +740,10 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function getSelectedCounties() {
+    return Array.from(document.querySelectorAll('input[name="county"]:checked')).map(cb => cb.value);
+  }
+
   function getSelectedTxTypes() {
     return Array.from(document.querySelectorAll('input[name="txType"]:checked')).map(cb => cb.value);
   }
@@ -764,7 +759,6 @@
       ['f-email',         emailRe.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
       ['f-deliveryEmail', emailRe.test(document.getElementById('deliveryEmail').value.trim()) ? 'ok' : ''],
       ['f-phone',         document.getElementById('phone').value.trim()],
-      ['f-regions',       document.getElementById('regions').value.trim()],
     ];
     checks.forEach(([id, val]) => {
       const el = document.getElementById(id);
@@ -772,6 +766,15 @@
       el.classList.toggle('error', err);
       if (err) ok = false;
     });
+    // Counties
+    const counties = getSelectedCounties();
+    const regionsErr = document.getElementById('regionsErr');
+    const regionsField = document.getElementById('f-regions');
+    if (counties.length === 0) {
+      regionsErr.style.display = 'block'; regionsField.classList.add('error'); ok = false;
+    } else {
+      regionsErr.style.display = 'none'; regionsField.classList.remove('error');
+    }
     // Transaction types
     const txTypes = getSelectedTxTypes();
     const txErr = document.getElementById('txTypesErr');
@@ -797,9 +800,8 @@
     document.getElementById('agr-contactName').textContent  = contactName;
     document.getElementById('agr-email').textContent        = document.getElementById('email').value.trim();
     document.getElementById('agr-deliveryEmail').textContent= document.getElementById('deliveryEmail').value.trim();
-    document.getElementById('agr-counties').textContent     = document.getElementById('regions').value.trim();
+    document.getElementById('agr-counties').textContent     = getSelectedCounties().join(', ');
     document.getElementById('agr-txTypes').textContent      = getSelectedTxTypes().join(', ');
-    document.getElementById('agr-weeklyCap').textContent    = document.getElementById('weeklyCap').value;
     document.getElementById('agr-signName').textContent     = contactName || 'the contact named above';
     document.getElementById('agr-signFirm').textContent     = firmName || 'their firm';
     document.getElementById('agr-signFirm2').textContent    = firmName || 'the firm';
@@ -835,9 +837,6 @@
     btn.disabled = true;
     btn.innerHTML = '<div class="loading-ring"></div> Submitting…';
 
-    const regions = document.getElementById('regions').value
-      .split(',').map(r => r.trim()).filter(Boolean);
-
     const payload = {
       name:           document.getElementById('firmName').value.trim(),
       regulated_by:   document.getElementById('regType').value,
@@ -847,9 +846,8 @@
       email:          document.getElementById('email').value.trim().toLowerCase(),
       delivery_email: document.getElementById('deliveryEmail').value.trim().toLowerCase(),
       phone:          document.getElementById('phone').value.trim(),
-      regions,
+      regions:           getSelectedCounties(),
       transaction_types: getSelectedTxTypes(),
-      weekly_cap:     document.getElementById('weeklyCap').value,
       notes:          document.getElementById('notes').value.trim(),
     };
 
