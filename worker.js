@@ -76,7 +76,7 @@ export default {
       if (path === '/api/agent/me' && request.method === 'GET')
         return handleAgentMe(request, env);
 
-      return env.ASSETS.fetch(request);
+      return jsonResponse({ error: 'Not found' }, 404);
 
     } catch (err) {
       console.error('Worker error:', err);
