@@ -511,6 +511,15 @@
     .hidden {
       display: none;
     }
+
+    .address-section { display:none; margin-bottom:1rem; }
+    .address-section.visible { display:block; }
+    .price-slider-wrap { margin: 1.25rem 0; }
+    .price-display { font-size:1.4rem; font-weight:700; color:#2563eb; margin-bottom:0.5rem; }
+    input[type=range] { width:100%; accent-color:#2563eb; }
+    .postcode-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .autofill-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.75rem; display:none; }
+    .autofill-row.visible { display:grid; }
   
     /* ── Mobile nav ─────────────────── */
     .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-primary);border-radius:6px;line-height:0}
@@ -587,62 +596,6 @@
           <p class="step-description">Tell us what you're buying, selling, or remortgaging</p>
         </div>
 
-        <div class="form-grid" style="grid-template-columns: 1fr 1fr">
-          <div class="form-group">
-            <label class="form-label">House / Flat number <span class="form-required">*</span></label>
-            <input type="text" id="houseNumber" class="form-input" placeholder="e.g. 42 or Flat 3" autocomplete="address-line1">
-            <div class="form-error" id="houseNumberErr">Please enter a house or flat number</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Postcode <span class="form-required">*</span></label>
-            <div style="position:relative">
-              <input type="text" id="postcodeInput" class="form-input" placeholder="e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
-              <div id="postcodeSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
-                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
-              </div>
-            </div>
-            <div class="form-error" id="postcodeErr">Please enter a valid UK postcode</div>
-          </div>
-        </div>
-        <div id="addressFields" style="display:none">
-          <div class="form-grid" style="grid-template-columns: 1fr 1fr">
-            <div class="form-group">
-              <label class="form-label">Street</label>
-              <input type="text" id="streetInput" class="form-input" placeholder="Street name" autocomplete="address-line2">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Town / City</label>
-              <input type="text" id="townInput" class="form-input" placeholder="Town" autocomplete="address-level2">
-            </div>
-          </div>
-          <div class="form-group" style="max-width:220px">
-            <label class="form-label">County</label>
-            <input type="text" id="countyInput2" class="form-input" placeholder="County" autocomplete="address-level1">
-          </div>
-        </div>
-        <input type="hidden" name="propertyAddress" id="propertyAddress">
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Property Price <span class="form-required">*</span></label>
-            <input type="number" name="propertyPrice" class="form-input" placeholder="e.g., 250000" min="0" step="1000" required>
-            <div class="form-error">Please enter the property price</div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Property Type <span class="form-required">*</span></label>
-            <select name="propertyType" class="form-select" required>
-              <option value="">Select type</option>
-              <option value="freehold-house">Freehold House</option>
-              <option value="leasehold-flat">Leasehold Flat</option>
-              <option value="leasehold-house">Leasehold House</option>
-              <option value="new-build">New Build</option>
-              <option value="other">Other</option>
-            </select>
-            <div class="form-error">Please select a property type</div>
-          </div>
-        </div>
-
         <div class="form-group">
           <label class="form-label">What do you need? <span class="form-required">*</span></label>
           <div class="choice-group">
@@ -656,14 +609,122 @@
             </div>
             <div class="choice-button">
               <input type="radio" id="both" name="transactionType" value="both">
-              <label for="both" class="choice-label">Buy & Sell</label>
+              <label for="both" class="choice-label">Buy &amp; Sell</label>
             </div>
             <div class="choice-button">
               <input type="radio" id="remortgage" name="transactionType" value="remortgage">
               <label for="remortgage" class="choice-label">Remortgage</label>
             </div>
           </div>
-          <div class="form-error">Please select a transaction type</div>
+          <div class="form-error" id="transactionTypeErr">Please select a transaction type</div>
+        </div>
+
+        <!-- Buying address -->
+        <div class="address-section" id="addressBuying">
+          <label class="form-label">Purchase property address</label>
+          <div class="form-group">
+            <input type="text" id="buyStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
+          </div>
+          <div class="postcode-row form-group">
+            <div style="position:relative">
+              <input type="text" id="buyPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <div id="buySpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
+              </div>
+            </div>
+          </div>
+          <div class="autofill-row" id="buyAutofill">
+            <div class="form-group">
+              <label class="form-label">Town / City</label>
+              <input type="text" id="buyTown" class="form-input" placeholder="Town" autocomplete="address-level2">
+            </div>
+            <div class="form-group">
+              <label class="form-label">County</label>
+              <input type="text" id="buyCounty" class="form-input" placeholder="County" autocomplete="address-level1">
+            </div>
+          </div>
+          <input type="hidden" id="buyAddress" name="propertyAddress">
+        </div>
+
+        <!-- Selling address -->
+        <div class="address-section" id="addressSelling">
+          <label class="form-label">Sale property address</label>
+          <div class="form-group">
+            <input type="text" id="sellStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
+          </div>
+          <div class="postcode-row form-group">
+            <div style="position:relative">
+              <input type="text" id="sellPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <div id="sellSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
+              </div>
+            </div>
+          </div>
+          <div class="autofill-row" id="sellAutofill">
+            <div class="form-group">
+              <label class="form-label">Town / City</label>
+              <input type="text" id="sellTown" class="form-input" placeholder="Town" autocomplete="address-level2">
+            </div>
+            <div class="form-group">
+              <label class="form-label">County</label>
+              <input type="text" id="sellCounty" class="form-input" placeholder="County" autocomplete="address-level1">
+            </div>
+          </div>
+          <input type="hidden" id="sellAddress" name="saleAddress">
+        </div>
+
+        <!-- Remortgage address -->
+        <div class="address-section" id="addressRemortgage">
+          <label class="form-label">Property address</label>
+          <div class="form-group">
+            <input type="text" id="remStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
+          </div>
+          <div class="postcode-row form-group">
+            <div style="position:relative">
+              <input type="text" id="remPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <div id="remSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
+              </div>
+            </div>
+          </div>
+          <div class="autofill-row" id="remAutofill">
+            <div class="form-group">
+              <label class="form-label">Town / City</label>
+              <input type="text" id="remTown" class="form-input" placeholder="Town" autocomplete="address-level2">
+            </div>
+            <div class="form-group">
+              <label class="form-label">County</label>
+              <input type="text" id="remCounty" class="form-input" placeholder="County" autocomplete="address-level1">
+            </div>
+          </div>
+          <input type="hidden" id="remAddress" name="propertyAddress">
+        </div>
+
+        <!-- Price sliders -->
+        <div id="priceWrapBuy" style="display:none" class="price-slider-wrap">
+          <label class="form-label" id="buyPriceLabel">Purchase price</label>
+          <div class="price-display" id="buyPriceDisplay">£300,000</div>
+          <input type="range" id="buyPriceSlider" min="50000" max="2000000" step="5000" value="300000">
+          <input type="hidden" id="buyPrice" name="propertyPrice" value="300000">
+        </div>
+        <div id="priceWrapSell" style="display:none" class="price-slider-wrap">
+          <label class="form-label">Sale price</label>
+          <div class="price-display" id="sellPriceDisplay">£300,000</div>
+          <input type="range" id="sellPriceSlider" min="50000" max="2000000" step="5000" value="300000">
+          <input type="hidden" id="sellPrice" name="salePrice" value="300000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Property Type <span class="form-required">*</span></label>
+          <select name="propertyType" class="form-select" required>
+            <option value="">Select type</option>
+            <option value="freehold-house">Freehold House</option>
+            <option value="leasehold-flat">Leasehold Flat</option>
+            <option value="leasehold-house">Leasehold House</option>
+            <option value="new-build">New Build</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="form-error">Please select a property type</div>
         </div>
 
         <div class="form-group">
@@ -792,64 +853,80 @@
 <script>
   fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
 
-  // ── Postcode lookup ──────────────────────────────────────────────────────────
-  let postcodeValid = false;
+  // ── Address lookup helper ────────────────────────────────────────────────────
+  function setupPostcodeLookup(streetId, postcodeId, spinnerId, townId, countyId, hiddenId, autofillRowId) {
+    const pcInput = document.getElementById(postcodeId);
+    const spinner = document.getElementById(spinnerId);
+    const autofillRow = document.getElementById(autofillRowId);
 
-  function buildAddressHidden() {
-    const house  = document.getElementById('houseNumber').value.trim();
-    const street = document.getElementById('streetInput').value.trim();
-    const town   = document.getElementById('townInput').value.trim();
-    const county = document.getElementById('countyInput2').value.trim();
-    const pc     = document.getElementById('postcodeInput').value.trim().toUpperCase();
-    const parts  = [house, street, town, county, pc].filter(Boolean);
-    document.getElementById('propertyAddress').value = parts.join(', ');
+    async function lookup() {
+      const pc = pcInput.value.trim().toUpperCase().replace(/\s+/g,'');
+      if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)) return;
+      spinner.style.display = 'block';
+      try {
+        const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
+        const data = await res.json();
+        if (data.status === 200) {
+          const r = data.result;
+          document.getElementById(townId).value = r.admin_district || r.parish || '';
+          document.getElementById(countyId).value = r.admin_county || r.region || '';
+          pcInput.value = r.postcode;
+          autofillRow.classList.add('visible');
+          buildHidden(streetId, postcodeId, townId, countyId, hiddenId);
+        }
+      } catch(_) { autofillRow.classList.add('visible'); }
+      finally { spinner.style.display = 'none'; }
+    }
+
+    let timer;
+    pcInput.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(lookup, 600); });
+    pcInput.addEventListener('blur', lookup);
+    [streetId, townId, countyId].forEach(id => document.getElementById(id).addEventListener('input', () => buildHidden(streetId, postcodeId, townId, countyId, hiddenId)));
   }
 
-  async function lookupPostcode(raw) {
-    const pc = raw.trim().toUpperCase().replace(/\s+/g, '');
-    if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)) return;
+  function buildHidden(streetId, postcodeId, townId, countyId, hiddenId) {
+    const parts = [
+      document.getElementById(streetId).value.trim(),
+      document.getElementById(townId).value.trim(),
+      document.getElementById(countyId).value.trim(),
+      document.getElementById(postcodeId).value.trim().toUpperCase(),
+    ].filter(Boolean);
+    document.getElementById(hiddenId).value = parts.join(', ');
+  }
 
-    document.getElementById('postcodeSpinner').style.display = 'block';
-    try {
-      const res  = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
-      const data = await res.json();
-      if (data.status === 200 && data.result) {
-        const r = data.result;
-        document.getElementById('streetInput').value  = '';
-        document.getElementById('townInput').value    = r.admin_district || r.parish || '';
-        document.getElementById('countyInput2').value = r.admin_county || r.region || '';
-        document.getElementById('postcodeInput').value = r.postcode;
-        document.getElementById('addressFields').style.display = 'block';
-        document.getElementById('postcodeErr').style.display = 'none';
-        postcodeValid = true;
-        buildAddressHidden();
-      } else {
-        document.getElementById('postcodeErr').textContent = 'Postcode not found — please check and try again';
-        document.getElementById('postcodeErr').style.display = 'block';
-        postcodeValid = false;
-      }
-    } catch {
-      // network error — allow manual entry
-      document.getElementById('addressFields').style.display = 'block';
-      postcodeValid = true;
-    } finally {
-      document.getElementById('postcodeSpinner').style.display = 'none';
+  // Show/hide address sections and price sliders based on transaction type
+  function onTransactionChange(val) {
+    document.getElementById('addressBuying').classList.toggle('visible', val === 'buying' || val === 'both');
+    document.getElementById('addressSelling').classList.toggle('visible', val === 'selling' || val === 'both');
+    document.getElementById('addressRemortgage').classList.toggle('visible', val === 'remortgage');
+    document.getElementById('priceWrapBuy').style.display = (val === 'buying' || val === 'both' || val === 'remortgage') ? 'block' : 'none';
+    document.getElementById('priceWrapSell').style.display = (val === 'selling' || val === 'both') ? 'block' : 'none';
+    document.getElementById('buyPriceLabel').textContent = val === 'remortgage' ? 'Property value' : 'Purchase price';
+  }
+
+  document.querySelectorAll('input[name="transactionType"]').forEach(r => {
+    r.addEventListener('change', () => onTransactionChange(r.value));
+  });
+
+  // Sliders
+  function setupSlider(sliderId, displayId, hiddenId) {
+    const slider = document.getElementById(sliderId);
+    const display = document.getElementById(displayId);
+    const hidden = document.getElementById(hiddenId);
+    function update() {
+      display.textContent = '£' + parseInt(slider.value).toLocaleString('en-GB');
+      hidden.value = slider.value;
     }
+    slider.addEventListener('input', update);
+    update();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const pcInput = document.getElementById('postcodeInput');
-    let pcTimer;
-    pcInput.addEventListener('input', () => {
-      clearTimeout(pcTimer);
-      postcodeValid = false;
-      pcTimer = setTimeout(() => lookupPostcode(pcInput.value), 600);
-    });
-    pcInput.addEventListener('blur', () => lookupPostcode(pcInput.value));
-
-    ['houseNumber','streetInput','townInput','countyInput2'].forEach(id => {
-      document.getElementById(id).addEventListener('input', buildAddressHidden);
-    });
+    setupPostcodeLookup('buyStreet','buyPostcode','buySpinner','buyTown','buyCounty','buyAddress','buyAutofill');
+    setupPostcodeLookup('sellStreet','sellPostcode','sellSpinner','sellTown','sellCounty','sellAddress','sellAutofill');
+    setupPostcodeLookup('remStreet','remPostcode','remSpinner','remTown','remCounty','remAddress','remAutofill');
+    setupSlider('buyPriceSlider','buyPriceDisplay','buyPrice');
+    setupSlider('sellPriceSlider','sellPriceDisplay','sellPrice');
   });
 
   let currentStep = 1;
@@ -894,33 +971,29 @@
     let isValid = true;
     const errors = [];
 
-    // Address fields validation (step 1)
+    // Step 1 validation
     if (step === 1) {
-      const house = document.getElementById('houseNumber').value.trim();
-      const pc    = document.getElementById('postcodeInput').value.trim();
-      const hErr  = document.getElementById('houseNumberErr');
-      const pcErr = document.getElementById('postcodeErr');
-
-      if (!house) {
-        document.getElementById('houseNumber').classList.add('error');
-        hErr.style.display = 'block';
+      const checkedType = document.querySelector('input[name="transactionType"]:checked');
+      const tErr = document.getElementById('transactionTypeErr');
+      if (!checkedType) {
+        tErr.style.display = 'block';
         isValid = false;
       } else {
-        document.getElementById('houseNumber').classList.remove('error');
-        hErr.style.display = 'none';
+        tErr.style.display = 'none';
+        const val = checkedType.value;
+        const sections = [];
+        if (val === 'buying' || val === 'both') sections.push({ street: 'buyStreet', postcode: 'buyPostcode' });
+        if (val === 'selling' || val === 'both') sections.push({ street: 'sellStreet', postcode: 'sellPostcode' });
+        if (val === 'remortgage') sections.push({ street: 'remStreet', postcode: 'remPostcode' });
+        sections.forEach(({ street, postcode }) => {
+          const streetVal = document.getElementById(street).value.trim();
+          const pcVal = document.getElementById(postcode).value.trim();
+          if (!streetVal || !pcVal) {
+            isValid = false;
+            errors.push('Please fill in property address and postcode');
+          }
+        });
       }
-
-      if (!pc || !postcodeValid) {
-        document.getElementById('postcodeInput').classList.add('error');
-        pcErr.textContent = !pc ? 'Please enter your postcode' : 'Please enter a valid UK postcode';
-        pcErr.style.display = 'block';
-        isValid = false;
-      } else {
-        document.getElementById('postcodeInput').classList.remove('error');
-        pcErr.style.display = 'none';
-      }
-
-      buildAddressHidden();
     }
 
     inputs.forEach(input => {
@@ -1011,20 +1084,26 @@
 
   function updateSummary() {
     const formData = new FormData(form);
-    const price = parseInt(formData.get('propertyPrice'));
     const timeline = formData.get('timeline');
+    const transactionType = document.querySelector('input[name="transactionType"]:checked')?.value || '';
+    const propertyAddress = document.getElementById('buyAddress')?.value || document.getElementById('remAddress')?.value || '';
+    const saleAddress = document.getElementById('sellAddress')?.value || '';
+    const buyPrice = parseInt(document.getElementById('buyPrice')?.value || '0');
+    const sellPrice = parseInt(document.getElementById('sellPrice')?.value || '0');
     const rows = [
-      ['Address', document.getElementById('propertyAddress').value],
-      ['Price', isNaN(price) ? ' - ' : '£' + price.toLocaleString('en-GB')],
+      ['Transaction', transactionType],
+      ...(propertyAddress ? [['Purchase address', propertyAddress]] : []),
+      ...(saleAddress ? [['Sale address', saleAddress]] : []),
+      ...(buyPrice ? [['Purchase price', '£' + buyPrice.toLocaleString('en-GB')]] : []),
+      ...(sellPrice && (transactionType === 'selling' || transactionType === 'both') ? [['Sale price', '£' + sellPrice.toLocaleString('en-GB')]] : []),
       ['Property type', formData.get('propertyType')],
-      ['Transaction', formData.get('transactionType')],
       ...(timeline ? [['Timeline', timeline]] : []),
       ['Name', `${formData.get('firstName')} ${formData.get('lastName')}`],
       ['Email', formData.get('email')],
       ['Phone', formData.get('phone')],
     ];
     document.getElementById('summaryContent').innerHTML = rows
-      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || ' - '}</span></div>`)
+      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:130px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || ' - '}</span></div>`)
       .join('');
   }
 
@@ -1056,10 +1135,12 @@
           lastName: formData.get('lastName'),
           email: formData.get('email'),
           phone: formData.get('phone'),
-          propertyAddress: formData.get('propertyAddress'),
-          propertyValue: formData.get('propertyPrice'),
+          propertyAddress: document.getElementById('buyAddress')?.value || document.getElementById('remAddress')?.value || '',
+          saleAddress: document.getElementById('sellAddress')?.value || '',
+          propertyValue: document.getElementById('buyPrice').value,
+          saleValue: document.getElementById('sellPrice')?.value || '',
           propertyType: formData.get('propertyType'),
-          transactionTypes: [formData.get('transactionType')],
+          transactionTypes: [document.querySelector('input[name="transactionType"]:checked')?.value],
           timeline: formData.get('timeline') || '',
         })
       });
