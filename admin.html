@@ -399,14 +399,15 @@
             <thead>
               <tr>
                 <th>Firm</th>
-                <th>Email</th>
-                <th>Phone</th>
+                <th>Contact</th>
+                <th>Counties / Types</th>
                 <th>Status</th>
                 <th>Added</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="conveyancersTable">
-              <tr><td colspan="5"><div class="loading">Loading…</div></td></tr>
+              <tr><td colspan="6"><div class="loading">Loading…</div></td></tr>
             </tbody>
           </table>
         </div>
@@ -891,16 +892,46 @@
           `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
         return;
       }
-      document.getElementById('conveyancersTable').innerHTML = convs.map(c => `
-        <tr>
-          <td><div class="td-name">${escHtml(c.name)}</div></td>
-          <td class="td-mono" style="font-size:0.8rem">${escHtml(c.email)}</td>
-          <td style="font-size:0.82rem">${escHtml(c.phone||'—')}</td>
+      document.getElementById('conveyancersTable').innerHTML = convs.map(c => {
+        const regions = JSON.parse(c.regions || '[]');
+        const txTypes = JSON.parse(c.transaction_types || '[]');
+        return `<tr>
+          <td>
+            <div class="td-name">${escHtml(c.name)}</div>
+            <div style="font-size:0.75rem;color:var(--muted)">${escHtml(c.regulated_by||'')}${c.reg_number ? ' · ' + escHtml(c.reg_number) : ''}</div>
+          </td>
+          <td style="font-size:0.82rem">
+            <div>${escHtml(c.contact_name||'—')}${c.role ? ' <span style="color:var(--muted)">(' + escHtml(c.role) + ')</span>' : ''}</div>
+            <div style="color:var(--muted);font-size:0.75rem">${escHtml(c.email)}</div>
+            ${c.delivery_email && c.delivery_email !== c.email ? `<div style="color:var(--muted);font-size:0.75rem">Delivery: ${escHtml(c.delivery_email)}</div>` : ''}
+            <div style="color:var(--muted);font-size:0.75rem">${escHtml(c.phone||'')}</div>
+          </td>
+          <td style="font-size:0.78rem">
+            <div style="margin-bottom:3px">${regions.map(r => `<span style="display:inline-block;background:#f3f4f6;border-radius:4px;padding:1px 5px;margin:1px">${escHtml(r)}</span>`).join('')||'—'}</div>
+            <div>${txTypes.map(t => `<span style="display:inline-block;background:var(--primary-dim);color:var(--primary);border-radius:4px;padding:1px 5px;margin:1px;font-size:0.72rem;font-weight:600">${escHtml(t)}</span>`).join('')||'—'}</div>
+          </td>
           <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-new'}">${c.active ? 'Active' : 'Pending'}</span></td>
-          <td class="td-mono" style="color:var(--muted)">${formatDate(c.created_at)}</td>
-        </tr>
-      `).join('');
-    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+          <td class="td-mono" style="color:var(--muted);font-size:0.78rem">${formatDate(c.created_at)}</td>
+          <td>
+            <button onclick="toggleConveyancer('${c.id}', ${c.active ? 1 : 0})"
+              style="font-size:0.78rem;padding:0.3rem 0.7rem;border-radius:6px;border:1.5px solid ${c.active ? '#ef4444' : 'var(--primary)'};background:none;color:${c.active ? '#ef4444' : 'var(--primary)'};cursor:pointer;font-weight:600">
+              ${c.active ? 'Deactivate' : 'Activate'}
+            </button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+  }
+
+  async function toggleConveyancer(id, currentlyActive) {
+    const activate = !currentlyActive;
+    if (!confirm(activate ? 'Activate this firm? They will receive a confirmation email.' : 'Deactivate this firm?')) return;
+    try {
+      await apiPatch('/api/admin/conveyancers/' + id, { active: activate });
+      loadConveyancers();
+    } catch (e) {
+      alert('Failed: ' + e.message);
+    }
   }
 
   function openAddConveyancer() {

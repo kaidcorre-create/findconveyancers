@@ -63,6 +63,9 @@ export default {
       if (path === '/api/admin/conveyancers' && request.method === 'POST')
         return handleAddConveyancer(request, env);
 
+      if (path.startsWith('/api/admin/conveyancers/') && request.method === 'PATCH')
+        return handlePatchConveyancer(path, request, env);
+
       if (path === '/api/admin/agents' && request.method === 'GET')
         return handleGetAgents(request, env);
 
@@ -671,6 +674,54 @@ async function handleGetConveyancers(request, env) {
   ).all();
 
   return jsonResponse({ conveyancers: results });
+}
+
+// ── Admin: activate / deactivate / update conveyancer ─────────────────────────
+async function handlePatchConveyancer(path, request, env) {
+  if (!isAdminAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
+
+  const id = path.split('/').pop();
+  if (!id) return jsonResponse({ error: 'Missing id' }, 400);
+
+  const body = await request.json().catch(() => ({}));
+  const fields = [];
+  const values = [];
+
+  if (body.active !== undefined) { fields.push('active = ?'); values.push(body.active ? 1 : 0); }
+  if (body.fee_per_lead !== undefined) { fields.push('fee_per_lead = ?'); values.push(Number(body.fee_per_lead)); }
+
+  if (!fields.length) return jsonResponse({ error: 'Nothing to update' }, 400);
+
+  const now = new Date().toISOString();
+  fields.push('updated_at = ?'); values.push(now);
+  values.push(id);
+
+  try {
+    await env.DB.exec('ALTER TABLE conveyancers ADD COLUMN updated_at TEXT');
+  } catch (_) {}
+
+  await env.DB.prepare(
+    `UPDATE conveyancers SET ${fields.join(', ')} WHERE id = ?`
+  ).bind(...values).run();
+
+  const row = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(id).first();
+  if (!row) return jsonResponse({ error: 'Not found' }, 404);
+
+  // Send activation email to conveyancer
+  if (body.active === true) {
+    await sendEmail(
+      row.email,
+      'Your FindConveyancers account is now active',
+      `<p>Dear ${row.contact_name || row.name},</p>
+      <p>Your FindConveyancers account for <strong>${row.name}</strong> has been activated. You will now start receiving referrals matching your registered counties and transaction types to <strong>${row.delivery_email || row.email}</strong>.</p>
+      <p>Each referral email will include a unique link to submit your quote. Remember to respond within 24 hours.</p>
+      <p>If you have any questions, reply to this email or contact us at <a href="mailto:hello@findconveyancers.co.uk">hello@findconveyancers.co.uk</a>.</p>
+      <p>Thank you for joining FindConveyancers.</p>`,
+      env
+    );
+  }
+
+  return jsonResponse({ success: true, conveyancer: row });
 }
 
 // ── Admin: add conveyancer ─────────────────────────────────────────────────────
