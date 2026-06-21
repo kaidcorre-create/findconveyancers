@@ -450,27 +450,51 @@ async function handleGetStats(request, env) {
 async function handleConveyancerSignup(request, env) {
   const body = await request.json().catch(() => ({}));
 
-  const name         = (body.name         || '').trim();
-  const email        = (body.email        || '').trim().toLowerCase();
-  const phone        = (body.phone        || '').trim();
-  const contact_name = (body.contact_name || '').trim();
-  const regulated_by = (body.regulated_by || '').trim();
-  const regions      = Array.isArray(body.regions) ? body.regions : [];
-  const notes        = (body.notes        || '').trim();
-  const role         = (body.role         || '').trim();
+  const name              = (body.name           || '').trim();
+  const email             = (body.email          || '').trim().toLowerCase();
+  const delivery_email    = (body.delivery_email || '').trim().toLowerCase();
+  const phone             = (body.phone          || '').trim();
+  const contact_name      = (body.contact_name   || '').trim();
+  const role              = (body.role           || '').trim();
+  const regulated_by      = (body.regulated_by   || '').trim();
+  const reg_number        = (body.reg_number     || '').trim();
+  const regions           = Array.isArray(body.regions)           ? body.regions           : [];
+  const transaction_types = Array.isArray(body.transaction_types) ? body.transaction_types : [];
+  const notes             = (body.notes          || '').trim();
 
-  if (!name || !email || !phone || !contact_name || !regulated_by || regions.length === 0) {
+  if (!name || !email || !phone || !contact_name || !regulated_by || !reg_number || regions.length === 0) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
   }
 
   const id  = crypto.randomUUID();
   const now = new Date().toISOString();
 
+  // Ensure new columns exist (idempotent)
+  for (const col of [
+    'ALTER TABLE conveyancers ADD COLUMN delivery_email TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN contact_name TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN role TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN regulated_by TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN reg_number TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN transaction_types TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN notes TEXT',
+  ]) {
+    try { await env.DB.exec(col); } catch (_) {}
+  }
+
   try {
     await env.DB.prepare(`
-      INSERT INTO conveyancers (id, name, email, phone, regions, active, fee_per_lead, created_at)
-      VALUES (?, ?, ?, ?, ?, 0, 0, ?)
-    `).bind(id, name, email, phone, JSON.stringify(regions), now).run();
+      INSERT INTO conveyancers
+        (id, name, email, delivery_email, phone, contact_name, role,
+         regulated_by, reg_number, regions, transaction_types, notes,
+         active, fee_per_lead, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
+    `).bind(
+      id, name, email, delivery_email, phone, contact_name, role,
+      regulated_by, reg_number,
+      JSON.stringify(regions), JSON.stringify(transaction_types), notes,
+      now
+    ).run();
   } catch (err) {
     if (err.message?.includes('UNIQUE')) {
       return jsonResponse({ error: 'Email already registered' }, 409);
@@ -485,11 +509,13 @@ async function handleConveyancerSignup(request, env) {
     `<p>A new firm has applied to join FindConveyancers.</p>
     <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Firm</td><td>${name}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regulated by</td><td>${regulated_by}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regulated by</td><td>${regulated_by} – ${reg_number}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Contact</td><td>${contact_name}${role ? ` (${role})` : ''}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Email</td><td>${email}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Delivery email</td><td>${delivery_email || email}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Phone</td><td>${phone}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regions</td><td>${regions.join(', ')}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Counties</td><td>${regions.join(', ')}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Transaction types</td><td>${transaction_types.join(', ')}</td></tr>
       ${notes ? `<tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Notes</td><td>${notes}</td></tr>` : ''}
     </table>
     <p style="margin-top:16px">Log in to the <a href="https://findconveyancers.co.uk/admin.html">admin dashboard</a> to activate this firm.</p>`,
