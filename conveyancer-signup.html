@@ -992,10 +992,10 @@
         btn.disabled = false;
         btn.innerHTML = 'Submit application <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
       } else {
-        throw new Error(data.error || 'Unknown error');
+        throw new Error('Server ' + res.status + ': ' + (data.error || 'Unknown error'));
       }
     } catch (e) {
-      alert.textContent = 'Something went wrong. Please try again or email us directly.';
+      alert.textContent = 'Error: ' + e.message + '. Please try again or email hello@findconveyancers.co.uk';
       alert.classList.add('show');
       btn.disabled = false;
       btn.innerHTML = 'Submit application';
