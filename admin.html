@@ -619,7 +619,13 @@
     document.getElementById('view-' + name).classList.add('active');
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', loadAll);
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    document.getElementById('refreshBtn').textContent = 'Refreshing…';
+    loadAll().finally(() => { document.getElementById('refreshBtn').textContent = 'Refresh'; });
+  });
+
+  // Auto-refresh every 30 seconds
+  setInterval(loadAll, 30000);
 
   // ── Filters ────────────────────────────────────────────────────────────────
   document.querySelectorAll('.filter-btn').forEach(btn => {
