@@ -512,24 +512,33 @@ async function handleEstateAgentSignup(request, env) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
   }
 
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS estate_agent_leads (
-      id         TEXT PRIMARY KEY,
-      name       TEXT NOT NULL,
-      business   TEXT NOT NULL,
-      email      TEXT NOT NULL,
-      phone      TEXT NOT NULL,
-      created_at TEXT NOT NULL
-    )
-  `).run();
+  try {
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS estate_agent_leads (
+        id         TEXT PRIMARY KEY,
+        name       TEXT NOT NULL,
+        business   TEXT NOT NULL,
+        email      TEXT NOT NULL,
+        phone      TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      )
+    `);
+  } catch (e) {
+    console.error('estate_agent_leads table create error:', e.message);
+  }
 
   const id  = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  await env.DB.prepare(`
-    INSERT INTO estate_agent_leads (id, name, business, email, phone, created_at)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `).bind(id, name, business, email, phone, now).run();
+  try {
+    await env.DB.prepare(`
+      INSERT INTO estate_agent_leads (id, name, business, email, phone, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(id, name, business, email, phone, now).run();
+  } catch (e) {
+    console.error('estate_agent_leads insert error:', e.message);
+    return jsonResponse({ error: 'Database error: ' + e.message }, 500);
+  }
 
   await sendEmail(
     env.NOTIFY_EMAIL,
