@@ -466,10 +466,12 @@ async function handleConveyancerSignup(request, env) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
   }
 
-  const id  = crypto.randomUUID();
-  const now = new Date().toISOString();
+  const id                 = crypto.randomUUID();
+  const now                = new Date().toISOString();
+  const agreement_version  = '1.0';
+  const agreed_at          = now;
 
-  // Ensure new columns exist (idempotent)
+  // Ensure columns exist (idempotent — errors from duplicate columns are swallowed)
   for (const col of [
     'ALTER TABLE conveyancers ADD COLUMN delivery_email TEXT',
     'ALTER TABLE conveyancers ADD COLUMN contact_name TEXT',
@@ -478,6 +480,8 @@ async function handleConveyancerSignup(request, env) {
     'ALTER TABLE conveyancers ADD COLUMN reg_number TEXT',
     'ALTER TABLE conveyancers ADD COLUMN transaction_types TEXT',
     'ALTER TABLE conveyancers ADD COLUMN notes TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN agreed_at TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN agreement_version TEXT',
   ]) {
     try { await env.DB.exec(col); } catch (_) {}
   }
@@ -487,13 +491,13 @@ async function handleConveyancerSignup(request, env) {
       INSERT INTO conveyancers
         (id, name, email, delivery_email, phone, contact_name, role,
          regulated_by, reg_number, regions, transaction_types, notes,
-         active, fee_per_lead, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
+         agreed_at, agreement_version, active, fee_per_lead, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
     `).bind(
       id, name, email, delivery_email, phone, contact_name, role,
       regulated_by, reg_number,
       JSON.stringify(regions), JSON.stringify(transaction_types), notes,
-      now
+      agreed_at, agreement_version, now
     ).run();
   } catch (err) {
     if (err.message?.includes('UNIQUE')) {
@@ -502,22 +506,97 @@ async function handleConveyancerSignup(request, env) {
     throw err;
   }
 
+  const agreedDate = new Date(agreed_at).toLocaleString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZone: 'Europe/London', timeZoneName: 'short',
+  });
+
+  const detailsTable = `
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;width:100%;margin-bottom:16px">
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Firm name</td><td>${name}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Regulated by</td><td>${regulated_by} – ${reg_number}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Contact name</td><td>${contact_name}${role ? ` (${role})` : ''}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Email</td><td>${email}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Referral delivery email</td><td>${delivery_email || email}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Phone</td><td>${phone}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Counties covered</td><td>${regions.join(', ')}</td></tr>
+      <tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Transaction types</td><td>${transaction_types.join(', ')}</td></tr>
+      ${notes ? `<tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;white-space:nowrap">Notes</td><td>${notes}</td></tr>` : ''}
+    </table>`;
+
+  const feesTable = `
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;width:100%;margin-bottom:16px">
+      <tr style="background:#f9fafb"><th style="padding:6px 12px;text-align:left;font-weight:600">Transaction type</th><th style="padding:6px 12px;text-align:left;font-weight:600">Completion fee (ex-VAT)</th></tr>
+      <tr><td style="padding:5px 12px;border-top:1px solid #e5e7eb">Purchase</td><td style="padding:5px 12px;border-top:1px solid #e5e7eb">£200</td></tr>
+      <tr><td style="padding:5px 12px;border-top:1px solid #e5e7eb">Sale</td><td style="padding:5px 12px;border-top:1px solid #e5e7eb">£200</td></tr>
+      <tr><td style="padding:5px 12px;border-top:1px solid #e5e7eb">New Build</td><td style="padding:5px 12px;border-top:1px solid #e5e7eb">£200</td></tr>
+      <tr><td style="padding:5px 12px;border-top:1px solid #e5e7eb">Remortgage</td><td style="padding:5px 12px;border-top:1px solid #e5e7eb">£100</td></tr>
+    </table>`;
+
+  const agreementBody = `
+    <p>FindConveyancers.co.uk, operated by Corre Connections, agrees to send you conveyancing referrals on the following terms.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">Your Details</h3>${detailsTable}
+    <h3 style="margin:20px 0 8px;font-size:15px">Your Fees</h3>
+    <p style="font-size:14px;margin-bottom:8px">You pay on completion only, at the following rates:</p>${feesTable}
+    <p style="font-size:13px;color:#6b7280">Fees are exclusive of VAT.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">Referrals</h3>
+    <p style="font-size:14px">Each referral we send you includes the client's name, contact details, property address, indicative value, transaction type, and referral source. We warrant that each referral contains accurate contact details and relates to a genuine enquiry.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">Your Obligations</h3>
+    <ul style="font-size:14px;padding-left:20px;line-height:1.8">
+      <li>You must hold a current SRA or CLC authorisation. Tell us immediately if that changes.</li>
+      <li>Respond to each referral with a fee quote within 24 hours (excluding weekends and bank holidays). If you don't respond in time we may offer the referral to another firm. No refund applies.</li>
+      <li>Deal with clients professionally and in line with your regulatory obligations.</li>
+      <li>Keep your profile on the platform accurate.</li>
+    </ul>
+    <h3 style="margin:20px 0 8px;font-size:15px">Payment</h3>
+    <p style="font-size:14px"><strong>You pay on completion only.</strong> No fee is due on delivery of a referral. No fee is due if the client doesn't instruct you. No fee is due if the transaction falls through before completion.</p>
+    <p style="font-size:14px"><strong>You must report every completion</strong> that originated from one of our referrals within 5 working days of the completion date, providing the referral reference number, property address, completion date, and transaction value.</p>
+    <p style="font-size:14px"><strong>We verify independently.</strong> We may verify transaction completion through the client, the estate agent involved, or HM Land Registry records. If we identify a completion you haven't reported, we'll invoice you for it.</p>
+    <p style="font-size:14px"><strong>The fee applies however the instruction came about.</strong> If we sent you a referral for a client and that client's transaction completes whether or not they used our quote comparison, and regardless of how you describe the resulting instruction the completion fee is owed.</p>
+    <p style="font-size:14px">Payment is due within 14 days of invoice. Late payments accrue interest at 8% above the Bank of England base rate under the Late Payment of Commercial Debts (Interest) Act 1998. We may suspend your account if an invoice is more than 21 days overdue.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">What We're Not Responsible For</h3>
+    <p style="font-size:14px">We are not a party to your retainer with any client and have no responsibility for the legal services you provide. We are not liable if a referral doesn't convert to an instruction or if a transaction falls through before completion.</p>
+    <p style="font-size:14px">Our total liability to you for anything arising from this agreement is capped at the total fees you have paid us in the 3 months before the relevant event.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">Data</h3>
+    <p style="font-size:14px">You will receive personal data about prospective clients. Use it only to provide a quote and, if instructed, to carry out the conveyancing. You must comply with UK GDPR and be registered with the ICO. We are each independent data controllers.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">Ending the Agreement</h3>
+    <p style="font-size:14px">Either party can end this agreement with 24 hours' prior written notice. We can end it immediately if you lose your SRA or CLC authorisation, or materially breach these terms and don't remedy it within 14 days of being notified.</p>
+    <p style="font-size:14px">Completion fees for referrals already delivered remain payable after termination.</p>
+    <h3 style="margin:20px 0 8px;font-size:15px">General</h3>
+    <p style="font-size:14px">This agreement is governed by English law and subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+    <p style="font-size:14px">We may update these terms with 30 days' notice via the platform. Continued use after the notice period constitutes acceptance.</p>
+    <p style="font-size:14px">These terms, together with the fees and preferences set out above, form the entire agreement between us regarding the supply of referrals.</p>
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+    <p style="font-size:13px;color:#374151"><strong>Agreement accepted by:</strong> ${contact_name}${role ? ` (${role})` : ''} on behalf of ${name}</p>
+    <p style="font-size:13px;color:#374151"><strong>Accepted at:</strong> ${agreedDate}</p>
+    <p style="font-size:13px;color:#374151"><strong>Agreement version:</strong> ${agreement_version}</p>
+    <p style="font-size:13px;color:#374151"><strong>Reference:</strong> ${id}</p>`;
+
+  // Confirmation to conveyancer
+  await sendEmail(
+    email,
+    `Your FindConveyancers Referral Supply Agreement – ${name}`,
+    `<p>Dear ${contact_name},</p>
+    <p>Thank you for registering with FindConveyancers. This email confirms that you have accepted our Referral Supply Agreement. Please keep it for your records.</p>
+    <p>We will review your application and be in touch within 1 working day to confirm your account.</p>
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+    <h2 style="font-size:18px;margin-bottom:16px">Referral Supply Agreement</h2>
+    ${agreementBody}
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+    <p style="font-size:12px;color:#9ca3af">FindConveyancers.co.uk is operated by Corre Connections. If you have any questions, reply to this email.</p>`,
+    env
+  );
+
   // Notify admin
   await sendEmail(
     env.NOTIFY_EMAIL,
     `New conveyancer signup: ${name}`,
-    `<p>A new firm has applied to join FindConveyancers.</p>
-    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Firm</td><td>${name}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Regulated by</td><td>${regulated_by} – ${reg_number}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Contact</td><td>${contact_name}${role ? ` (${role})` : ''}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Email</td><td>${email}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Delivery email</td><td>${delivery_email || email}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Phone</td><td>${phone}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Counties</td><td>${regions.join(', ')}</td></tr>
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Transaction types</td><td>${transaction_types.join(', ')}</td></tr>
-      ${notes ? `<tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Notes</td><td>${notes}</td></tr>` : ''}
-    </table>
+    `<p>A new firm has applied to join FindConveyancers and accepted the Referral Supply Agreement.</p>
+    ${detailsTable}
+    <p><strong>Agreed at:</strong> ${agreedDate}</p>
+    <p><strong>Agreement version:</strong> ${agreement_version}</p>
+    <p><strong>Reference:</strong> ${id}</p>
     <p style="margin-top:16px">Log in to the <a href="https://findconveyancers.co.uk/admin.html">admin dashboard</a> to activate this firm.</p>`,
     env
   );
