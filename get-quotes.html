@@ -517,15 +517,12 @@
     .price-slider-wrap { margin: 1.25rem 0; }
     .price-display { font-size:1.4rem; font-weight:700; color:#2563eb; margin-bottom:0.5rem; }
     input[type=range] { width:100%; accent-color:#2563eb; }
-    .postcode-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .postcode-row { display:block; }
     .autofill-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.75rem; display:none; }
     .autofill-row.visible { display:grid; }
     .postcode-field { text-transform: uppercase; }
     .postcode-field::placeholder { text-transform: none; }
     .county-wrap { position: relative; margin-top: 0.75rem; }
-    .county-search { width:100%; padding:0.9rem 1rem; border:2px solid var(--border-light); border-radius:10px; font-family:inherit; font-size:1rem; color:var(--text-primary); transition:all 0.2s; }
-    .county-search:focus { outline:none; border-color:var(--primary-blue); box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
-    .county-search::placeholder { color:var(--text-muted); }
     .county-dd { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50; background:#fff; border:2px solid var(--primary-blue); border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; }
     .county-dd.open { display:block; }
     .county-opt { padding:0.6rem 1rem; font-size:0.9rem; cursor:pointer; color:var(--text-primary); }
@@ -646,7 +643,7 @@
             </div>
           </div>
           <div class="county-wrap">
-            <input type="text" id="buyCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <input type="text" id="buyCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
             <div class="county-dd" id="buyCountyDd"></div>
           </div>
           <input type="hidden" id="buyCounty" name="buyCounty">
@@ -668,7 +665,7 @@
             </div>
           </div>
           <div class="county-wrap">
-            <input type="text" id="sellCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <input type="text" id="sellCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
             <div class="county-dd" id="sellCountyDd"></div>
           </div>
           <input type="hidden" id="sellCounty" name="sellCounty">
@@ -690,7 +687,7 @@
             </div>
           </div>
           <div class="county-wrap">
-            <input type="text" id="remCountySearch" class="county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
+            <input type="text" id="remCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
             <div class="county-dd" id="remCountyDd"></div>
           </div>
           <input type="hidden" id="remCounty" name="remCounty">
