@@ -2,10 +2,14 @@ name = "findconveyancers"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
+[assets]
+directory = "."
+exclude = ["worker.js", "wrangler.toml", "node_modules", ".git", "functions", "schema.sql", "*.py", "*.docx", "*.jsonl"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "findconveyancers-db"
-database_id = "1627f142-0521-4fc5-9173-565ba675b89c" 
+database_id = "1627f142-0521-4fc5-9173-565ba675b89c"
 
 [vars]
 NOTIFY_EMAIL = "kai@correconnections.co.uk"
@@ -13,5 +17,3 @@ ADMIN_PASSWORD = "pabloswim"
 
 [observability]
 enabled = false
-# Set secrets via CLI — never commit these:
-# wrangler secret put ADMIN_PASSWORD
