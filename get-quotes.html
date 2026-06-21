@@ -762,6 +762,7 @@
     </div>
 
     <!-- Button Group -->
+    <div id="submitErrorBanner" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#dc2626;margin-bottom:1rem"></div>
     <div class="button-group" id="buttonGroup">
       <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" style="display: none;">← Previous</button>
       <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">Next →</button>
@@ -1027,6 +1028,13 @@
       .join('');
   }
 
+  function showSubmitError(msg) {
+    const el = document.getElementById('submitErrorBanner');
+    el.textContent = 'Submission error: ' + msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   async function submitForm() {
     const formData = new FormData(form);
 
@@ -1061,21 +1069,15 @@
         formContainer.style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
         successPanel.classList.add('show');
-
-        // Track event
-        gtag('event', 'form_submission', {
-          'event_category': 'quotes',
-          'event_label': 'quote_request_submitted'
-        });
         fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'form_submitted' }) }).catch(() => {});
       } else {
-        alert('Error submitting form. Please try again.');
+        const errData = await response.json().catch(() => ({}));
+        showSubmitError('Server ' + response.status + ': ' + (errData.error || 'Unknown error'));
         nextBtn.disabled = false;
         nextBtn.innerHTML = '✓ Submit';
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error submitting form. Please try again.');
+      showSubmitError(error.message);
       nextBtn.disabled = false;
       nextBtn.innerHTML = '✓ Submit';
     }
