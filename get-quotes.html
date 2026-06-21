@@ -587,11 +587,40 @@
           <p class="step-description">Tell us what you're buying, selling, or remortgaging</p>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Property Address <span class="form-required">*</span></label>
-          <input type="text" name="propertyAddress" class="form-input" placeholder="e.g., 123 High Street, Northampton" required>
-          <div class="form-error">Please enter the property address</div>
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr">
+          <div class="form-group">
+            <label class="form-label">House / Flat number <span class="form-required">*</span></label>
+            <input type="text" id="houseNumber" class="form-input" placeholder="e.g. 42 or Flat 3" autocomplete="address-line1">
+            <div class="form-error" id="houseNumberErr">Please enter a house or flat number</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Postcode <span class="form-required">*</span></label>
+            <div style="position:relative">
+              <input type="text" id="postcodeInput" class="form-input" placeholder="e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <div id="postcodeSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
+              </div>
+            </div>
+            <div class="form-error" id="postcodeErr">Please enter a valid UK postcode</div>
+          </div>
         </div>
+        <div id="addressFields" style="display:none">
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="form-group">
+              <label class="form-label">Street</label>
+              <input type="text" id="streetInput" class="form-input" placeholder="Street name" autocomplete="address-line2">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Town / City</label>
+              <input type="text" id="townInput" class="form-input" placeholder="Town" autocomplete="address-level2">
+            </div>
+          </div>
+          <div class="form-group" style="max-width:220px">
+            <label class="form-label">County</label>
+            <input type="text" id="countyInput2" class="form-input" placeholder="County" autocomplete="address-level1">
+          </div>
+        </div>
+        <input type="hidden" name="propertyAddress" id="propertyAddress">
 
         <div class="form-grid">
           <div class="form-group">
@@ -762,6 +791,66 @@
 <script>
   fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
 
+  // ── Postcode lookup ──────────────────────────────────────────────────────────
+  let postcodeValid = false;
+
+  function buildAddressHidden() {
+    const house  = document.getElementById('houseNumber').value.trim();
+    const street = document.getElementById('streetInput').value.trim();
+    const town   = document.getElementById('townInput').value.trim();
+    const county = document.getElementById('countyInput2').value.trim();
+    const pc     = document.getElementById('postcodeInput').value.trim().toUpperCase();
+    const parts  = [house, street, town, county, pc].filter(Boolean);
+    document.getElementById('propertyAddress').value = parts.join(', ');
+  }
+
+  async function lookupPostcode(raw) {
+    const pc = raw.trim().toUpperCase().replace(/\s+/g, '');
+    if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)) return;
+
+    document.getElementById('postcodeSpinner').style.display = 'block';
+    try {
+      const res  = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
+      const data = await res.json();
+      if (data.status === 200 && data.result) {
+        const r = data.result;
+        document.getElementById('streetInput').value  = '';
+        document.getElementById('townInput').value    = r.admin_district || r.parish || '';
+        document.getElementById('countyInput2').value = r.admin_county || r.region || '';
+        document.getElementById('postcodeInput').value = r.postcode;
+        document.getElementById('addressFields').style.display = 'block';
+        document.getElementById('postcodeErr').style.display = 'none';
+        postcodeValid = true;
+        buildAddressHidden();
+      } else {
+        document.getElementById('postcodeErr').textContent = 'Postcode not found — please check and try again';
+        document.getElementById('postcodeErr').style.display = 'block';
+        postcodeValid = false;
+      }
+    } catch {
+      // network error — allow manual entry
+      document.getElementById('addressFields').style.display = 'block';
+      postcodeValid = true;
+    } finally {
+      document.getElementById('postcodeSpinner').style.display = 'none';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const pcInput = document.getElementById('postcodeInput');
+    let pcTimer;
+    pcInput.addEventListener('input', () => {
+      clearTimeout(pcTimer);
+      postcodeValid = false;
+      pcTimer = setTimeout(() => lookupPostcode(pcInput.value), 600);
+    });
+    pcInput.addEventListener('blur', () => lookupPostcode(pcInput.value));
+
+    ['houseNumber','streetInput','townInput','countyInput2'].forEach(id => {
+      document.getElementById(id).addEventListener('input', buildAddressHidden);
+    });
+  });
+
   let currentStep = 1;
   const totalSteps = 3;
   const form = document.getElementById('quoteForm');
@@ -803,6 +892,35 @@
     const radios = currentStepEl.querySelectorAll('input[type="radio"][required]');
     let isValid = true;
     const errors = [];
+
+    // Address fields validation (step 1)
+    if (step === 1) {
+      const house = document.getElementById('houseNumber').value.trim();
+      const pc    = document.getElementById('postcodeInput').value.trim();
+      const hErr  = document.getElementById('houseNumberErr');
+      const pcErr = document.getElementById('postcodeErr');
+
+      if (!house) {
+        document.getElementById('houseNumber').classList.add('error');
+        hErr.style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('houseNumber').classList.remove('error');
+        hErr.style.display = 'none';
+      }
+
+      if (!pc || !postcodeValid) {
+        document.getElementById('postcodeInput').classList.add('error');
+        pcErr.textContent = !pc ? 'Please enter your postcode' : 'Please enter a valid UK postcode';
+        pcErr.style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('postcodeInput').classList.remove('error');
+        pcErr.style.display = 'none';
+      }
+
+      buildAddressHidden();
+    }
 
     inputs.forEach(input => {
       if (!input.value.trim()) {
@@ -895,7 +1013,7 @@
     const price = parseInt(formData.get('propertyPrice'));
     const timeline = formData.get('timeline');
     const rows = [
-      ['Address', formData.get('propertyAddress')],
+      ['Address', document.getElementById('propertyAddress').value],
       ['Price', isNaN(price) ? ' - ' : '£' + price.toLocaleString('en-GB')],
       ['Property type', formData.get('propertyType')],
       ['Transaction', formData.get('transactionType')],
