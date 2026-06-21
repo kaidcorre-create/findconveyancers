@@ -38,11 +38,13 @@
 
     /* Header */
     .header { background: white; border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-    .header-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .header-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 1.25rem; }
+    .partner-hdr-link { font-size: 0.875rem; font-weight: 600; color: var(--primary); text-decoration: none; white-space: nowrap; }
+    .partner-hdr-link:hover { text-decoration: underline; }
     .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--heading); }
     .brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; }
     .brand-name { font-size: 1.25rem; font-weight: 700; }
-    .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+    .header-nav { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
     .header-nav a { color: var(--muted); text-decoration: none; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.95rem; transition: color 0.15s; }
     .header-nav a:hover { color: var(--heading); }
     .header-btn { background: var(--primary) !important; color: white !important; padding: 0.5rem 1.25rem !important; border-radius: 8px !important; font-weight: 600 !important; }
@@ -130,7 +132,6 @@
     <a href="/guides/">Guides</a>
     <a href="/stamp-duty-calculator.html">SDLT Calculator</a>
     <a href="/buying-costs-calculator.html">Buying Costs</a>
-    <a href="/partner.html">Become a Partner?</a>
     <a href="/get-quotes.html" class="mob-cta">Get Free Quotes</a>
   </div>
 </nav>
@@ -141,11 +142,12 @@
       <img src="/favicon.svg" alt="FindConveyancers" width="32" height="32" style="display:block">
       <div class="brand-name">FindConveyancers</div>
     </a>
+    <a href="/partner.html" class="partner-hdr-link">Become a Partner?</a>
     <nav class="header-nav">
       <a href="/">Home</a>
       <a href="/guides/" style="color: var(--heading); font-weight: 600;">Guides</a>
       <a href="/stamp-duty-calculator.html">SDLT Calc</a>
-      <a href="/partner.html">Become a Partner?</a><a href="/get-quotes.html" class="header-btn">Get Free Quotes</a>
+      <a href="/get-quotes.html" class="header-btn">Get Free Quotes</a>
     </nav>
   </div>
 </header>
