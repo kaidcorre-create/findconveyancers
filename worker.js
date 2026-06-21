@@ -499,7 +499,7 @@ async function handleConveyancerSignup(request, env) {
   return jsonResponse({ success: true, id }, 201);
 }
 
-// ── Public: estate agent signup ───────────────────────────────────────────────
+/// ── Public: estate agent signup ───────────────────────────────────────────────
 async function handleEstateAgentSignup(request, env) {
   const body = await request.json().catch(() => ({}));
 
@@ -511,6 +511,17 @@ async function handleEstateAgentSignup(request, env) {
   if (!name || !business || !email || !phone) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
   }
+
+  await env.DB.prepare(`
+    CREATE TABLE IF NOT EXISTS estate_agent_leads (
+      id         TEXT PRIMARY KEY,
+      name       TEXT NOT NULL,
+      business   TEXT NOT NULL,
+      email      TEXT NOT NULL,
+      phone      TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    )
+  `).run();
 
   const id  = crypto.randomUUID();
   const now = new Date().toISOString();
