@@ -8,7 +8,7 @@ database_name = "findconveyancers-db"
 database_id = "1627f142-0521-4fc5-9173-565ba675b89c"
 
 [vars]
-NOTIFY_EMAIL = "kai@correconnections.co.uk"
+NOTIFY_EMAIL = "kai@findconveyancers.co.uk"
 ADMIN_PASSWORD = "pabloswim"
 
 [observability]
