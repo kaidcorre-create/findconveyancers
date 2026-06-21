@@ -520,7 +520,9 @@
     .postcode-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
     .autofill-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.75rem; display:none; }
     .autofill-row.visible { display:grid; }
-  
+    .postcode-field { text-transform: uppercase; }
+    .postcode-field::placeholder { text-transform: none; }
+
     /* ── Mobile nav ─────────────────── */
     .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-primary);border-radius:6px;line-height:0}
     .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
@@ -627,7 +629,7 @@
           </div>
           <div class="postcode-row form-group">
             <div style="position:relative">
-              <input type="text" id="buyPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <input type="text" id="buyPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
               <div id="buySpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
                 <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
               </div>
@@ -644,7 +646,7 @@
           </div>
           <div class="postcode-row form-group">
             <div style="position:relative">
-              <input type="text" id="sellPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <input type="text" id="sellPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
               <div id="sellSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
                 <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
               </div>
@@ -661,7 +663,7 @@
           </div>
           <div class="postcode-row form-group">
             <div style="position:relative">
-              <input type="text" id="remPostcode" class="form-input" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code" style="text-transform:uppercase">
+              <input type="text" id="remPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
               <div id="remSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
                 <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
               </div>
