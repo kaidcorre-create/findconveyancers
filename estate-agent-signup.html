@@ -321,10 +321,10 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Unknown error');
+        throw new Error('Server ' + res.status + ': ' + (data.error || 'Unknown error'));
       }
     } catch (e) {
-      alertEl.textContent = 'Something went wrong. Please try again or email us directly.';
+      alertEl.textContent = 'Error: ' + e.message;
       alertEl.classList.add('show');
       btn.disabled = false;
       btn.innerHTML = 'Express interest <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
