@@ -505,6 +505,21 @@
 </div>
 
 <!-- Add agent modal -->
+<!-- Assign lead modal -->
+<div class="modal-overlay" id="assignModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Assign lead to conveyancer</div>
+      <button class="modal-close" onclick="closeAssignModal()">×</button>
+    </div>
+    <div style="padding:1.25rem 1.5rem">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Select a conveyancer to send this referral to. They will receive an email with the lead details and a unique link to submit their quote.</p>
+      <div id="assignConveyancerList" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto;margin-bottom:1rem"></div>
+      <div id="assignStatus" style="font-size:0.85rem;margin-top:0.5rem"></div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="agentModal">
   <div class="modal">
     <div class="modal-header">
@@ -801,7 +816,10 @@
         </td>
         <td style="font-size:0.82rem;color:${l.instructed_firm ? 'var(--green)' : 'var(--muted)'}">${escHtml(l.instructed_firm || '—')}</td>
         <td class="td-mono" style="color:var(--muted)">${formatDate(l.created_at)}</td>
-        <td><button class="action-btn view-lead-btn" data-lead-id="${escHtml(l.id)}">View</button></td>
+        <td style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <button class="action-btn view-lead-btn" data-lead-id="${escHtml(l.id)}">View</button>
+          <button class="action-btn" style="background:var(--primary-dim);color:var(--primary);border-color:var(--primary)" data-lead-id="${escHtml(l.id)}" onclick="openAssignModal('${escHtml(l.id)}')">Assign</button>
+        </td>
       </tr>
     `).join('');
 
@@ -936,6 +954,78 @@
       alert('Failed: ' + e.message);
     }
   }
+
+  let assignLeadId = null;
+
+  async function openAssignModal(leadId) {
+    assignLeadId = leadId;
+    const lead = allLeads.find(l => l.id === leadId);
+    document.querySelector('#assignModal .modal-title').textContent =
+      'Assign lead' + (lead ? ` — ${lead.first_name} ${lead.last_name}` : '');
+    document.getElementById('assignStatus').textContent = '';
+
+    const list = document.getElementById('assignConveyancerList');
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Loading conveyancers…</div>';
+    document.getElementById('assignModal').classList.add('open');
+
+    try {
+      const data = await apiGet('/api/admin/conveyancers');
+      const active = (data.conveyancers || []).filter(c => c.active);
+      const assigned = JSON.parse(lead?.assigned_conveyancers || '[]');
+
+      if (!active.length) {
+        list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">No active conveyancers found. Activate a firm first.</div>';
+        return;
+      }
+
+      list.innerHTML = active.map(c => {
+        const alreadySent = assigned.includes(c.id);
+        const regions = JSON.parse(c.regions || '[]');
+        return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;border:1px solid var(--border);border-radius:8px;gap:1rem">
+          <div>
+            <div style="font-weight:600;font-size:0.875rem">${escHtml(c.name)}</div>
+            <div style="font-size:0.75rem;color:var(--muted)">${escHtml(c.delivery_email || c.email)}</div>
+            <div style="font-size:0.72rem;color:var(--subtle);margin-top:2px">${regions.slice(0,3).join(', ')}${regions.length > 3 ? ' +' + (regions.length-3) + ' more' : ''}</div>
+          </div>
+          <button onclick="sendAssignment('${c.id}', this)" ${alreadySent ? 'disabled style="opacity:0.5"' : ''}
+            style="flex-shrink:0;padding:0.4rem 0.9rem;border-radius:6px;border:1.5px solid var(--primary);background:${alreadySent ? '#f3f4f6' : 'var(--primary)'};color:${alreadySent ? 'var(--muted)' : 'white'};font-size:0.8rem;font-weight:600;cursor:${alreadySent ? 'default' : 'pointer'}">
+            ${alreadySent ? 'Sent ✓' : 'Send referral'}
+          </button>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      list.innerHTML = '<div style="color:#dc2626;font-size:0.85rem">Failed to load: ' + e.message + '</div>';
+    }
+  }
+
+  async function sendAssignment(conveyancerId, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    const statusEl = document.getElementById('assignStatus');
+    try {
+      const data = await apiPost('/api/admin/leads/' + assignLeadId + '/assign', { conveyancer_id: conveyancerId });
+      btn.textContent = 'Sent ✓';
+      btn.style.background = '#f3f4f6';
+      btn.style.color = 'var(--muted)';
+      btn.style.borderColor = 'var(--border)';
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = '✓ Referral sent to ' + (data.sent_to || 'conveyancer');
+      loadLeads();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Send referral';
+      statusEl.style.color = '#dc2626';
+      statusEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  function closeAssignModal() {
+    document.getElementById('assignModal').classList.remove('open');
+    assignLeadId = null;
+  }
+  document.getElementById('assignModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('assignModal')) closeAssignModal();
+  });
 
   function openAddConveyancer() {
     ['cvNameInput','cvEmailInput','cvPhoneInput','cvRegionsInput'].forEach(id => {

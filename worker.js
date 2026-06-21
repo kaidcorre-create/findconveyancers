@@ -51,6 +51,9 @@ export default {
       if (path === '/api/admin/leads' && request.method === 'GET')
         return handleGetLeads(request, env);
 
+      if (path.startsWith('/api/admin/leads/') && path.endsWith('/assign') && request.method === 'POST')
+        return handleAssignLead(request, env, path.split('/')[4]);
+
       if (path.startsWith('/api/admin/leads/') && request.method === 'PATCH')
         return handleUpdateLead(request, env, path.split('/').pop());
 
@@ -873,6 +876,51 @@ async function sendEmail(to, subject, html, env) {
   } catch (e) {
     console.error('Email failed:', e.message);
   }
+}
+
+// ── Admin: assign lead to a specific conveyancer ──────────────────────────────
+async function handleAssignLead(request, env, leadId) {
+  if (!isAdminAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
+
+  const { conveyancer_id } = await request.json().catch(() => ({}));
+  if (!conveyancer_id) return jsonResponse({ error: 'conveyancer_id required' }, 400);
+
+  const lead = await env.DB.prepare('SELECT * FROM leads WHERE id = ?').bind(leadId).first();
+  if (!lead) return jsonResponse({ error: 'Lead not found' }, 404);
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(conveyancer_id).first();
+  if (!conv) return jsonResponse({ error: 'Conveyancer not found' }, 404);
+
+  const quoteLink = `https://findconveyancers.co.uk/quote.html?lead=${leadId}&conv=${conv.id}`;
+  const txTypes   = JSON.parse(lead.transaction_types || '[]');
+  const body      = {
+    firstName:     lead.first_name,
+    lastName:      lead.last_name,
+    propertyAddress: lead.postcode || lead.property_address || '',
+    propertyValue: lead.property_value,
+    propertyType:  lead.property_type,
+    transactionTypes: txTypes,
+    timeline:      lead.timeline || '',
+  };
+
+  await sendEmail(
+    conv.delivery_email || conv.email,
+    `New referral – ${lead.property_type || 'Property'} at £${(parseInt(lead.property_value)||0).toLocaleString('en-GB')}`,
+    emailConveyancerNewLead(body, leadId, conv, quoteLink),
+    env
+  );
+
+  // Log assignment
+  const now = new Date().toISOString();
+  try {
+    await env.DB.exec('ALTER TABLE leads ADD COLUMN assigned_conveyancers TEXT');
+  } catch (_) {}
+  const existing = JSON.parse(lead.assigned_conveyancers || '[]');
+  if (!existing.includes(conveyancer_id)) existing.push(conveyancer_id);
+  await env.DB.prepare('UPDATE leads SET assigned_conveyancers = ?, updated_at = ? WHERE id = ?')
+    .bind(JSON.stringify(existing), now, leadId).run();
+
+  return jsonResponse({ success: true, sent_to: conv.name });
 }
 
 // ── Email all active conveyancers when a new lead arrives ──────────────────────
