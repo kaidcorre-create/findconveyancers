@@ -13,29 +13,36 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#2563eb">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary:    #2563eb;
-      --primary-dk: #1d4ed8;
-      --primary-dim: rgba(37,99,235,0.07);
-      --text:       #111827;
-      --muted:      #6b7280;
-      --subtle:     #9ca3af;
-      --border:     #e5e7eb;
-      --surface:    #ffffff;
-      --bg:         #f9fafb;
-      --shadow-sm:  0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
-      --radius:     10px;
+        :root {
+      --primary: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --primary-subtle: #EFF6FF;
+      --heading: #0F172A;
+      --body: #374151;
+      --secondary: #6B7280;
+      --muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --bg-alt: #F3F4F6;
+      --white: #ffffff;
+      --green: #059669;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--white);
+      color: var(--heading);
       min-height: 100vh;
     }
 
@@ -44,39 +51,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 1.5rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+      padding: 1.25rem 2.5rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--bg-alt);
     }
 
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary);
       text-decoration: none;
     }
-
-    .logo-icon {
-      width: 32px; height: 32px;
-      background: var(--primary);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; }
-
-    .logo-text { font-size: 1rem; font-weight: 700; color: var(--text); }
 
     .back-link {
       font-size: 0.82rem;
       color: var(--muted);
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.15s;
+      transition: color 0.2s;
     }
 
-    .back-link:hover { color: var(--primary); }
+    .back-link:hover { color: var(--heading); }
 
     /* ── Tab nav ── */
     .tab-nav {
@@ -84,45 +79,40 @@
       justify-content: center;
       gap: 0;
       padding: 2.5rem 1.5rem 0;
-      max-width: 760px;
+      max-width: 780px;
       margin: 0 auto;
     }
 
     .tab-btn {
-      padding: 0.7rem 1.75rem;
+      padding: 0.75rem 2rem;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1.5px solid var(--bg-alt);
+      background: var(--white);
       color: var(--muted);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
     }
 
-    .tab-btn:first-child { border-radius: 8px 0 0 8px; }
-    .tab-btn:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
+    .tab-btn:first-child { border-radius: 6px 0 0 6px; }
+    .tab-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
 
     .tab-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
-    .tab-btn:not(.active):hover {
-      border-color: var(--primary);
-      color: var(--primary);
+      background: var(--heading);
+      border-color: var(--heading);
+      color: var(--white);
     }
 
     /* ── Content ── */
     .content-wrap {
-      max-width: 760px;
+      max-width: 780px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 5rem;
     }
 
     .doc { display: none; }
-    .doc.active { display: block; animation: fadeIn 0.2s ease; }
+    .doc.active { display: block; animation: fadeIn 0.25s ease; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
@@ -131,164 +121,153 @@
 
     /* ── Doc header ── */
     .doc-header {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem 2rem 1.75rem;
-      margin-bottom: 1.75rem;
-      box-shadow: var(--shadow-sm);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--bg-alt);
     }
 
     .doc-kicker {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--primary);
-      background: var(--primary-dim);
-      border-radius: 100px;
-      padding: 0.25rem 0.75rem;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.75rem;
     }
 
     .doc-title {
-      font-size: clamp(1.5rem, 3.5vw, 2rem);
-      font-weight: 800;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
       line-height: 1.2;
-      color: var(--text);
-      margin-bottom: 0.6rem;
+      margin-bottom: 1rem;
     }
 
     .doc-meta {
-      font-size: 0.78rem;
-      color: var(--subtle);
-      font-weight: 500;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 300;
     }
 
     .doc-intro {
-      margin-top: 0.85rem;
-      font-size: 0.9rem;
+      margin-top: 1rem;
+      font-size: 0.95rem;
       color: var(--muted);
-      line-height: 1.7;
-      max-width: 580px;
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 600px;
     }
 
     /* ── Sections ── */
     .section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem 2rem;
-      margin-bottom: 1rem;
-      box-shadow: var(--shadow-sm);
+      margin-bottom: 2.5rem;
     }
 
     .section-num {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--primary);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 0.9rem;
-      color: var(--text);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--heading);
     }
 
     h3 {
-      font-size: 0.875rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
       margin-top: 1.25rem;
-      color: var(--text);
+      color: var(--heading);
     }
 
     p {
-      font-size: 0.875rem;
-      line-height: 1.75;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #3a3630;
+      margin-bottom: 0.85rem;
+      font-weight: 300;
     }
 
-    p:last-child { margin-bottom: 0; }
-
     ul, ol {
-      padding-left: 1.4rem;
-      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      margin-bottom: 0.85rem;
     }
 
     li {
-      font-size: 0.875rem;
-      line-height: 1.75;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #3a3630;
+      margin-bottom: 0.35rem;
+      font-weight: 300;
     }
-
-    strong { color: var(--text); font-weight: 600; }
 
     /* ── Highlight box ── */
     .highlight-box {
-      background: var(--primary-dim);
-      border: 1px solid rgba(37,99,235,0.15);
+      background: var(--white);
+      border: 1.5px solid var(--bg-alt);
       border-left: 3px solid var(--primary);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0;
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
     }
 
     .highlight-box p {
       margin-bottom: 0;
-      font-size: 0.85rem;
-      color: var(--text);
+      font-size: 0.88rem;
     }
 
     /* ── Warning box ── */
     .warning-box {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-left: 3px solid #f59e0b;
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
+      background: rgba(201,168,76,0.06);
+      border: 1.5px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
     }
 
     .warning-box p {
       margin-bottom: 0;
-      font-size: 0.85rem;
-      color: #92400e;
+      font-size: 0.88rem;
+      color: var(--heading);
     }
 
     .warning-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #b45309;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary);
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
-    /* ── Divider — hidden since sections are now cards ── */
-    .divider { display: none; }
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--bg-alt);
+      margin: 2rem 0;
+    }
 
     /* ── Contact block ── */
     .contact-block {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem 2rem;
-      margin-top: 1rem;
-      box-shadow: var(--shadow-sm);
+      background: var(--white);
+      border: 1px solid var(--bg-alt);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 2rem;
     }
 
-    .contact-block h3 { margin-top: 0; font-size: 0.875rem; }
+    .contact-block h3 { margin-top: 0; }
 
     .contact-block a {
-      color: var(--primary);
+      color: var(--secondary);
       text-decoration: none;
     }
 
@@ -299,29 +278,22 @@
       text-align: center;
       padding: 2rem 1.5rem;
       font-size: 0.75rem;
-      color: var(--subtle);
-      border-top: 1px solid var(--border);
+      color: var(--muted);
+      border-top: 1px solid var(--bg-alt);
     }
 
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--primary); }
+    footer a { color: var(--muted); }
 
     @media (max-width: 520px) {
-      header { padding: 0.875rem 1rem; }
-      .tab-btn { padding: 0.6rem 1.1rem; font-size: 0.82rem; }
-      .section, .doc-header, .contact-block { padding: 1.25rem; }
+      header { padding: 1rem 1.25rem; }
+      .tab-btn { padding: 0.65rem 1.25rem; font-size: 0.82rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <a class="logo" href="/">
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    </div>
-    <span class="logo-text">FindConveyancers</span>
-  </a>
+  <a class="logo" href="/">⬡ FindConveyancers</a>
   <a class="back-link" href="/">← Back to home</a>
 </header>
 
@@ -646,8 +618,48 @@
 
 </div><!-- /content-wrap -->
 
-<footer>
-  <p>© 2026 FindConveyancers, operated by Corre Connections · <a href="#" onclick="showDoc('privacy', document.querySelectorAll('.tab-btn')[0])">Privacy Policy</a> · <a href="#" onclick="showDoc('terms', document.querySelectorAll('.tab-btn')[1])">Terms of Service</a></p>
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">
+          <img src="/favicon.svg" alt="FindConveyancers" width="28" height="28" style="display:block">
+          <div class="footer-brand-name">FindConveyancers</div>
+        </div>
+        <p class="footer-tagline">A free conveyancing comparison service. Compare quotes from regulated solicitors across England &amp; Wales.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Service</h4>
+        <a href="/get-quotes.html">Get Quotes</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-section">
+        <h4>Guides</h4>
+        <a href="/guides/what-is-conveyancing.html">What is Conveyancing</a>
+        <a href="/guides/conveyancing-costs-2026.html">Conveyancing Costs 2026</a>
+        <a href="/guides/first-time-buyer-conveyancing.html">First-Time Buyer Guide</a>
+        <a href="/guides/freehold-vs-leasehold-conveyancing.html">Freehold vs Leasehold</a>
+        <a href="/guides/how-long-does-conveyancing-take.html">How Long Does It Take</a>
+      </div>
+      <div class="footer-section">
+        <h4>Tools</h4>
+        <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+        <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <a href="/legal.html">Privacy Policy</a>
+        <a href="/legal.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 FindConveyancers, operated by Corre Connections.</span>
+      <span>England &amp; Wales</span>
+    </div>
+    <p class="footer-disclaimer">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
+  </div>
 </footer>
 
 <script>

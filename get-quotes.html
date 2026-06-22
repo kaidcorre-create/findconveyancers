@@ -35,32 +35,39 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --primary-blue: #3B82F6;
-      --primary-blue-dark: #1E40AF;
-      --secondary-green: #10B981;
-      --accent-orange: #F59E0B;
-      --error-red: #DC2626;
-      --success-green: #10B981;
-      --bg-light: #F9FAFB;
-      --bg-lighter: #F3F4F6;
-      --border-light: #E5E7EB;
-      --text-primary: #1F2937;
-      --text-secondary: #6B7280;
-      --text-muted: #9CA3AF;
+        :root {
+      --primary: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --primary-subtle: #EFF6FF;
+      --heading: #0F172A;
+      --body: #374151;
+      --secondary: #6B7280;
+      --muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --bg-alt: #F3F4F6;
+      --white: #ffffff;
+      --green: #059669;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
     }
 
     body {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-primary);
+      color: var(--heading);
       line-height: 1.6;
-      background-color: var(--bg-light);
+      background-color: var(--bg);
     }
 
     /* Header */
     .header {
       background: white;
-      border-bottom: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border);
       padding: 1rem 0;
       position: sticky;
       top: 0;
@@ -81,13 +88,13 @@
       align-items: center;
       gap: 0.75rem;
       text-decoration: none;
-      color: var(--text-primary);
+      color: var(--heading);
     }
 
     .brand-icon {
       width: 32px;
       height: 32px;
-      background: linear-gradient(135deg, var(--primary-blue) 0%, #2563EB 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -103,14 +110,14 @@
     }
 
     .header-back {
-      color: var(--text-secondary);
+      color: var(--secondary);
       text-decoration: none;
       font-size: 0.95rem;
       transition: color 0.2s;
     }
 
     .header-back:hover {
-      color: var(--primary-blue);
+      color: var(--primary);
     }
 
     /* Main Container */
@@ -127,21 +134,21 @@
 
     .progress-label {
       font-size: 0.85rem;
-      color: var(--text-secondary);
+      color: var(--secondary);
       margin-bottom: 0.75rem;
       font-weight: 600;
     }
 
     .progress-bar {
       height: 4px;
-      background: var(--border-light);
+      background: var(--border);
       border-radius: 2px;
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-green) 100%);
+      background: linear-gradient(90deg, var(--primary) 0%, var(--green) 100%);
       width: 25%;
       transition: width 0.3s ease;
     }
@@ -183,11 +190,11 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: var(--text-primary);
+      color: var(--heading);
     }
 
     .step-description {
-      color: var(--text-secondary);
+      color: var(--secondary);
       font-size: 0.95rem;
     }
 
@@ -204,12 +211,12 @@
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      color: var(--text-primary);
+      color: var(--heading);
       font-size: 0.95rem;
     }
 
     .form-required {
-      color: var(--error-red);
+      color: var(--border);
       margin-left: 0.25rem;
     }
 
@@ -217,37 +224,37 @@
     .form-select {
       width: 100%;
       padding: 0.9rem 1rem;
-      border: 2px solid var(--border-light);
+      border: 2px solid var(--border);
       border-radius: 10px;
       font-family: inherit;
       font-size: 1rem;
       transition: all 0.2s;
-      color: var(--text-primary);
+      color: var(--heading);
     }
 
     .form-input:focus,
     .form-select:focus {
       outline: none;
-      border-color: var(--primary-blue);
+      border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .form-input::placeholder {
-      color: var(--text-muted);
+      color: var(--secondary);
     }
 
     .form-input.error {
-      border-color: var(--error-red);
+      border-color: var(--border);
       background-color: #FEE2E2;
     }
 
     .form-input.success {
-      border-color: var(--success-green);
+      border-color: var(--green);
       background-color: #F0FDF4;
     }
 
     .form-error {
-      color: var(--error-red);
+      color: var(--border);
       font-size: 0.85rem;
       margin-top: 0.5rem;
       display: none;
@@ -277,7 +284,7 @@
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      border: 2px solid var(--border-light);
+      border: 2px solid var(--border);
       border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
@@ -288,13 +295,13 @@
     }
 
     .choice-button input:checked + .choice-label {
-      border-color: var(--primary-blue);
+      border-color: var(--primary);
       background: #DBEAFE;
-      color: var(--primary-blue);
+      color: var(--primary);
     }
 
     .choice-label:hover {
-      border-color: var(--primary-blue);
+      border-color: var(--primary);
     }
 
     /* Two Column Grid for Form */
@@ -328,27 +335,27 @@
     }
 
     .btn-primary {
-      background: var(--primary-blue);
+      background: var(--primary);
       color: white;
       flex: 1;
     }
 
     .btn-primary:hover:not(:disabled) {
-      background: var(--primary-blue-dark);
+      background: var(--primary-dark);
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
     }
 
     .btn-primary:disabled {
-      background: var(--text-muted);
+      background: var(--secondary);
       cursor: not-allowed;
       opacity: 0.5;
     }
 
     .btn-secondary {
       background: white;
-      color: var(--primary-blue);
-      border: 2px solid var(--primary-blue);
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
 
     .btn-secondary:hover {
@@ -364,7 +371,7 @@
     .success-panel {
       display: none;
       background: #F0FDF4;
-      border: 2px solid var(--success-green);
+      border: 2px solid var(--green);
       border-radius: 16px;
       padding: 3rem 2rem;
       text-align: center;
@@ -383,12 +390,12 @@
     .success-title {
       font-size: 1.75rem;
       font-weight: 700;
-      color: var(--success-green);
+      color: var(--green);
       margin-bottom: 0.75rem;
     }
 
     .success-message {
-      color: var(--text-secondary);
+      color: var(--secondary);
       margin-bottom: 1.5rem;
       font-size: 1rem;
     }
@@ -404,13 +411,13 @@
     .success-next h4 {
       font-size: 0.95rem;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--heading);
       margin-bottom: 0.75rem;
     }
 
     .success-next ol {
       margin-left: 1.5rem;
-      color: var(--text-secondary);
+      color: var(--secondary);
       font-size: 0.9rem;
     }
 
@@ -422,7 +429,7 @@
     /* Error Summary */
     .error-summary {
       background: #FEE2E2;
-      border: 2px solid var(--error-red);
+      border: 2px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
@@ -434,7 +441,7 @@
     }
 
     .error-summary h3 {
-      color: var(--error-red);
+      color: var(--border);
       font-size: 0.95rem;
       margin-bottom: 0.75rem;
     }
@@ -442,7 +449,7 @@
     .error-summary ul {
       list-style: none;
       font-size: 0.9rem;
-      color: var(--error-red);
+      color: var(--border);
     }
 
     .error-summary li {
@@ -511,37 +518,19 @@
     .hidden {
       display: none;
     }
-
-    .address-section { display:none; margin-bottom:1rem; }
-    .address-section.visible { display:block; }
-    .price-slider-wrap { margin: 1.25rem 0; }
-    .price-display { font-size:1.4rem; font-weight:700; color:#2563eb; margin-bottom:0.5rem; }
-    input[type=range] { width:100%; accent-color:#2563eb; }
-    .postcode-row { display:block; }
-    .autofill-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.75rem; display:none; }
-    .autofill-row.visible { display:grid; }
-    .postcode-field { text-transform: uppercase; }
-    .postcode-field::placeholder { text-transform: none; }
-    .county-wrap { position: relative; margin-top: 0.75rem; }
-    .county-dd { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50; background:#fff; border:2px solid var(--primary-blue); border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; }
-    .county-dd.open { display:block; }
-    .county-opt { padding:0.6rem 1rem; font-size:0.9rem; cursor:pointer; color:var(--text-primary); }
-    .county-opt:hover { background:#DBEAFE; color:var(--primary-blue); }
-    .county-opt.selected { font-weight:700; color:var(--primary-blue); }
-    .county-no-match { padding:0.6rem 1rem; font-size:0.9rem; color:var(--text-muted); }
-
+  
     /* ── Mobile nav ─────────────────── */
-    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-primary);border-radius:6px;line-height:0}
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--heading);border-radius:6px;line-height:0}
     .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
     .mob-overlay.open{display:block}
     .mob-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
     .mob-panel.open{transform:translateX(0)}
-    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light)}
-    .mob-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:var(--text-primary);line-height:0}
+    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .mob-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:var(--heading);line-height:0}
     .mob-links{display:flex;flex-direction:column}
-    .mob-links a{display:block;padding:0.9rem 0;font-size:1.05rem;font-weight:500;color:var(--text-primary);text-decoration:none;border-bottom:1px solid var(--border-light)}
-    .mob-links a:hover{color:var(--primary-blue)}
-    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary-blue);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
+    .mob-links a{display:block;padding:0.9rem 0;font-size:1.05rem;font-weight:500;color:var(--heading);text-decoration:none;border-bottom:1px solid var(--border)}
+    .mob-links a:hover{color:var(--primary)}
+    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
     @media(max-width:768px){
       .nav-hamburger{display:flex!important;align-items:center;justify-content:center}
       .header-nav{display:none!important}
@@ -606,6 +595,33 @@
         </div>
 
         <div class="form-group">
+          <label class="form-label">Property Address <span class="form-required">*</span></label>
+          <input type="text" name="propertyAddress" class="form-input" placeholder="e.g., 123 High Street, Northampton" required>
+          <div class="form-error">Please enter the property address</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Property Price <span class="form-required">*</span></label>
+            <input type="number" name="propertyPrice" class="form-input" placeholder="e.g., 250000" min="0" step="1000" required>
+            <div class="form-error">Please enter the property price</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Property Type <span class="form-required">*</span></label>
+            <select name="propertyType" class="form-select" required>
+              <option value="">Select type</option>
+              <option value="freehold-house">Freehold House</option>
+              <option value="leasehold-flat">Leasehold Flat</option>
+              <option value="leasehold-house">Leasehold House</option>
+              <option value="new-build">New Build</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="form-error">Please select a property type</div>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="form-label">What do you need? <span class="form-required">*</span></label>
           <div class="choice-group">
             <div class="choice-button">
@@ -618,107 +634,14 @@
             </div>
             <div class="choice-button">
               <input type="radio" id="both" name="transactionType" value="both">
-              <label for="both" class="choice-label">Buy &amp; Sell</label>
+              <label for="both" class="choice-label">Buy & Sell</label>
             </div>
             <div class="choice-button">
               <input type="radio" id="remortgage" name="transactionType" value="remortgage">
               <label for="remortgage" class="choice-label">Remortgage</label>
             </div>
           </div>
-          <div class="form-error" id="transactionTypeErr">Please select a transaction type</div>
-        </div>
-
-        <!-- Buying address -->
-        <div class="address-section" id="addressBuying">
-          <label class="form-label">Purchase property address</label>
-          <div class="form-group">
-            <input type="text" id="buyStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
-          </div>
-          <div class="postcode-row form-group">
-            <div style="position:relative">
-              <input type="text" id="buyPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
-              <div id="buySpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
-                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
-              </div>
-            </div>
-          </div>
-          <div class="county-wrap">
-            <input type="text" id="buyCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
-            <div class="county-dd" id="buyCountyDd"></div>
-          </div>
-          <input type="hidden" id="buyCounty" name="buyCounty">
-          <input type="hidden" id="buyAddress" name="propertyAddress">
-        </div>
-
-        <!-- Selling address -->
-        <div class="address-section" id="addressSelling">
-          <label class="form-label">Sale property address</label>
-          <div class="form-group">
-            <input type="text" id="sellStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
-          </div>
-          <div class="postcode-row form-group">
-            <div style="position:relative">
-              <input type="text" id="sellPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
-              <div id="sellSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
-                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
-              </div>
-            </div>
-          </div>
-          <div class="county-wrap">
-            <input type="text" id="sellCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
-            <div class="county-dd" id="sellCountyDd"></div>
-          </div>
-          <input type="hidden" id="sellCounty" name="sellCounty">
-          <input type="hidden" id="sellAddress" name="saleAddress">
-        </div>
-
-        <!-- Remortgage address -->
-        <div class="address-section" id="addressRemortgage">
-          <label class="form-label">Property address</label>
-          <div class="form-group">
-            <input type="text" id="remStreet" class="form-input" placeholder="e.g. 42 High Street" autocomplete="address-line1">
-          </div>
-          <div class="postcode-row form-group">
-            <div style="position:relative">
-              <input type="text" id="remPostcode" class="form-input postcode-field" placeholder="Postcode e.g. NN1 1AA" autocomplete="postal-code">
-              <div id="remSpinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
-                <div style="width:14px;height:14px;border:2px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin 0.7s linear infinite"></div>
-              </div>
-            </div>
-          </div>
-          <div class="county-wrap">
-            <input type="text" id="remCountySearch" class="form-input county-search" placeholder="County e.g. Northamptonshire" autocomplete="off">
-            <div class="county-dd" id="remCountyDd"></div>
-          </div>
-          <input type="hidden" id="remCounty" name="remCounty">
-          <input type="hidden" id="remAddress" name="propertyAddress">
-        </div>
-
-        <!-- Price sliders -->
-        <div id="priceWrapBuy" style="display:none" class="price-slider-wrap">
-          <label class="form-label" id="buyPriceLabel">Purchase price</label>
-          <div class="price-display" id="buyPriceDisplay">£300,000</div>
-          <input type="range" id="buyPriceSlider" min="50000" max="2000000" step="5000" value="300000">
-          <input type="hidden" id="buyPrice" name="propertyPrice" value="300000">
-        </div>
-        <div id="priceWrapSell" style="display:none" class="price-slider-wrap">
-          <label class="form-label">Sale price</label>
-          <div class="price-display" id="sellPriceDisplay">£300,000</div>
-          <input type="range" id="sellPriceSlider" min="50000" max="2000000" step="5000" value="300000">
-          <input type="hidden" id="sellPrice" name="salePrice" value="300000">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Property Type <span class="form-required">*</span></label>
-          <select name="propertyType" class="form-select" required>
-            <option value="">Select type</option>
-            <option value="freehold-house">Freehold House</option>
-            <option value="leasehold-flat">Leasehold Flat</option>
-            <option value="leasehold-house">Leasehold House</option>
-            <option value="new-build">New Build</option>
-            <option value="other">Other</option>
-          </select>
-          <div class="form-error">Please select a property type</div>
+          <div class="form-error">Please select a transaction type</div>
         </div>
 
         <div class="form-group">
@@ -773,20 +696,20 @@
           <p class="step-description">Check your details are correct before we send your request</p>
         </div>
 
-        <div style="background: var(--bg-lighter); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-          <div id="summaryContent" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.9;"></div>
+        <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+          <div id="summaryContent" style="color: var(--secondary); font-size: 0.9rem; line-height: 1.9;"></div>
         </div>
 
-        <div style="background: #DBEAFE; border: 1px solid var(--primary-blue); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-          <p style="font-size: 0.9rem; color: var(--primary-blue); line-height: 1.6;">
+        <div style="background: #DBEAFE; border: 1px solid var(--primary); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+          <p style="font-size: 0.9rem; color: var(--primary); line-height: 1.6;">
             <strong>Free & no obligation</strong> - solicitors send you quotes, you choose if and who to instruct. We never charge you a fee.
           </p>
         </div>
 
         <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
           <input type="checkbox" id="termsCheckbox" name="terms" style="margin-top: 0.25rem;">
-          <label for="termsCheckbox" style="font-size: 0.9rem; color: var(--text-secondary);">
-            I agree to the <a href="/legal.html" style="color: var(--primary-blue); text-decoration: none;">Terms & Conditions</a> and <a href="/legal.html" style="color: var(--primary-blue); text-decoration: none;">Privacy Policy</a>
+          <label for="termsCheckbox" style="font-size: 0.9rem; color: var(--secondary);">
+            I agree to the <a href="/legal/terms-and-conditions.html" style="color: var(--primary); text-decoration: none;">Terms & Conditions</a> and <a href="/legal/privacy-policy.html" style="color: var(--primary); text-decoration: none;">Privacy Policy</a>
           </label>
         </div>
       </div>
@@ -811,13 +734,12 @@
       </div>
 
       <div style="display: flex; gap: 1rem; flex-direction: column;">
-        <a href="/" class="btn btn-primary" style="text-decoration: none; background: var(--primary-blue); color: white;">Explore Our Guides</a>
-        <a href="/" class="btn btn-secondary" style="text-decoration: none; color: var(--primary-blue); border-color: var(--primary-blue);">Back to Home</a>
+        <a href="/" class="btn btn-primary" style="text-decoration: none; background: var(--primary); color: white;">Explore Our Guides</a>
+        <a href="/" class="btn btn-secondary" style="text-decoration: none; color: var(--primary); border-color: var(--primary);">Back to Home</a>
       </div>
     </div>
 
     <!-- Button Group -->
-    <div id="submitErrorBanner" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#dc2626;margin-bottom:1rem"></div>
     <div class="button-group" id="buttonGroup">
       <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" style="display: none;">← Previous</button>
       <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">Next →</button>
@@ -825,13 +747,48 @@
   </div>
 
   <!-- Footer -->
-  <footer style="text-align: center; padding: 2rem 0; color: var(--text-secondary); font-size: 0.85rem;">
-    <p>&copy; 2026 FindConveyancers, operated by Corre Connections.</p>
-    <p>
-      <a href="/legal.html" style="color: var(--primary-blue); text-decoration: none; margin-right: 1rem;">Privacy</a>
-      <a href="/legal.html" style="color: var(--primary-blue); text-decoration: none;">Terms</a>
-    </p>
-  </footer>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">
+          <img src="/favicon.svg" alt="FindConveyancers" width="28" height="28" style="display:block">
+          <div class="footer-brand-name">FindConveyancers</div>
+        </div>
+        <p class="footer-tagline">A free conveyancing comparison service. Compare quotes from regulated solicitors across England &amp; Wales.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Service</h4>
+        <a href="/get-quotes.html">Get Quotes</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-section">
+        <h4>Guides</h4>
+        <a href="/guides/what-is-conveyancing.html">What is Conveyancing</a>
+        <a href="/guides/conveyancing-costs-2026.html">Conveyancing Costs 2026</a>
+        <a href="/guides/first-time-buyer-conveyancing.html">First-Time Buyer Guide</a>
+        <a href="/guides/freehold-vs-leasehold-conveyancing.html">Freehold vs Leasehold</a>
+        <a href="/guides/how-long-does-conveyancing-take.html">How Long Does It Take</a>
+      </div>
+      <div class="footer-section">
+        <h4>Tools</h4>
+        <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+        <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <a href="/legal.html">Privacy Policy</a>
+        <a href="/legal.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 FindConveyancers, operated by Corre Connections.</span>
+      <span>England &amp; Wales</span>
+    </div>
+    <p class="footer-disclaimer">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
+  </div>
+</footer>
 </div>
 
 <!-- Google Analytics -->
@@ -845,121 +802,6 @@
 
 <!-- Form Logic -->
 <script>
-  fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'get_quotes_view' }) }).catch(() => {});
-
-  // ── Address lookup helper ────────────────────────────────────────────────────
-  const UK_COUNTIES = [
-    'Bedfordshire','Berkshire','Bristol','Buckinghamshire','Cambridgeshire','Cheshire',
-    'City of London','Cornwall','Cumbria','Derbyshire','Devon','Dorset','Durham',
-    'East Riding of Yorkshire','East Sussex','Essex','Gloucestershire','Greater London',
-    'Greater Manchester','Hampshire','Herefordshire','Hertfordshire','Isle of Wight',
-    'Kent','Lancashire','Leicestershire','Lincolnshire','Merseyside','Norfolk',
-    'North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire',
-    'Rutland','Shropshire','Somerset','South Yorkshire','Staffordshire','Suffolk',
-    'Surrey','Tyne and Wear','Warwickshire','West Midlands','West Sussex',
-    'West Yorkshire','Wiltshire','Worcestershire'
-  ];
-
-  function setupCountyDropdown(searchId, dropdownId, hiddenId) {
-    const input  = document.getElementById(searchId);
-    const dd     = document.getElementById(dropdownId);
-    const hidden = document.getElementById(hiddenId);
-
-    function render(query) {
-      const q = query.toLowerCase();
-      const matches = UK_COUNTIES.filter(c => c.toLowerCase().includes(q));
-      if (!matches.length) {
-        dd.innerHTML = '<div class="county-no-match">No matches</div>';
-      } else {
-        dd.innerHTML = matches.map(c =>
-          `<div class="county-opt${hidden.value === c ? ' selected' : ''}" data-val="${c}">${c}</div>`
-        ).join('');
-      }
-    }
-
-    input.addEventListener('focus', () => { render(input.value); dd.classList.add('open'); });
-    input.addEventListener('input', () => render(input.value));
-
-    dd.addEventListener('mousedown', e => {
-      e.preventDefault();
-      const opt = e.target.closest('.county-opt');
-      if (!opt) return;
-      hidden.value = opt.dataset.val;
-      input.value  = opt.dataset.val;
-      dd.classList.remove('open');
-    });
-
-    input.addEventListener('blur', () => setTimeout(() => dd.classList.remove('open'), 150));
-  }
-
-  function setupPostcodeLookup(streetId, postcodeId, spinnerId, hiddenId) {
-    const pcInput = document.getElementById(postcodeId);
-    const spinner = document.getElementById(spinnerId);
-
-    async function lookup() {
-      const pc = pcInput.value.trim().toUpperCase().replace(/\s+/g,'');
-      if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)) return;
-      spinner.style.display = 'block';
-      try {
-        const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
-        const data = await res.json();
-        if (data.status === 200) pcInput.value = data.result.postcode;
-      } catch(_) {}
-      finally { spinner.style.display = 'none'; buildHidden(streetId, postcodeId, hiddenId); }
-    }
-
-    let timer;
-    pcInput.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(lookup, 600); });
-    pcInput.addEventListener('blur', lookup);
-    document.getElementById(streetId).addEventListener('input', () => buildHidden(streetId, postcodeId, hiddenId));
-  }
-
-  function buildHidden(streetId, postcodeId, hiddenId) {
-    const parts = [
-      document.getElementById(streetId).value.trim(),
-      document.getElementById(postcodeId).value.trim().toUpperCase(),
-    ].filter(Boolean);
-    document.getElementById(hiddenId).value = parts.join(', ');
-  }
-
-  // Show/hide address sections and price sliders based on transaction type
-  function onTransactionChange(val) {
-    document.getElementById('addressBuying').classList.toggle('visible', val === 'buying' || val === 'both');
-    document.getElementById('addressSelling').classList.toggle('visible', val === 'selling' || val === 'both');
-    document.getElementById('addressRemortgage').classList.toggle('visible', val === 'remortgage');
-    document.getElementById('priceWrapBuy').style.display = (val === 'buying' || val === 'both' || val === 'remortgage') ? 'block' : 'none';
-    document.getElementById('priceWrapSell').style.display = (val === 'selling' || val === 'both') ? 'block' : 'none';
-    document.getElementById('buyPriceLabel').textContent = val === 'remortgage' ? 'Property value' : 'Purchase price';
-  }
-
-  document.querySelectorAll('input[name="transactionType"]').forEach(r => {
-    r.addEventListener('change', () => onTransactionChange(r.value));
-  });
-
-  // Sliders
-  function setupSlider(sliderId, displayId, hiddenId) {
-    const slider = document.getElementById(sliderId);
-    const display = document.getElementById(displayId);
-    const hidden = document.getElementById(hiddenId);
-    function update() {
-      display.textContent = '£' + parseInt(slider.value).toLocaleString('en-GB');
-      hidden.value = slider.value;
-    }
-    slider.addEventListener('input', update);
-    update();
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    setupPostcodeLookup('buyStreet','buyPostcode','buySpinner','buyAddress');
-    setupPostcodeLookup('sellStreet','sellPostcode','sellSpinner','sellAddress');
-    setupPostcodeLookup('remStreet','remPostcode','remSpinner','remAddress');
-    setupCountyDropdown('buyCountySearch','buyCountyDd','buyCounty');
-    setupCountyDropdown('sellCountySearch','sellCountyDd','sellCounty');
-    setupCountyDropdown('remCountySearch','remCountyDd','remCounty');
-    setupSlider('buyPriceSlider','buyPriceDisplay','buyPrice');
-    setupSlider('sellPriceSlider','sellPriceDisplay','sellPrice');
-  });
-
   let currentStep = 1;
   const totalSteps = 3;
   const form = document.getElementById('quoteForm');
@@ -1001,31 +843,6 @@
     const radios = currentStepEl.querySelectorAll('input[type="radio"][required]');
     let isValid = true;
     const errors = [];
-
-    // Step 1 validation
-    if (step === 1) {
-      const checkedType = document.querySelector('input[name="transactionType"]:checked');
-      const tErr = document.getElementById('transactionTypeErr');
-      if (!checkedType) {
-        tErr.style.display = 'block';
-        isValid = false;
-      } else {
-        tErr.style.display = 'none';
-        const val = checkedType.value;
-        const sections = [];
-        if (val === 'buying' || val === 'both') sections.push({ street: 'buyStreet', postcode: 'buyPostcode' });
-        if (val === 'selling' || val === 'both') sections.push({ street: 'sellStreet', postcode: 'sellPostcode' });
-        if (val === 'remortgage') sections.push({ street: 'remStreet', postcode: 'remPostcode' });
-        sections.forEach(({ street, postcode }) => {
-          const streetVal = document.getElementById(street).value.trim();
-          const pcVal = document.getElementById(postcode).value.trim();
-          if (!streetVal || !pcVal) {
-            isValid = false;
-            errors.push('Please fill in property address and postcode');
-          }
-        });
-      }
-    }
 
     inputs.forEach(input => {
       if (!input.value.trim()) {
@@ -1115,34 +932,21 @@
 
   function updateSummary() {
     const formData = new FormData(form);
+    const price = parseInt(formData.get('propertyPrice'));
     const timeline = formData.get('timeline');
-    const transactionType = document.querySelector('input[name="transactionType"]:checked')?.value || '';
-    const propertyAddress = document.getElementById('buyAddress')?.value || document.getElementById('remAddress')?.value || '';
-    const saleAddress = document.getElementById('sellAddress')?.value || '';
-    const buyPrice = parseInt(document.getElementById('buyPrice')?.value || '0');
-    const sellPrice = parseInt(document.getElementById('sellPrice')?.value || '0');
     const rows = [
-      ['Transaction', transactionType],
-      ...(propertyAddress ? [['Purchase address', propertyAddress]] : []),
-      ...(saleAddress ? [['Sale address', saleAddress]] : []),
-      ...(buyPrice ? [['Purchase price', '£' + buyPrice.toLocaleString('en-GB')]] : []),
-      ...(sellPrice && (transactionType === 'selling' || transactionType === 'both') ? [['Sale price', '£' + sellPrice.toLocaleString('en-GB')]] : []),
+      ['Address', formData.get('propertyAddress')],
+      ['Price', isNaN(price) ? ' - ' : '£' + price.toLocaleString('en-GB')],
       ['Property type', formData.get('propertyType')],
+      ['Transaction', formData.get('transactionType')],
       ...(timeline ? [['Timeline', timeline]] : []),
       ['Name', `${formData.get('firstName')} ${formData.get('lastName')}`],
       ['Email', formData.get('email')],
       ['Phone', formData.get('phone')],
     ];
     document.getElementById('summaryContent').innerHTML = rows
-      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:130px;font-weight:600;color:var(--text-primary)">${k}</span><span>${v || ' - '}</span></div>`)
+      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--heading)">${k}</span><span>${v || ' - '}</span></div>`)
       .join('');
-  }
-
-  function showSubmitError(msg) {
-    const el = document.getElementById('submitErrorBanner');
-    el.textContent = 'Submission error: ' + msg;
-    el.style.display = 'block';
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   async function submitForm() {
@@ -1166,34 +970,33 @@
           lastName: formData.get('lastName'),
           email: formData.get('email'),
           phone: formData.get('phone'),
-          propertyAddress: document.getElementById('buyAddress')?.value || document.getElementById('remAddress')?.value || '',
-          propertyCounty: document.getElementById('buyCounty')?.value || document.getElementById('remCounty')?.value || '',
-          saleAddress: document.getElementById('sellAddress')?.value || '',
-          saleCounty: document.getElementById('sellCounty')?.value || '',
-          propertyValue: document.getElementById('buyPrice').value,
-          saleValue: document.getElementById('sellPrice')?.value || '',
+          propertyAddress: formData.get('propertyAddress'),
+          propertyValue: formData.get('propertyPrice'),
           propertyType: formData.get('propertyType'),
-          transactionTypes: [document.querySelector('input[name="transactionType"]:checked')?.value],
+          transactionTypes: [formData.get('transactionType')],
           timeline: formData.get('timeline') || '',
         })
       });
 
       if (response.ok) {
         // Hide form, show success
-        form.style.display = 'none';
+        formContainer.style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
-        document.querySelector('.progress-section').style.display = 'none';
         successPanel.classList.add('show');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'form_submitted' }) }).catch(() => {});
+
+        // Track event
+        gtag('event', 'form_submission', {
+          'event_category': 'quotes',
+          'event_label': 'quote_request_submitted'
+        });
       } else {
-        const errData = await response.json().catch(() => ({}));
-        showSubmitError('Server ' + response.status + ': ' + (errData.error || 'Unknown error'));
+        alert('Error submitting form. Please try again.');
         nextBtn.disabled = false;
         nextBtn.innerHTML = '✓ Submit';
       }
     } catch (error) {
-      showSubmitError(error.message);
+      console.error('Error:', error);
+      alert('Error submitting form. Please try again.');
       nextBtn.disabled = false;
       nextBtn.innerHTML = '✓ Submit';
     }

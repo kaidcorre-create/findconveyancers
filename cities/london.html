@@ -42,7 +42,7 @@
       box-sizing: border-box;
     }
 
-    :root {
+        :root {
       --primary: #3B82F6;
       --primary-dark: #1D4ED8;
       --primary-subtle: #EFF6FF;
@@ -66,21 +66,19 @@
 
     body {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--body);
+      color: var(--heading);
       line-height: 1.6;
-      background: var(--bg);
-      -webkit-font-smoothing: antialiased;
+      background-color: var(--bg);
     }
 
     /* Header */
     .header {
-      background: var(--white);
+      background: white;
       border-bottom: 1px solid var(--border);
       padding: 1rem 0;
       position: sticky;
       top: 0;
       z-index: 100;
-      overflow: hidden;
     }
 
     .header-container {
@@ -90,13 +88,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1.25rem;
     }
 
     .header-brand {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.75rem;
       text-decoration: none;
       color: var(--heading);
     }
@@ -104,21 +101,19 @@
     .brand-icon {
       width: 32px;
       height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 800;
+      font-weight: 700;
       font-size: 18px;
     }
 
     .brand-name {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: var(--heading);
-      letter-spacing: -0.3px;
     }
 
     .header-nav a {
@@ -724,11 +719,44 @@
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-container">
-    <p class="footer-text">&copy; 2026 FindConveyancers, operated by Corre Connections.</p>
-    <p class="footer-text" style="margin-top: 1rem;">
-      <a href="/legal.html" style="color: #93C5FD; text-decoration: none; margin-right: 1.5rem;">Privacy Policy</a>
-      <a href="/legal.html" style="color: #93C5FD; text-decoration: none;">Terms & Conditions</a>
-    </p>
+    <div class="footer-top">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">
+          <img src="/favicon.svg" alt="FindConveyancers" width="28" height="28" style="display:block">
+          <div class="footer-brand-name">FindConveyancers</div>
+        </div>
+        <p class="footer-tagline">A free conveyancing comparison service. Compare quotes from regulated solicitors across England &amp; Wales.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Service</h4>
+        <a href="/get-quotes.html">Get Quotes</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-section">
+        <h4>Guides</h4>
+        <a href="/guides/what-is-conveyancing.html">What is Conveyancing</a>
+        <a href="/guides/conveyancing-costs-2026.html">Conveyancing Costs 2026</a>
+        <a href="/guides/first-time-buyer-conveyancing.html">First-Time Buyer Guide</a>
+        <a href="/guides/freehold-vs-leasehold-conveyancing.html">Freehold vs Leasehold</a>
+        <a href="/guides/how-long-does-conveyancing-take.html">How Long Does It Take</a>
+      </div>
+      <div class="footer-section">
+        <h4>Tools</h4>
+        <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+        <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <a href="/legal.html">Privacy Policy</a>
+        <a href="/legal.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 FindConveyancers, operated by Corre Connections.</span>
+      <span>England &amp; Wales</span>
+    </div>
+    <p class="footer-disclaimer">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
   </div>
 </footer>
 

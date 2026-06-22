@@ -7,31 +7,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --ink: #2d3748;
-      --paper: #f8f9fa;
-      --cream: #f3f4f6;
-      --gold: #3b82f6;
-      --gold-light: #60a5fa;
-      --sage: #ea8c55;
-      --muted: #718096;
+        :root {
+      --primary: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --primary-subtle: #EFF6FF;
+      --heading: #0F172A;
+      --body: #374151;
+      --secondary: #6B7280;
+      --muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --bg-alt: #F3F4F6;
       --white: #ffffff;
-      --error: #dc2626;
-      --step-active: var(--gold);
-      --radius-sm: 10px;
-      --radius-md: 12px;
+      --green: #059669;
+      --radius-sm: 6px;
+      --radius-md: 10px;
       --radius-lg: 16px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.1);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--paper);
-      color: var(--ink);
+      background: var(--white);
+      color: var(--heading);
       min-height: 100vh;
     }
 
@@ -42,7 +45,7 @@
       justify-content: space-between;
       padding: 1.2rem 1.5rem;
       background: var(--white);
-      border-bottom: 2px solid var(--cream);
+      border-bottom: 2px solid var(--bg-alt);
       gap: 2rem;
     }
 
@@ -55,7 +58,7 @@
     .brand-logo {
       width: 44px;
       height: 44px;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -77,7 +80,7 @@
       font-family: 'DM Sans', sans-serif;
       font-size: 1.05rem;
       font-weight: 700;
-      color: var(--ink);
+      color: var(--heading);
       line-height: 1.2;
     }
 
@@ -99,7 +102,7 @@
     .agent-logo-placeholder {
       width: 40px;
       height: 40px;
-      background: var(--cream);
+      background: var(--bg-alt);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -122,7 +125,7 @@
       font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
       font-weight: 500;
-      color: var(--ink);
+      color: var(--heading);
     }
 
     .agent-tagline {
@@ -159,7 +162,7 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--white);
-      background: var(--gold);
+      background: var(--primary);
       padding: 0.5rem 1.1rem;
       border-radius: 20px;
       margin-bottom: 1.2rem;
@@ -171,14 +174,14 @@
       font-size: clamp(1.8rem, 5vw, 2.8rem);
       font-weight: 700;
       line-height: 1.3;
-      color: var(--ink);
+      color: var(--heading);
       margin-bottom: 1rem;
       word-break: break-word;
     }
 
     .hero h1 em {
       font-style: italic;
-      color: var(--sage);
+      color: var(--secondary);
     }
 
     .hero p {
@@ -209,7 +212,7 @@
     }
 
     .trust-item svg {
-      color: var(--gold);
+      color: var(--primary);
       flex-shrink: 0;
       width: 20px;
       height: 20px;
@@ -235,7 +238,7 @@
     .progress-bar {
       display: flex;
       border-bottom: none;
-      background: var(--cream);
+      background: var(--bg-alt);
       padding: 0.75rem 0;
       gap: 0;
     }
@@ -265,19 +268,19 @@
     }
 
     .progress-step.active {
-      color: var(--gold);
+      color: var(--primary);
     }
 
     .progress-step.active::after {
-      background: var(--gold);
+      background: var(--primary);
     }
 
     .progress-step.done {
-      color: var(--sage);
+      color: var(--secondary);
     }
 
     .progress-step.done::after {
-      background: var(--sage);
+      background: var(--secondary);
     }
 
     .step-num {
@@ -293,18 +296,18 @@
       font-weight: 700;
       margin-right: 0.45rem;
       transition: all 0.3s ease;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .progress-step.active .step-num {
-      background: var(--gold);
+      background: var(--primary);
       color: var(--white);
       transform: scale(1.15);
       box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
     }
 
     .progress-step.done .step-num {
-      background: var(--sage);
+      background: var(--secondary);
       color: var(--white);
       font-size: 0.85rem;
     }
@@ -344,7 +347,7 @@
       font-size: 1.4rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      color: var(--ink);
+      color: var(--heading);
       line-height: 1.2;
     }
 
@@ -366,7 +369,7 @@
     .choice-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 
     .choice-btn {
-      border: 2px solid var(--cream);
+      border: 2px solid var(--bg-alt);
       background: var(--white);
       border-radius: var(--radius-md);
       padding: 1.25rem 0.75rem;
@@ -379,11 +382,11 @@
       gap: 0.6rem;
       min-height: 110px;
       justify-content: center;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .choice-btn:hover {
-      border-color: var(--gold-light);
+      border-color: var(--primary-subtle);
       background: rgba(59,130,246,0.04);
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
@@ -395,7 +398,7 @@
     }
 
     .choice-btn.selected {
-      border-color: var(--gold);
+      border-color: var(--primary);
       background: rgba(59,130,246,0.08);
       box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
     }
@@ -409,17 +412,17 @@
       width: 36px;
       height: 36px;
       flex-shrink: 0;
-      color: var(--sage);
+      color: var(--secondary);
     }
 
     .choice-btn.selected .choice-icon {
-      color: var(--gold);
+      color: var(--primary);
     }
 
     .choice-label {
       font-size: 0.9rem;
       font-weight: 500;
-      color: var(--ink);
+      color: var(--heading);
     }
 
     .choice-desc {
@@ -435,7 +438,7 @@
       display: block;
       font-size: 0.9rem;
       font-weight: 600;
-      color: var(--ink);
+      color: var(--heading);
       margin-bottom: 0.6rem;
       letter-spacing: 0.3px;
     }
@@ -447,32 +450,32 @@
     select {
       width: 100%;
       padding: 0.9rem 1.1rem;
-      border: 2px solid var(--cream);
+      border: 2px solid var(--bg-alt);
       border-radius: var(--radius-sm);
       font-family: 'DM Sans', sans-serif;
       font-size: 1rem;
-      color: var(--ink);
+      color: var(--heading);
       background: var(--white);
       outline: none;
       transition: all 0.25s ease;
       appearance: none;
       min-height: 48px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     input:focus, select:focus {
-      border-color: var(--gold);
+      border-color: var(--primary);
       background-color: rgba(59,130,246,0.02);
       box-shadow: var(--shadow-md), 0 0 0 3px rgba(59,130,246,0.1);
     }
 
     input.error, select.error {
-      border-color: var(--error);
+      border-color: var(--border);
       background-color: rgba(220,38,38,0.03);
     }
 
     input.valid {
-      border-color: var(--sage);
+      border-color: var(--secondary);
       background-color: rgba(234,140,85,0.03);
     }
 
@@ -489,7 +492,7 @@
 
     .field-error {
       font-size: 0.8rem;
-      color: var(--error);
+      color: var(--border);
       margin-top: 0.5rem;
       display: none;
       font-weight: 600;
@@ -510,7 +513,7 @@
 
     .field-success {
       font-size: 0.8rem;
-      color: var(--sage);
+      color: var(--secondary);
       margin-top: 0.5rem;
       display: none;
       font-weight: 600;
@@ -532,7 +535,7 @@
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
-      color: var(--gold);
+      color: var(--primary);
       font-size: 0.9rem;
       font-weight: 600;
     }
@@ -542,7 +545,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.6rem;
       font-weight: 600;
-      color: var(--ink);
+      color: var(--heading);
       margin-bottom: 0.5rem;
     }
 
@@ -552,7 +555,7 @@
       gap: 0.75rem;
       margin-top: 1.75rem;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--cream);
+      border-top: 1px solid var(--bg-alt);
     }
 
     .btn {
@@ -572,10 +575,10 @@
     }
 
     .btn-primary {
-      background: var(--gold);
+      background: var(--primary);
       color: var(--white);
       flex: 1;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-primary:hover {
@@ -593,13 +596,13 @@
       background: #cbd5e1;
       cursor: not-allowed;
       transform: none;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-secondary {
       background: var(--white);
-      color: var(--gold);
-      border: 2px solid var(--gold);
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
 
     .btn-secondary:hover {
@@ -616,13 +619,13 @@
     /* ── Error Summary ── */
     .error-summary {
       background: rgba(220,38,38,0.08);
-      border: 2px solid var(--error);
+      border: 2px solid var(--border);
       border-radius: var(--radius-md);
       padding: 1.2rem;
       margin-bottom: 1.75rem;
       display: none;
       animation: slideDown 0.3s ease;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .error-summary.show { display: block; }
@@ -630,7 +633,7 @@
     .error-summary-title {
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--error);
+      color: var(--border);
       margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
@@ -645,7 +648,7 @@
     .error-summary-list {
       list-style: none;
       font-size: 0.85rem;
-      color: var(--error);
+      color: var(--border);
       line-height: 1.6;
     }
 
@@ -714,7 +717,7 @@
       align-items: center;
       justify-content: center;
       margin: 0 auto 2rem;
-      color: var(--sage);
+      color: var(--secondary);
       animation: scaleIn 0.5s ease-out;
       box-shadow: 0 0 0 3px rgba(234,140,85,0.1);
     }
@@ -739,7 +742,7 @@
       font-family: 'DM Sans', sans-serif;
       font-size: 1.65rem;
       margin-bottom: 0.8rem;
-      color: var(--ink);
+      color: var(--heading);
       line-height: 1.3;
     }
 
@@ -754,12 +757,12 @@
 
     .next-steps {
       margin-top: 2.5rem;
-      background: var(--paper);
+      background: var(--white);
       border: none;
       border-radius: var(--radius-md);
       padding: 1.75rem;
       text-align: left;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .next-steps-title {
@@ -767,7 +770,7 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--primary);
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
@@ -785,7 +788,7 @@
       align-items: flex-start;
       margin-bottom: 1.5rem;
       font-size: 0.9rem;
-      color: var(--ink);
+      color: var(--heading);
       font-weight: 400;
       line-height: 1.7;
     }
@@ -793,7 +796,7 @@
     .next-step-item:last-child { margin-bottom: 0; }
 
     .next-step-item strong {
-      color: var(--ink);
+      color: var(--heading);
       font-weight: 700;
       display: block;
       margin-bottom: 0.25rem;
@@ -803,7 +806,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--sage);
+      background: var(--secondary);
       color: var(--white);
       font-size: 0.75rem;
       font-weight: 700;
@@ -820,8 +823,8 @@
       padding: 2rem 1.5rem;
       font-size: 0.75rem;
       color: var(--muted);
-      border-top: 1px solid var(--cream);
-      background: var(--paper);
+      border-top: 1px solid var(--bg-alt);
+      background: var(--white);
     }
 
     footer a {
@@ -831,7 +834,7 @@
     }
 
     footer a:hover {
-      color: var(--gold);
+      color: var(--primary);
       text-decoration: underline;
     }
 
@@ -1072,7 +1075,7 @@
           <div class="value-display" id="valueDisplay">£250,000</div>
           <input type="range" id="propertyValue" min="50000" max="2000000" step="5000" value="250000"
             oninput="updateValueDisplay(this.value)"
-            style="width:100%; accent-color: var(--gold); cursor:pointer; min-height:48px; padding:8px 0;">
+            style="width:100%; accent-color: var(--primary); cursor:pointer; min-height:48px; padding:8px 0;">
           <div style="display:flex; justify-content:space-between; margin-top:0.5rem">
             <span class="field-hint">£50,000</span>
             <span class="field-hint">£2,000,000+</span>
@@ -1178,7 +1181,7 @@
         </div>
       </div>
 
-      <div style="margin-top:1.5rem; padding:1rem; background:rgba(201,168,76,0.08); border-radius:8px; font-size:0.8rem; color:var(--ink); line-height:1.5;">
+      <div style="margin-top:1.5rem; padding:1rem; background:rgba(201,168,76,0.08); border-radius:8px; font-size:0.8rem; color:var(--heading); line-height:1.5;">
         <strong>💡 Tip:</strong> Check your spam/junk folder if you don't see quotes within 2 hours. If you don't hear from us, email <code style="background:rgba(0,0,0,0.05); padding:0.2rem 0.4rem; border-radius:3px;">support@findconveyancers.co.uk</code>
       </div>
     </div>
@@ -1186,8 +1189,48 @@
   </div><!-- /form-card -->
 </div><!-- /form-wrap -->
 
-<footer>
-  <p>© 2026 FindConveyancers, operated by Corre Connections · <a href="/legal.html">Privacy Policy</a> · <a href="/legal.html">Terms</a> · All solicitors are regulated by the SRA or CLC</p>
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">
+          <img src="/favicon.svg" alt="FindConveyancers" width="28" height="28" style="display:block">
+          <div class="footer-brand-name">FindConveyancers</div>
+        </div>
+        <p class="footer-tagline">A free conveyancing comparison service. Compare quotes from regulated solicitors across England &amp; Wales.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Service</h4>
+        <a href="/get-quotes.html">Get Quotes</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-section">
+        <h4>Guides</h4>
+        <a href="/guides/what-is-conveyancing.html">What is Conveyancing</a>
+        <a href="/guides/conveyancing-costs-2026.html">Conveyancing Costs 2026</a>
+        <a href="/guides/first-time-buyer-conveyancing.html">First-Time Buyer Guide</a>
+        <a href="/guides/freehold-vs-leasehold-conveyancing.html">Freehold vs Leasehold</a>
+        <a href="/guides/how-long-does-conveyancing-take.html">How Long Does It Take</a>
+      </div>
+      <div class="footer-section">
+        <h4>Tools</h4>
+        <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+        <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <a href="/legal.html">Privacy Policy</a>
+        <a href="/legal.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 FindConveyancers, operated by Corre Connections.</span>
+      <span>England &amp; Wales</span>
+    </div>
+    <p class="footer-disclaimer">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
+  </div>
 </footer>
 
 <script>

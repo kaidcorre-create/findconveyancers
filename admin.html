@@ -11,43 +11,39 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:          #F9FAFB;
-      --surface:     #ffffff;
-      --border:      #E5E7EB;
-      --border2:     #D1D5DB;
-      --text:        #0F172A;
-      --muted:       #9CA3AF;
-      --subtle:      #6B7280;
-      --primary:     #3B82F6;
-      --primary-dark:#1D4ED8;
-      --primary-dim: #EFF6FF;
-      --green:       #059669;
-      --green-dim:   #ECFDF5;
-      --red:         #DC2626;
-      --red-dim:     #FEF2F2;
-      --blue:        #3B82F6;
-      --blue-dim:    #EFF6FF;
-      --purple:      #7C3AED;
-      --purple-dim:  #EDE9FE;
-      --orange:      #D97706;
-      --orange-dim:  #FFFBEB;
-      --radius:      8px;
-      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+        :root {
+      --primary: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --primary-subtle: #EFF6FF;
+      --heading: #0F172A;
+      --body: #374151;
+      --secondary: #6B7280;
+      --muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --bg-alt: #F3F4F6;
+      --white: #ffffff;
+      --green: #059669;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--heading); min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
 
     /* ── Login ── */
     #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(155deg, #EFF6FF 0%, var(--bg) 60%); }
-    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; text-align: center; box-shadow: var(--shadow-md); }
+    .login-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; text-align: center; box-shadow: var(--shadow-md); }
     .login-logo { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-bottom: 0.4rem; }
-    .login-logo-text { font-size: 1.2rem; font-weight: 700; color: var(--text); }
-    .login-sub  { font-size: 0.82rem; color: var(--subtle); margin-bottom: 2rem; }
-    .login-input { width: 100%; padding: 0.75rem 1rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; margin-bottom: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
+    .login-logo-text { font-size: 1.2rem; font-weight: 700; color: var(--heading); }
+    .login-sub  { font-size: 0.82rem; color: var(--muted); margin-bottom: 2rem; }
+    .login-input { width: 100%; padding: 0.75rem 1rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--heading); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; margin-bottom: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
     .login-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-    .login-btn { width: 100%; padding: 0.75rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+    .login-btn { width: 100%; padding: 0.75rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-md); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
     .login-btn:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
     .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .login-error { color: var(--red); font-size: 0.8rem; margin-top: 0.75rem; display: none; }
@@ -57,20 +53,20 @@
     .shell { display: grid; grid-template-columns: 232px 1fr; grid-template-rows: 60px 1fr; min-height: 100vh; }
 
     /* ── Topbar ── */
-    .topbar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; background: var(--surface); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-    .topbar-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1rem; color: var(--text); text-decoration: none; }
+    .topbar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; background: var(--white); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .topbar-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1rem; color: var(--heading); text-decoration: none; }
     .topbar-right { display: flex; align-items: center; gap: 1rem; }
     .topbar-badge { font-size: 0.75rem; color: var(--muted); }
-    .logout-btn { font-size: 0.78rem; color: var(--subtle); background: none; border: 1.5px solid var(--border2); border-radius: var(--radius); padding: 0.35rem 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-    .logout-btn:hover { color: var(--text); border-color: var(--primary); }
+    .logout-btn { font-size: 0.78rem; color: var(--muted); background: none; border: 1.5px solid var(--border2); border-radius: var(--radius-md); padding: 0.35rem 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .logout-btn:hover { color: var(--heading); border-color: var(--primary); }
 
     /* ── Sidebar ── */
-    .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 1.25rem 0; overflow-y: auto; }
+    .sidebar { background: var(--white); border-right: 1px solid var(--border); padding: 1.25rem 0; overflow-y: auto; }
     .nav-section { padding: 0 0.75rem; margin-bottom: 1rem; }
     .nav-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 0.625rem; margin-bottom: 0.35rem; }
-    .nav-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.575rem 0.75rem; border-radius: var(--radius); cursor: pointer; color: var(--subtle); font-size: 0.875rem; font-weight: 500; border: none; background: none; width: 100%; text-align: left; transition: background 0.15s, color 0.15s; }
-    .nav-item:hover  { background: var(--bg); color: var(--text); }
-    .nav-item.active { background: var(--primary-dim); color: var(--primary); font-weight: 600; }
+    .nav-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.575rem 0.75rem; border-radius: var(--radius-md); cursor: pointer; color: var(--muted); font-size: 0.875rem; font-weight: 500; border: none; background: none; width: 100%; text-align: left; transition: background 0.15s, color 0.15s; }
+    .nav-item:hover  { background: var(--bg); color: var(--heading); }
+    .nav-item.active { background: var(--primary-subtle); color: var(--primary); font-weight: 600; }
     .nav-badge { margin-left: auto; background: var(--primary); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 10px; min-width: 20px; text-align: center; }
 
     /* ── Main ── */
@@ -78,34 +74,34 @@
     .view { display: none; }
     .view.active { display: block; }
     .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; }
-    .page-title { font-size: 1.25rem; font-weight: 700; color: var(--text); }
-    .page-sub   { font-size: 0.8rem; color: var(--subtle); margin-top: 0.2rem; }
+    .page-title { font-size: 1.25rem; font-weight: 700; color: var(--heading); }
+    .page-sub   { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
 
     /* ── Stats ── */
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; box-shadow: var(--shadow-sm); }
-    .stat-card.highlight { border-color: rgba(59,130,246,0.3); background: var(--primary-dim); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; box-shadow: var(--shadow-sm); }
+    .stat-card.highlight { border-color: rgba(59,130,246,0.3); background: var(--primary-subtle); }
     .stat-card.green     { border-color: rgba(5,150,105,0.25); }
-    .stat-label { font-size: 0.75rem; color: var(--subtle); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .stat-value { font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--text); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--heading); }
     .stat-card.highlight .stat-value { color: var(--primary); }
     .stat-card.green .stat-value     { color: var(--green); }
     .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
 
     /* ── Filters ── */
     .filters { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
-    .filter-btn { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 500; border: 1.5px solid var(--border); background: var(--surface); color: var(--subtle); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .filter-btn { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 500; border: 1.5px solid var(--border); background: var(--white); color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
     .filter-btn:hover  { border-color: var(--primary); color: var(--primary); }
-    .filter-btn.active { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); font-weight: 600; }
-    .search-input { margin-left: auto; padding: 0.4rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; outline: none; width: 200px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .filter-btn.active { background: var(--primary-subtle); border-color: var(--primary); color: var(--primary); font-weight: 600; }
+    .search-input { margin-left: auto; padding: 0.4rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--white); color: var(--heading); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; outline: none; width: 200px; transition: border-color 0.2s, box-shadow 0.2s; }
     .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
     .search-input::placeholder { color: var(--muted); }
 
     /* ── Table ── */
-    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; overflow-x: auto; box-shadow: var(--shadow-sm); }
+    .table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; overflow-x: auto; box-shadow: var(--shadow-sm); }
     table { width: 100%; border-collapse: collapse; }
-    th { padding: 0.75rem 1rem; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); border-bottom: 1px solid var(--border); white-space: nowrap; background: var(--bg); }
-    td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--text); vertical-align: middle; }
+    th { padding: 0.75rem 1rem; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; background: var(--bg); }
+    td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--heading); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--bg); }
     .td-name { font-weight: 600; }
@@ -116,66 +112,66 @@
     .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
     .badge::before { content: '●'; font-size: 0.55rem; }
     .badge-new         { background: var(--blue-dim);   color: var(--blue); }
-    .badge-quotes_sent { background: var(--orange-dim); color: var(--orange); }
+    .badge-quotes_sent { background: var(--orange-dim); color: var(--border); }
     .badge-instructed  { background: var(--green-dim);  color: var(--green); }
     .badge-completed   { background: var(--purple-dim); color: var(--purple); }
-    .badge-contacted   { background: var(--primary-dim);color: var(--primary); }
+    .badge-contacted   { background: var(--primary-subtle);color: var(--primary); }
     .badge-converted   { background: var(--green-dim);  color: var(--green); }
     .badge-lost        { background: var(--red-dim);    color: var(--red); }
 
     /* ── Quote count pill ── */
-    .quote-pill { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 0.72rem; font-weight: 700; background: var(--border); color: var(--subtle); }
-    .quote-pill.has-quotes { background: var(--primary-dim); color: var(--primary); }
+    .quote-pill { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 0.72rem; font-weight: 700; background: var(--border); color: var(--muted); }
+    .quote-pill.has-quotes { background: var(--primary-subtle); color: var(--primary); }
 
     /* ── Buttons ── */
-    .action-btn { padding: 0.3rem 0.7rem; border-radius: var(--radius); font-size: 0.75rem; font-weight: 500; border: 1.5px solid var(--border2); background: none; color: var(--subtle); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-    .action-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
-    .btn-add { padding: 0.55rem 1.1rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+    .action-btn { padding: 0.3rem 0.7rem; border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 500; border: 1.5px solid var(--border2); background: none; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .action-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-subtle); }
+    .btn-add { padding: 0.55rem 1.1rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-md); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
     .btn-add:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(59,130,246,0.25); }
-    .btn-cancel { padding: 0.6rem 1.2rem; border-radius: var(--radius); border: 1.5px solid var(--border2); background: none; color: var(--subtle); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
-    .btn-cancel:hover { color: var(--text); border-color: var(--border2); background: var(--bg); }
-    .btn-save { padding: 0.6rem 1.4rem; border-radius: var(--radius); background: var(--primary); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+    .btn-cancel { padding: 0.6rem 1.2rem; border-radius: var(--radius-md); border: 1.5px solid var(--border2); background: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+    .btn-cancel:hover { color: var(--heading); border-color: var(--border2); background: var(--bg); }
+    .btn-save { padding: 0.6rem 1.4rem; border-radius: var(--radius-md); background: var(--primary); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
     .btn-save:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(59,130,246,0.25); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ── Agent / conveyancer list ── */
     .agent-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .agent-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-sm); }
+    .agent-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--white); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-sm); }
     .agent-ref       { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--primary); min-width: 120px; font-weight: 600; }
     .agent-full-name { font-size: 0.875rem; flex: 1; font-weight: 500; }
-    .agent-count     { font-family: 'DM Mono', monospace; font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .agent-count     { font-family: 'DM Mono', monospace; font-size: 0.85rem; font-weight: 700; color: var(--heading); }
     .agent-bar-wrap  { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .agent-bar       { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.5s ease; }
 
     /* ── Form fields ── */
     .field { margin-bottom: 1.1rem; }
-    .field label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--text); margin-bottom: 0.4rem; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--heading); margin-bottom: 0.4rem; }
     .field-error { font-size: 0.75rem; color: var(--red); margin-top: 0.3rem; display: none; }
-    .modal-input { width: 100%; padding: 0.65rem 0.9rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .modal-input { width: 100%; padding: 0.65rem 0.9rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--heading); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
     .modal-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
     .modal-input::placeholder { color: var(--muted); }
     .modal-input.error { border-color: var(--red); }
     .ref-preview { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; font-family: 'DM Mono', monospace; }
-    .highlight-box { background: var(--primary-dim); border: 1px solid rgba(59,130,246,0.2); border-radius: var(--radius); padding: 1rem 1.1rem; }
-    .highlight-box p { font-size: 0.78rem; color: var(--subtle); margin: 0; }
+    .highlight-box { background: var(--primary-subtle); border: 1px solid rgba(59,130,246,0.2); border-radius: var(--radius-md); padding: 1rem 1.1rem; }
+    .highlight-box p { font-size: 0.78rem; color: var(--muted); margin: 0; }
 
     /* ── Modal ── */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.4); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
     .modal-overlay.open { display: flex; }
-    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 1rem; box-shadow: var(--shadow-md); animation: slideUp 0.2s ease; }
+    .modal { background: var(--white); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 1rem; box-shadow: var(--shadow-md); animation: slideUp 0.2s ease; }
     @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
-    .modal-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+    .modal-title { font-weight: 700; font-size: 1rem; color: var(--heading); }
     .modal-close { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; line-height: 1; padding: 0; transition: color 0.15s; }
-    .modal-close:hover { color: var(--text); }
+    .modal-close:hover { color: var(--heading); }
     .modal-body { padding: 1.5rem; }
     .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: var(--bg); border-radius: 0 0 14px 14px; }
-    .modal-section-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); margin-bottom: 0.75rem; margin-top: 1.25rem; }
+    .modal-section-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; margin-top: 1.25rem; }
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .detail-item label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.3rem; }
-    .detail-item .val { font-size: 0.875rem; word-break: break-all; color: var(--text); }
+    .detail-item .val { font-size: 0.875rem; word-break: break-all; color: var(--heading); }
     .detail-item .val.mono { font-family: 'DM Mono', monospace; }
-    .status-select, .notes-area { width: 100%; padding: 0.65rem 0.9rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; margin-bottom: 0; }
+    .status-select, .notes-area { width: 100%; padding: 0.65rem 0.9rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-md); color: var(--heading); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; margin-bottom: 0; }
     .status-select { appearance: none; cursor: pointer; }
     .status-select:focus, .notes-area:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
     .notes-area { resize: vertical; min-height: 80px; font-size: 0.85rem; line-height: 1.6; }
@@ -185,7 +181,7 @@
     .quote-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
     .quote-row:last-child { border-bottom: none; }
     .quote-row.winner { background: var(--green-dim); border-radius: 6px; margin-bottom: 2px; }
-    .quote-row .firm { font-weight: 600; color: var(--text); }
+    .quote-row .firm { font-weight: 600; color: var(--heading); }
     .quote-row .total { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--green); }
     .quote-row.winner .total { color: var(--green); }
 
@@ -195,18 +191,15 @@
 
     /* ── Empty / loading ── */
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
-    .empty-icon { margin-bottom: 0.75rem; display: flex; justify-content: center; }
+    .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; }
     .empty-text { font-size: 0.875rem; }
     .loading { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; }
 
     /* ── Toast ── */
-    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1.25rem; font-size: 0.875rem; color: var(--text); box-shadow: var(--shadow-md); z-index: 200; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; }
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1.25rem; font-size: 0.875rem; color: var(--heading); box-shadow: var(--shadow-md); z-index: 200; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; }
     .toast.show    { opacity: 1; transform: translateY(0); }
     .toast.success { border-color: var(--green); color: var(--green); }
     .toast.error   { border-color: var(--red);   color: var(--red); }
-
-    .nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-    .empty-icon svg { width: 28px; height: 28px; stroke: var(--border2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
     /* ── Responsive ── */
     @media (max-width: 900px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
@@ -249,44 +242,24 @@
     <nav class="sidebar">
       <div class="nav-section">
         <div class="nav-label">Overview</div>
-        <button class="nav-item active" data-view="dashboard">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          Dashboard
-        </button>
+        <button class="nav-item active" data-view="dashboard">📊 Dashboard</button>
       </div>
       <div class="nav-section">
         <div class="nav-label">Leads</div>
         <button class="nav-item" data-view="leads" data-filter="all">
-          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          All Leads <span class="nav-badge" id="navBadgeAll">—</span>
+          📋 All Leads <span class="nav-badge" id="navBadgeAll">—</span>
         </button>
         <button class="nav-item" data-view="leads" data-filter="new">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          New <span class="nav-badge" id="navBadgeNew">—</span>
+          🔵 New <span class="nav-badge" id="navBadgeNew">—</span>
         </button>
-        <button class="nav-item" data-view="leads" data-filter="quotes_sent">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Quotes Sent
-        </button>
-        <button class="nav-item" data-view="leads" data-filter="instructed">
-          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Instructed
-        </button>
-        <button class="nav-item" data-view="leads" data-filter="completed">
-          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          Completed
-        </button>
+        <button class="nav-item" data-view="leads" data-filter="quotes_sent">🟠 Quotes Sent</button>
+        <button class="nav-item" data-view="leads" data-filter="instructed">🟢 Instructed</button>
+        <button class="nav-item" data-view="leads" data-filter="completed">✅ Completed</button>
       </div>
       <div class="nav-section">
         <div class="nav-label">Partners</div>
-        <button class="nav-item" data-view="conveyancers">
-          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Conveyancers
-        </button>
-        <button class="nav-item" data-view="agents">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Agents
-        </button>
+        <button class="nav-item" data-view="conveyancers">⚖️ Conveyancers</button>
+        <button class="nav-item" data-view="agents">🏘 Agents</button>
       </div>
     </nav>
 
@@ -300,7 +273,7 @@
             <div class="page-title">Dashboard</div>
             <div class="page-sub">Overview of the quote pipeline</div>
           </div>
-          <button class="action-btn" id="refreshBtn">Refresh</button>
+          <button class="action-btn" id="refreshBtn">↻ Refresh</button>
         </div>
 
         <div class="stats-grid">
@@ -323,16 +296,6 @@
             <div class="stat-label">Instructed</div>
             <div class="stat-value" id="statInstructed">—</div>
             <div class="stat-sub">clients placed</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Get Quotes Clicks</div>
-            <div class="stat-value" id="statButtonClicks">—</div>
-            <div class="stat-sub">landed on form page</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Form Submissions</div>
-            <div class="stat-value" id="statFormSubmits">—</div>
-            <div class="stat-sub" id="statConversionRate">conversion rate</div>
           </div>
         </div>
 
@@ -399,15 +362,14 @@
             <thead>
               <tr>
                 <th>Firm</th>
-                <th>Contact</th>
-                <th>Counties / Types</th>
+                <th>Email</th>
+                <th>Phone</th>
                 <th>Status</th>
                 <th>Added</th>
-                <th></th>
               </tr>
             </thead>
             <tbody id="conveyancersTable">
-              <tr><td colspan="6"><div class="loading">Loading…</div></td></tr>
+              <tr><td colspan="5"><div class="loading">Loading…</div></td></tr>
             </tbody>
           </table>
         </div>
@@ -447,13 +409,13 @@
 
       <div class="modal-section-title">Update Status</div>
       <select class="status-select" id="modalStatus" style="margin-bottom:1rem">
-        <option value="new">New</option>
-        <option value="quotes_sent">Quotes Sent</option>
-        <option value="instructed">Instructed</option>
-        <option value="completed">Completed</option>
-        <option value="contacted">Contacted</option>
-        <option value="converted">Converted</option>
-        <option value="lost">Lost</option>
+        <option value="new">🔵 New</option>
+        <option value="quotes_sent">🟠 Quotes Sent</option>
+        <option value="instructed">🟢 Instructed</option>
+        <option value="completed">✅ Completed</option>
+        <option value="contacted">🟡 Contacted</option>
+        <option value="converted">🟢 Converted</option>
+        <option value="lost">🔴 Lost</option>
       </select>
       <div class="modal-section-title">Notes</div>
       <textarea class="notes-area" id="modalNotes" placeholder="Internal notes…"></textarea>
@@ -505,21 +467,6 @@
 </div>
 
 <!-- Add agent modal -->
-<!-- Assign lead modal -->
-<div class="modal-overlay" id="assignModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Assign lead to conveyancer</div>
-      <button class="modal-close" onclick="closeAssignModal()">×</button>
-    </div>
-    <div style="padding:1.25rem 1.5rem">
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Select a conveyancer to send this referral to. They will receive an email with the lead details and a unique link to submit their quote.</p>
-      <div id="assignConveyancerList" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto;margin-bottom:1rem"></div>
-      <div id="assignStatus" style="font-size:0.85rem;margin-top:0.5rem"></div>
-    </div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="agentModal">
   <div class="modal">
     <div class="modal-header">
@@ -561,7 +508,7 @@
         </div>
       </div>
       <div class="highlight-box" style="margin-top:0.5rem">
-        <p>Referral link: <span id="refLink" style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--gold)">fill in reference above</span></p>
+        <p>Referral link: <span id="refLink" style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--primary)">fill in reference above</span></p>
       </div>
     </div>
     <div class="modal-footer">
@@ -625,7 +572,6 @@
       showView(btn.dataset.view);
       if (btn.dataset.filter) setFilter(btn.dataset.filter);
       if (btn.dataset.view === 'conveyancers') loadConveyancers();
-      if (btn.dataset.view === 'agents') loadAgents();
     });
   });
 
@@ -634,10 +580,7 @@
     document.getElementById('view-' + name).classList.add('active');
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', () => {
-    document.getElementById('refreshBtn').textContent = 'Refreshing…';
-    loadAll().finally(() => { document.getElementById('refreshBtn').textContent = 'Refresh'; });
-  });
+  document.getElementById('refreshBtn').addEventListener('click', loadAll);
 
   // ── Filters ────────────────────────────────────────────────────────────────
   document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -687,25 +630,21 @@
     try {
       const data = await apiGet('/api/admin/stats');
 
-      document.getElementById('statTotal').textContent        = data.total ?? '—';
-      document.getElementById('statWeek').textContent         = data.thisWeek ?? '—';
-      document.getElementById('statQuotes').textContent       = data.totalQuotes ?? '—';
-      document.getElementById('statInstructed').textContent   = data.instructed ?? '—';
-      document.getElementById('statButtonClicks').textContent = data.buttonClicks ?? '—';
-      document.getElementById('statFormSubmits').textContent  = data.formSubmits ?? '—';
-      const rate = data.buttonClicks > 0 ? Math.round((data.formSubmits / data.buttonClicks) * 100) : 0;
-      document.getElementById('statConversionRate').textContent = data.buttonClicks > 0 ? `${rate}% conversion` : 'conversion rate';
+      document.getElementById('statTotal').textContent     = data.total ?? '—';
+      document.getElementById('statWeek').textContent      = data.thisWeek ?? '—';
+      document.getElementById('statQuotes').textContent    = data.totalQuotes ?? '—';
+      document.getElementById('statInstructed').textContent = data.instructed ?? '—';
 
       const newCount = (data.byStatus || []).find(s => s.status === 'new');
       document.getElementById('navBadgeNew').textContent = newCount?.cnt ?? newCount?.count ?? '0';
       document.getElementById('navBadgeAll').textContent = data.total ?? '0';
 
       // Status breakdown pills
-      const statusColors = { new: 'var(--blue)', quotes_sent: 'var(--orange)', instructed: 'var(--green)', completed: 'var(--purple)', lost: 'var(--red)' };
+      const statusColors = { new: 'var(--blue)', quotes_sent: 'var(--border)', instructed: 'var(--green)', completed: 'var(--purple)', lost: 'var(--red)' };
       const breakdownHTML = (data.byStatus || []).map(s => `
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.6rem">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.6rem">
           <span style="width:8px;height:8px;border-radius:50%;background:${statusColors[s.status] || 'var(--muted)'};flex-shrink:0"></span>
-          <span style="font-size:0.82rem;color:var(--subtle)">${escHtml(s.status)}</span>
+          <span style="font-size:0.82rem;color:var(--muted)">${escHtml(s.status)}</span>
           <span style="font-family:'DM Mono',monospace;font-weight:700;font-size:0.95rem;margin-left:auto">${s.cnt ?? s.count}</span>
         </div>
       `).join('');
@@ -723,14 +662,14 @@
         transaction_types: Array.isArray(l.transaction_types) ? l.transaction_types : JSON.parse(l.transaction_types || '[]')
       }));
       renderLeads();
-      // Populate dashboard agent breakdown
-      buildAgentBreakdown();
+      // Populate agent breakdown
+      buildAgentList();
     } catch {
-      document.getElementById('leadsTable').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Could not load leads.</div></div></td></tr>`;
+      document.getElementById('leadsTable').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load leads.</div></div></td></tr>`;
     }
   }
 
-  function buildAgentBreakdown() {
+  function buildAgentList() {
     const agentMap = {};
     allLeads.forEach(l => {
       const ref = l.agent_ref || 'direct';
@@ -749,36 +688,9 @@
             <div class="agent-count">${a.count} lead${a.count!==1?'s':''}</div>
           </div>`)
         .join('')
-      : '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="empty-text">No agent data</div></div>';
+      : '<div class="empty-state"><div class="empty-icon">🏘</div><div class="empty-text">No agent data</div></div>';
     document.getElementById('agentBreakdown').innerHTML = html;
-  }
-
-  async function loadAgents() {
-    document.getElementById('agentsList').innerHTML = '<div class="loading">Loading…</div>';
-    try {
-      const data = await apiGet('/api/admin/agents');
-      const agents = (data.agents || []);
-      if (!agents.length) {
-        document.getElementById('agentsList').innerHTML =
-          '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="empty-text">No agent partners yet. Add your first agent.</div></div>';
-        return;
-      }
-      const max = Math.max(...agents.map(a => a.lead_count), 1);
-      document.getElementById('agentsList').innerHTML = agents.map(a => `
-        <div class="agent-row">
-          <div class="agent-ref">${escHtml(a.ref)}</div>
-          <div class="agent-full-name">
-            <div>${escHtml(a.name)}</div>
-            <div class="td-sub">${escHtml(a.email)}</div>
-          </div>
-          <div class="agent-bar-wrap"><div class="agent-bar" style="width:${Math.round(a.lead_count/max*100)}%"></div></div>
-          <div class="agent-count">${a.lead_count} lead${a.lead_count!==1?'s':''}</div>
-          <span class="badge ${a.active ? 'badge-instructed' : 'badge-lost'}">${a.active ? 'Active' : 'Inactive'}</span>
-        </div>`).join('');
-    } catch {
-      document.getElementById('agentsList').innerHTML =
-        '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Failed to load agents.</div></div>';
-    }
+    document.getElementById('agentsList').innerHTML = html;
   }
 
   function renderLeads() {
@@ -795,7 +707,7 @@
 
     if (!leads.length) {
       document.getElementById('leadsTable').innerHTML =
-        `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="empty-text">No leads found</div></div></td></tr>`;
+        `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No leads found</div></div></td></tr>`;
       return;
     }
 
@@ -816,10 +728,7 @@
         </td>
         <td style="font-size:0.82rem;color:${l.instructed_firm ? 'var(--green)' : 'var(--muted)'}">${escHtml(l.instructed_firm || '—')}</td>
         <td class="td-mono" style="color:var(--muted)">${formatDate(l.created_at)}</td>
-        <td style="display:flex;gap:0.4rem;flex-wrap:wrap">
-          <button class="action-btn view-lead-btn" data-lead-id="${escHtml(l.id)}">View</button>
-          <button class="action-btn" style="background:var(--primary-dim);color:var(--primary);border-color:var(--primary)" data-lead-id="${escHtml(l.id)}" onclick="openAssignModal('${escHtml(l.id)}')">Assign</button>
-        </td>
+        <td><button class="action-btn view-lead-btn" data-lead-id="${escHtml(l.id)}">View</button></td>
       </tr>
     `).join('');
 
@@ -870,10 +779,10 @@
         document.getElementById('modalQuotes').innerHTML = quotes.map((q, i) => `
           <div class="quote-row ${i===0?'winner':''}">
             <div>
-              <div class="firm">${escHtml(q.firm_name)} ${i===0?'<span style="color:var(--green);font-size:0.72rem">Lowest</span>':''}</div>
+              <div class="firm">${escHtml(q.firm_name)} ${i===0?'<span style="color:var(--green);font-size:0.72rem">★ Lowest</span>':''}</div>
               <div style="font-size:0.72rem;color:var(--muted)">Legal: ${fmt(q.legal_fee)} + VAT · Disb: ${fmt(q.disbursements)}</div>
             </div>
-            <div class="total">${fmt(q.total_quote)} ${q.chosen?'<span style="color:var(--gold);font-size:0.72rem">Chosen</span>':''}</div>
+            <div class="total">${fmt(q.total_quote)} ${q.chosen?'<span style="color:var(--primary);font-size:0.72rem">✓ Chosen</span>':''}</div>
           </div>
         `).join('');
       }
@@ -910,122 +819,20 @@
       const convs = data.conveyancers || [];
       if (!convs.length) {
         document.getElementById('conveyancersTable').innerHTML =
-          `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
+          `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⚖️</div><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
         return;
       }
-      document.getElementById('conveyancersTable').innerHTML = convs.map(c => {
-        const regions = JSON.parse(c.regions || '[]');
-        const txTypes = JSON.parse(c.transaction_types || '[]');
-        return `<tr>
-          <td>
-            <div class="td-name">${escHtml(c.name)}</div>
-            <div style="font-size:0.75rem;color:var(--muted)">${escHtml(c.regulated_by||'')}${c.reg_number ? ' · ' + escHtml(c.reg_number) : ''}</div>
-          </td>
-          <td style="font-size:0.82rem">
-            <div>${escHtml(c.contact_name||'—')}${c.role ? ' <span style="color:var(--muted)">(' + escHtml(c.role) + ')</span>' : ''}</div>
-            <div style="color:var(--muted);font-size:0.75rem">${escHtml(c.email)}</div>
-            ${c.delivery_email && c.delivery_email !== c.email ? `<div style="color:var(--muted);font-size:0.75rem">Delivery: ${escHtml(c.delivery_email)}</div>` : ''}
-            <div style="color:var(--muted);font-size:0.75rem">${escHtml(c.phone||'')}</div>
-          </td>
-          <td style="font-size:0.78rem">
-            <div style="margin-bottom:3px">${regions.map(r => `<span style="display:inline-block;background:#f3f4f6;border-radius:4px;padding:1px 5px;margin:1px">${escHtml(r)}</span>`).join('')||'—'}</div>
-            <div>${txTypes.map(t => `<span style="display:inline-block;background:var(--primary-dim);color:var(--primary);border-radius:4px;padding:1px 5px;margin:1px;font-size:0.72rem;font-weight:600">${escHtml(t)}</span>`).join('')||'—'}</div>
-          </td>
-          <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-new'}">${c.active ? 'Active' : 'Pending'}</span></td>
-          <td class="td-mono" style="color:var(--muted);font-size:0.78rem">${formatDate(c.created_at)}</td>
-          <td>
-            <button onclick="toggleConveyancer('${c.id}', ${c.active ? 1 : 0})"
-              style="font-size:0.78rem;padding:0.3rem 0.7rem;border-radius:6px;border:1.5px solid ${c.active ? '#ef4444' : 'var(--primary)'};background:none;color:${c.active ? '#ef4444' : 'var(--primary)'};cursor:pointer;font-weight:600">
-              ${c.active ? 'Deactivate' : 'Activate'}
-            </button>
-          </td>
-        </tr>`;
-      }).join('');
-    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+      document.getElementById('conveyancersTable').innerHTML = convs.map(c => `
+        <tr>
+          <td><div class="td-name">${escHtml(c.name)}</div></td>
+          <td class="td-mono" style="font-size:0.8rem">${escHtml(c.email)}</td>
+          <td style="font-size:0.82rem">${escHtml(c.phone||'—')}</td>
+          <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-lost'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+          <td class="td-mono" style="color:var(--muted)">${formatDate(c.created_at)}</td>
+        </tr>
+      `).join('');
+    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Failed to load</div></div></td></tr>`; }
   }
-
-  async function toggleConveyancer(id, currentlyActive) {
-    const activate = !currentlyActive;
-    if (!confirm(activate ? 'Activate this firm? They will receive a confirmation email.' : 'Deactivate this firm?')) return;
-    try {
-      await apiPatch('/api/admin/conveyancers/' + id, { active: activate });
-      loadConveyancers();
-    } catch (e) {
-      alert('Failed: ' + e.message);
-    }
-  }
-
-  let assignLeadId = null;
-
-  async function openAssignModal(leadId) {
-    assignLeadId = leadId;
-    const lead = allLeads.find(l => l.id === leadId);
-    document.querySelector('#assignModal .modal-title').textContent =
-      'Assign lead' + (lead ? ` — ${lead.first_name} ${lead.last_name}` : '');
-    document.getElementById('assignStatus').textContent = '';
-
-    const list = document.getElementById('assignConveyancerList');
-    list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Loading conveyancers…</div>';
-    document.getElementById('assignModal').classList.add('open');
-
-    try {
-      const data = await apiGet('/api/admin/conveyancers');
-      const active = (data.conveyancers || []).filter(c => c.active);
-      const assigned = JSON.parse(lead?.assigned_conveyancers || '[]');
-
-      if (!active.length) {
-        list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">No active conveyancers found. Activate a firm first.</div>';
-        return;
-      }
-
-      list.innerHTML = active.map(c => {
-        const alreadySent = assigned.includes(c.id);
-        const regions = JSON.parse(c.regions || '[]');
-        return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;border:1px solid var(--border);border-radius:8px;gap:1rem">
-          <div>
-            <div style="font-weight:600;font-size:0.875rem">${escHtml(c.name)}</div>
-            <div style="font-size:0.75rem;color:var(--muted)">${escHtml(c.delivery_email || c.email)}</div>
-            <div style="font-size:0.72rem;color:var(--subtle);margin-top:2px">${regions.slice(0,3).join(', ')}${regions.length > 3 ? ' +' + (regions.length-3) + ' more' : ''}</div>
-          </div>
-          <button onclick="sendAssignment('${c.id}', this)" ${alreadySent ? 'disabled style="opacity:0.5"' : ''}
-            style="flex-shrink:0;padding:0.4rem 0.9rem;border-radius:6px;border:1.5px solid var(--primary);background:${alreadySent ? '#f3f4f6' : 'var(--primary)'};color:${alreadySent ? 'var(--muted)' : 'white'};font-size:0.8rem;font-weight:600;cursor:${alreadySent ? 'default' : 'pointer'}">
-            ${alreadySent ? 'Sent ✓' : 'Send referral'}
-          </button>
-        </div>`;
-      }).join('');
-    } catch (e) {
-      list.innerHTML = '<div style="color:#dc2626;font-size:0.85rem">Failed to load: ' + e.message + '</div>';
-    }
-  }
-
-  async function sendAssignment(conveyancerId, btn) {
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-    const statusEl = document.getElementById('assignStatus');
-    try {
-      const data = await apiPost('/api/admin/leads/' + assignLeadId + '/assign', { conveyancer_id: conveyancerId });
-      btn.textContent = 'Sent ✓';
-      btn.style.background = '#f3f4f6';
-      btn.style.color = 'var(--muted)';
-      btn.style.borderColor = 'var(--border)';
-      statusEl.style.color = 'var(--green)';
-      statusEl.textContent = '✓ Referral sent to ' + (data.sent_to || 'conveyancer');
-      loadLeads();
-    } catch (e) {
-      btn.disabled = false;
-      btn.textContent = 'Send referral';
-      statusEl.style.color = '#dc2626';
-      statusEl.textContent = 'Error: ' + e.message;
-    }
-  }
-
-  function closeAssignModal() {
-    document.getElementById('assignModal').classList.remove('open');
-    assignLeadId = null;
-  }
-  document.getElementById('assignModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('assignModal')) closeAssignModal();
-  });
 
   function openAddConveyancer() {
     ['cvNameInput','cvEmailInput','cvPhoneInput','cvRegionsInput'].forEach(id => {
