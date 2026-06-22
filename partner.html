@@ -162,20 +162,100 @@
       .page-heading h1 { font-size: 1.5rem; }
     }
   </style>
+
+
+
+
+
+<style id="fc-chrome">
+/* === FindConveyancers standardised chrome === */
+.fc-header{background:#fff;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:1000}
+.fc-header-in{max-width:1200px;margin:0 auto;padding:0.85rem 1.5rem;display:flex;align-items:center;gap:1.25rem}
+.fc-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;flex-shrink:0}
+.fc-brand img{display:block;width:32px;height:32px}
+.fc-brand span{font-size:1.15rem;font-weight:700;color:#0F172A;letter-spacing:-0.3px;white-space:nowrap}
+.fc-nav{display:flex;align-items:center;gap:1.55rem;margin-left:auto}
+.fc-nav a{color:#6B7280;text-decoration:none;font-size:0.9rem;font-weight:500;white-space:nowrap;transition:color .15s}
+.fc-nav a:hover{color:#3B82F6}
+.fc-nav a.fc-partners{color:#3B82F6;font-weight:600;border:1.5px solid #3B82F6;padding:0.45rem 0.95rem;border-radius:8px}
+.fc-nav a.fc-partners:hover{background:#3B82F6;color:#fff}
+.fc-nav a.fc-cta{background:#3B82F6;color:#fff;padding:0.6rem 1.2rem;border-radius:10px;font-weight:600;font-size:0.88rem}
+.fc-nav a.fc-cta:hover{background:#1D4ED8}
+.fc-burger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;margin-left:auto;color:#0F172A;border-radius:6px;line-height:0}
+.fc-burger:hover{background:#F3F4F6}
+.fc-ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100}
+.fc-ovl.open{display:block}
+.fc-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:1200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+.fc-drawer.open{transform:translateX(0)}
+.fc-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid #E5E7EB}
+.fc-drawer-head a{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+.fc-drawer-head img{display:block;width:30px;height:30px}
+.fc-drawer-head span{font-weight:700;font-size:1.05rem;color:#0F172A}
+.fc-drawer-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:#0F172A;line-height:0}
+.fc-drawer-links{display:flex;flex-direction:column}
+.fc-drawer-links a{display:block;padding:0.85rem 0;font-size:1.02rem;font-weight:500;color:#0F172A;text-decoration:none;border-bottom:1px solid #E5E7EB}
+.fc-drawer-links a:hover{color:#3B82F6}
+.fc-drawer-links a.fc-drawer-cta{margin-top:1.4rem;background:#3B82F6;color:#fff;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;border-bottom:none}
+.fc-drawer-links a.fc-drawer-cta:hover{background:#1D4ED8}
+@media(max-width:880px){.fc-nav{display:none}.fc-burger{display:flex;align-items:center;justify-content:center}}
+.fc-footer{background:#0F172A;color:#94A3B8;padding:3.5rem 1.5rem 2rem}
+.fc-footer-in{max-width:1100px;margin:0 auto}
+.fc-footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:2rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
+.fc-footer-brand{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem}
+.fc-footer-brand img{display:block;width:28px;height:28px}
+.fc-footer-brand span{font-size:1rem;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.fc-footer-tag{font-size:0.82rem;color:#64748B;line-height:1.6;margin:0}
+.fc-footer-col h4{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#CBD5E1;margin:0 0 1rem}
+.fc-footer-col a{display:block;color:#94A3B8;text-decoration:none;font-size:0.85rem;margin-bottom:0.55rem;transition:color .15s}
+.fc-footer-col a:hover{color:#93C5FD}
+.fc-footer-bottom{font-size:0.78rem;color:#64748B;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem}
+.fc-footer-disc{font-size:0.75rem;color:#475569;line-height:1.6;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.05);margin:0}
+@media(max-width:860px){.fc-footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.fc-footer-top{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
-<header class="header">
-  <a href="/" class="logo">
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    </div>
-    <div>
-      <div class="logo-text">FindConveyancers</div>
-      <div class="logo-sub">Partner Portal</div>
-    </div>
-  </a>
+<!-- fc-chrome:header -->
+<div id="fcOvl" class="fc-ovl"></div>
+<nav id="fcDrawer" class="fc-drawer" aria-label="Mobile navigation">
+  <div class="fc-drawer-head">
+    <a href="/"><img src="/favicon.svg" alt="FindConveyancers" width="30" height="30"><span>FindConveyancers</span></a>
+    <button id="fcDrawerClose" class="fc-drawer-close" aria-label="Close menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg></button>
+  </div>
+  <div class="fc-drawer-links">
+    <a href="/#how-it-works">How It Works</a>
+    <a href="/#why-us">Why Us</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/guides/">Guides</a>
+    <a href="/stamp-duty-calculator.html">SDLT Calculator</a>
+    <a href="/buying-costs-calculator.html">Buying Costs</a>
+    <a href="/partner.html">Partners</a>
+    <a href="/get-quotes.html" class="fc-drawer-cta">Get Free Quotes</a>
+  </div>
+</nav>
+<header class="fc-header">
+  <div class="fc-header-in">
+    <a href="/" class="fc-brand"><img src="/favicon.svg" alt="FindConveyancers" width="32" height="32"><span>FindConveyancers</span></a>
+    <nav class="fc-nav">
+      <a href="/#how-it-works">How It Works</a>
+      <a href="/#why-us">Why Us</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/guides/">Guides</a>
+      <a href="/stamp-duty-calculator.html">SDLT Calc</a>
+      <a href="/partner.html" class="fc-partners">Partners</a>
+      <a href="/get-quotes.html" class="fc-cta">Get Free Quotes</a>
+    </nav>
+    <button id="fcBurger" class="fc-burger" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  </div>
 </header>
+<!-- /fc-chrome:header -->
+
+
+
+
+
+
+
 
 <div class="page-body">
 
@@ -220,5 +300,64 @@
 
 </div>
 
+
+
+
+
+
+<!-- fc-chrome:footer -->
+<footer class="fc-footer">
+  <div class="fc-footer-in">
+    <div class="fc-footer-top">
+      <div>
+        <div class="fc-footer-brand"><img src="/favicon.svg" alt="FindConveyancers" width="28" height="28"><span>FindConveyancers</span></div>
+        <p class="fc-footer-tag">A free conveyancing comparison service. Compare quotes from regulated solicitors across England &amp; Wales.</p>
+      </div>
+      <div class="fc-footer-col">
+        <h4>Service</h4>
+        <a href="/get-quotes.html">Get Quotes</a>
+        <a href="/#how-it-works">How It Works</a>
+        <a href="/#faq">FAQ</a>
+      </div>
+      <div class="fc-footer-col">
+        <h4>Guides</h4>
+        <a href="/guides/what-is-conveyancing.html">What is Conveyancing</a>
+        <a href="/guides/conveyancing-costs-2026.html">Conveyancing Costs 2026</a>
+        <a href="/guides/first-time-buyer-conveyancing.html">First-Time Buyer Guide</a>
+        <a href="/guides/freehold-vs-leasehold-conveyancing.html">Freehold vs Leasehold</a>
+        <a href="/guides/how-long-does-conveyancing-take.html">How Long Does It Take</a>
+      </div>
+      <div class="fc-footer-col">
+        <h4>Tools</h4>
+        <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+        <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+      </div>
+      <div class="fc-footer-col">
+        <h4>Legal</h4>
+        <a href="/legal.html">Privacy Policy</a>
+        <a href="/legal.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+    <div class="fc-footer-bottom">
+      <span>&copy; 2026 FindConveyancers, operated by Corre Connections.</span>
+      <span>England &amp; Wales</span>
+    </div>
+    <p class="fc-footer-disc">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
+  </div>
+</footer>
+<script>
+(function(){
+  var b=document.getElementById('fcBurger'),o=document.getElementById('fcOvl'),
+      d=document.getElementById('fcDrawer'),c=document.getElementById('fcDrawerClose');
+  if(!d)return;
+  function open(){d.classList.add('open');o.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){d.classList.remove('open');o.classList.remove('open');document.body.style.overflow='';}
+  if(b)b.addEventListener('click',open);
+  if(o)o.addEventListener('click',close);
+  if(c)c.addEventListener('click',close);
+  d.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+})();
+</script>
+<!-- /fc-chrome:footer -->
 </body>
 </html>
