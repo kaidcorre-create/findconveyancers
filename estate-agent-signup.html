@@ -223,37 +223,10 @@
 </style>
 </head>
 <body>
-<!-- fc-chrome:header -->
-<div id="fcOvl" class="fc-ovl"></div>
-<nav id="fcDrawer" class="fc-drawer" aria-label="Mobile navigation">
-  <div class="fc-drawer-head">
-    <a href="/"><img src="/favicon.svg" alt="FindConveyancers" width="30" height="30"><span>FindConveyancers</span></a>
-    <button id="fcDrawerClose" class="fc-drawer-close" aria-label="Close menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg></button>
-  </div>
-  <div class="fc-drawer-links">
-    <a href="/#how-it-works">How It Works</a>
-    <a href="/#why-us">Why Us</a>
-    <a href="/#faq">FAQ</a>
-    <a href="/guides/">Guides</a>
-    <a href="/stamp-duty-calculator.html">SDLT Calculator</a>
-    <a href="/buying-costs-calculator.html">Buying Costs</a>
-    <a href="/partner.html">Partners</a>
-    <a href="/get-quotes.html" class="fc-drawer-cta">Get Free Quotes</a>
-  </div>
-</nav>
+<!-- fc-chrome:header (brand only, no consumer nav) -->
 <header class="fc-header">
   <div class="fc-header-in">
     <a href="/" class="fc-brand"><img src="/favicon.svg" alt="FindConveyancers" width="32" height="32"><span>FindConveyancers</span></a>
-    <nav class="fc-nav">
-      <a href="/#how-it-works">How It Works</a>
-      <a href="/#why-us">Why Us</a>
-      <a href="/#faq">FAQ</a>
-      <a href="/guides/">Guides</a>
-      <a href="/stamp-duty-calculator.html">SDLT Calc</a>
-      <a href="/partner.html" class="fc-partners">Partners</a>
-      <a href="/get-quotes.html" class="fc-cta">Get Free Quotes</a>
-    </nav>
-    <button id="fcBurger" class="fc-burger" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   </div>
 </header>
 <!-- /fc-chrome:header -->
@@ -457,19 +430,6 @@
     <p class="fc-footer-disc">FindConveyancers is a free comparison service and is not a law firm. We do not provide legal advice. All solicitors and licensed conveyancers quoted through this service are independently regulated by the Solicitors Regulation Authority (SRA) or the Council for Licensed Conveyancers (CLC). Using this service is free and does not create any obligation to instruct a solicitor.</p>
   </div>
 </footer>
-<script>
-(function(){
-  var b=document.getElementById('fcBurger'),o=document.getElementById('fcOvl'),
-      d=document.getElementById('fcDrawer'),c=document.getElementById('fcDrawerClose');
-  if(!d)return;
-  function open(){d.classList.add('open');o.classList.add('open');document.body.style.overflow='hidden';}
-  function close(){d.classList.remove('open');o.classList.remove('open');document.body.style.overflow='';}
-  if(b)b.addEventListener('click',open);
-  if(o)o.addEventListener('click',close);
-  if(c)c.addEventListener('click',close);
-  d.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
-})();
-</script>
 <!-- /fc-chrome:footer -->
 </body>
 </html>
