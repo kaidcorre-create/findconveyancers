@@ -695,15 +695,54 @@ async function handleConveyancerSignup(request, env) {
 }
 
 /// ── Public: estate agent signup ───────────────────────────────────────────────
+async function migrateEstateAgentTables(env) {
+  const results = [];
+  // New columns for estate_agent_leads
+  for (const sql of [
+    `ALTER TABLE estate_agent_leads ADD COLUMN contact_first_name TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN contact_last_name  TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN role               TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN website            TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN num_offices        TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN regions            TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN est_referrals      TEXT`,
+    `ALTER TABLE estate_agent_leads ADD COLUMN how_heard          TEXT`,
+  ]) {
+    try { await env.DB.exec(sql); results.push({ sql, ok: true }); }
+    catch (e) { results.push({ sql, ok: false, msg: e.message }); }
+  }
+  // New columns for agents
+  for (const sql of [
+    `ALTER TABLE agents ADD COLUMN contact_first_name TEXT`,
+    `ALTER TABLE agents ADD COLUMN contact_last_name  TEXT`,
+    `ALTER TABLE agents ADD COLUMN role               TEXT`,
+    `ALTER TABLE agents ADD COLUMN website            TEXT`,
+    `ALTER TABLE agents ADD COLUMN num_offices        TEXT`,
+  ]) {
+    try { await env.DB.exec(sql); results.push({ sql, ok: true }); }
+    catch (e) { results.push({ sql, ok: false, msg: e.message }); }
+  }
+  return results;
+}
+
 async function handleEstateAgentSignup(request, env) {
   const body = await request.json().catch(() => ({}));
 
-  const name     = (body.name     || '').trim();
-  const business = (body.business || '').trim();
-  const email    = (body.email    || '').trim().toLowerCase();
-  const phone    = (body.phone    || '').trim();
+  const firstName = (body.contact_first_name || '').trim();
+  const lastName  = (body.contact_last_name  || '').trim();
+  const role      = (body.role      || '').trim();
+  const business  = (body.business  || '').trim();
+  const website   = (body.website   || '').trim();
+  const numOffices= (body.num_offices|| '').trim();
+  const email     = (body.email     || '').trim().toLowerCase();
+  const phone     = (body.phone     || '').trim();
+  const regions   = Array.isArray(body.regions) ? body.regions.filter(Boolean) : [];
+  const estReferrals = (body.est_referrals || '').trim();
+  const howHeard  = (body.how_heard || '').trim();
 
-  if (!name || !business || !email || !phone) {
+  const name = [firstName, lastName].filter(Boolean).join(' ') || business;
+
+  if (!firstName || !lastName || !business || !email || !phone || regions.length === 0) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
   }
 
@@ -722,54 +761,61 @@ async function handleEstateAgentSignup(request, env) {
     console.error('estate_agent_leads table create error:', e.message);
   }
 
+  // Run migrations silently — idempotent, errors just mean column already exists
+  await migrateEstateAgentTables(env);
+
   const id  = crypto.randomUUID();
   const now = new Date().toISOString();
+  const regionsJson = JSON.stringify(regions);
 
   try {
     await env.DB.prepare(`
-      INSERT INTO estate_agent_leads (id, name, business, email, phone, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(id, name, business, email, phone, now).run();
+      INSERT INTO estate_agent_leads
+        (id, name, business, email, phone, contact_first_name, contact_last_name, role, website, num_offices, regions, est_referrals, how_heard, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(id, name, business, email, phone, firstName, lastName, role, website, numOffices, regionsJson, estReferrals, howHeard, now).run();
   } catch (e) {
     console.error('estate_agent_leads insert error:', e.message);
     return jsonResponse({ error: 'Database error: ' + e.message }, 500);
   }
 
   // Bridge to the `agents` table so the referral link works from day one.
-  // Created PENDING (active = 0, fee = 0); an admin activates it and sets the
-  // fee later. Same id as the enquiry row, so ?ref=<id> attributes via
-  // handleLeadSubmission's "WHERE id = ? OR ref = ?" lookup.
   const agentRef = (business.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'agent') + '-' + id.slice(0, 6);
   try {
     await env.DB.prepare(`
-      INSERT INTO agents (id, ref, name, email, phone, password, active, fee_per_lead, created_at)
-      VALUES (?, ?, ?, ?, ?, '', 0, 0, ?)
-    `).bind(id, agentRef, business, email, phone, now).run();
+      INSERT INTO agents (id, ref, name, email, phone, password, active, fee_per_lead, contact_first_name, contact_last_name, role, website, num_offices, created_at)
+      VALUES (?, ?, ?, ?, ?, '', 0, 0, ?, ?, ?, ?, ?, ?)
+    `).bind(id, agentRef, business, email, phone, firstName, lastName, role, website, numOffices, now).run();
   } catch (e) {
     console.error('agents bridge insert error:', e.message);
   }
 
+  const regionsList = regions.join(', ');
   await sendEmail(
     env.NOTIFY_EMAIL,
     `New estate agent partnership enquiry: ${business}`,
-    `<p>An estate agent has expressed interest in partnering with FindConveyancers.</p>
+    `<p>An estate agent has submitted a partnership sign-up through FindConveyancers.</p>
     <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Name</td><td>${name}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Agency</td><td>${business}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Website</td><td>${website || '—'}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Offices</td><td>${numOffices || '—'}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Contact name</td><td>${name}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Job title</td><td>${role || '—'}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Email</td><td>${email}</td></tr>
       <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Phone</td><td>${phone}</td></tr>
-    </table>
-    <p style="margin-top:16px">Follow up within 24 hours to discuss the referral partnership scheme.</p>`,
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Areas covered</td><td>${regionsList}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Est. referrals/month</td><td>${estReferrals || '—'}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">How they heard</td><td>${howHeard || '—'}</td></tr>
+      <tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-weight:600">Referral link</td><td>https://findconveyancers.co.uk/?ref=${agentRef}</td></tr>
+    </table>`,
     env
   );
 
-  // Welcome the agent with their referral link. Email failures must never
-  // break the API response.
   try {
     await sendEmail(
       email,
       'Welcome: your referral link is live',
-      emailEstateAgentWelcome({ id, name, business, email, phone }),
+      emailEstateAgentWelcome({ id, ref: agentRef, name, business, email, phone }),
       env,
       EMAIL_FROM_PARTNER
     );
@@ -777,7 +823,7 @@ async function handleEstateAgentSignup(request, env) {
     console.error('Estate-agent welcome email failed:', e.message);
   }
 
-  return jsonResponse({ success: true, id }, 201);
+  return jsonResponse({ success: true, id, ref: agentRef }, 201);
 }
 
 // ── Admin: list conveyancers ───────────────────────────────────────────────────
@@ -1227,8 +1273,9 @@ async function migrateLeadsTable(env) {
 async function handleMigrate(request, env) {
   const auth = request.headers.get('Authorization') || '';
   if (auth !== `Bearer ${env.ADMIN_PASSWORD}`) return jsonResponse({ error: 'Unauthorised' }, 401);
-  const results = await migrateLeadsTable(env);
-  return jsonResponse({ ok: true, results });
+  const leadsResults = await migrateLeadsTable(env);
+  const agentResults = await migrateEstateAgentTables(env);
+  return jsonResponse({ ok: true, results: [...leadsResults, ...agentResults] });
 }
 
 // ── Email templates (email-safe: table-based layout, inlined styles) ───────────
@@ -1623,7 +1670,7 @@ function emailConveyancerWelcome(conv, agreementHtml) {
 
 // ── New: estate agent partner welcome (Template 3) ─────────────────────────────
 function emailEstateAgentWelcome(agent) {
-  const refUrl = `https://findconveyancers.co.uk/?ref=${agent.id}`;
+  const refUrl = `https://findconveyancers.co.uk/?ref=${agent.ref || agent.id}`;
   const content =
     eSectionLabel('Your Referral Link') +
     eReferralBox(refUrl) +

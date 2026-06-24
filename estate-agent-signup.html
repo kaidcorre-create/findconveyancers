@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Partner with FindConveyancers as an estate agent — offer your clients a free conveyancing comparison service.">
+  <meta name="description" content="Partner with FindConveyancers as an estate agent — earn a referral fee for every conveyancing transaction that completes through your link.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -27,7 +27,9 @@
       --border:      #e5e7eb;
       --surface:     #ffffff;
       --bg:          #f9fafb;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
       --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+      --radius:      10px;
     }
 
     body {
@@ -39,31 +41,73 @@
       flex-direction: column;
     }
 
-    .header {
+    /* ── Progress bar ── */
+    .progress-wrap {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 1rem 1.5rem;
+      padding: 0 1.5rem;
+    }
+    .progress-steps {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .progress-step {
+      flex: 1;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.65rem;
+      padding: 1rem 0;
+      border-bottom: 2px solid transparent;
+      cursor: default;
+      transition: border-color 0.2s;
     }
-    .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-    .logo-icon {
-      width: 32px; height: 32px; background: var(--primary); border-radius: 8px;
+    .progress-step.active   { border-bottom-color: var(--primary); }
+    .progress-step-num {
+      width: 24px; height: 24px; flex-shrink: 0;
+      border-radius: 50%;
+      font-size: 0.72rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
+      background: var(--border);
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
     }
-    .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; }
-    .logo-text { font-size: 1rem; font-weight: 700; color: var(--text); }
-    .logo-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+    .progress-step.active   .progress-step-num { background: var(--primary); color: white; }
+    .progress-step.complete .progress-step-num { background: var(--green);   color: white; }
+    .progress-step-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--subtle);
+      line-height: 1.3;
+    }
+    .progress-step.active   .progress-step-label { color: var(--primary); }
+    .progress-step.complete .progress-step-label { color: var(--green); }
+    .progress-divider {
+      width: 20px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--border);
+      font-size: 1rem;
+    }
 
+    /* ── Page body ── */
     .page-body {
       flex: 1;
-      max-width: 600px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 5rem;
+      padding: 2.5rem 1.5rem 4rem;
       width: 100%;
     }
 
+    /* ── Step panels ── */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fadeUp 0.25s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -73,51 +117,160 @@
       margin-bottom: 1rem;
     }
     .card-title    { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
-    .card-subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+    .card-subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.5; }
 
-    /* ── Benefit strips ── */
-    .benefits { display: flex; flex-direction: column; gap: 0; margin-bottom: 2rem; }
-    .benefit {
-      display: flex; gap: 0.9rem; align-items: flex-start;
-      padding: 0.9rem 0;
+    /* ── How it works ── */
+    .how-section { margin-bottom: 2rem; }
+    .how-section:last-child { margin-bottom: 0; }
+    .how-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+    .how-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 0;
       border-bottom: 1px solid var(--border);
     }
-    .benefit:last-child { border-bottom: none; padding-bottom: 0; }
-    .benefit-icon {
-      width: 34px; height: 34px; flex-shrink: 0;
-      background: var(--primary-dim); border-radius: 8px;
+    .how-step:last-child { border-bottom: none; padding-bottom: 0; }
+    .how-step-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--primary-dim);
+      border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800; color: var(--primary);
     }
-    .benefit-icon svg { width: 17px; height: 17px; stroke: var(--primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .benefit-body h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .benefit-body p  { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+    .how-step-body h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .how-step-body p  { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
 
-    /* ── Form ── */
+    .trust-line {
+      margin-top: 1.75rem;
+      padding: 1rem 1.1rem;
+      background: var(--green-dim);
+      border: 1px solid rgba(5,150,105,0.18);
+      border-left: 3px solid var(--green);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--green);
+      text-align: center;
+    }
+
+    /* ── Form fields ── */
     .section-label {
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.07em; color: var(--subtle); margin: 1.75rem 0 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--subtle);
+      margin: 1.75rem 0 1rem;
     }
     .section-label:first-child { margin-top: 0; }
 
     .field { margin-bottom: 1.25rem; }
     .field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
     .field label .req { color: var(--primary); margin-left: 2px; }
-    .field input {
-      width: 100%; padding: 0.65rem 0.85rem;
-      border: 1.5px solid var(--border); border-radius: 8px;
-      font-family: inherit; font-size: 0.9rem; color: var(--text);
-      background: var(--surface); outline: none;
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--surface);
       transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
     }
-    .field input:focus {
+    .field input:focus, .field select:focus, .field textarea:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
-    .field.error input { border-color: #ef4444; }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field .hint    { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
+    .field.error input, .field.error select { border-color: #ef4444; }
     .field .err-msg { font-size: 0.76rem; color: #ef4444; margin-top: 0.35rem; display: none; }
     .field.error .err-msg { display: block; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
+    /* ── Region checkboxes ── */
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem; }
+    .check-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text); cursor: pointer; }
+    .check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
+    .other-input-wrap { margin-top: 0.6rem; display: none; }
+    .other-input-wrap.show { display: block; }
+
+    /* ── Agreement ── */
+    .agree-row {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .agree-row:has(input:checked) { border-color: var(--primary); background: var(--primary-dim); }
+    .agree-row input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--primary); cursor: pointer; }
+    .agree-row label { font-size: 0.875rem; color: var(--text); line-height: 1.5; cursor: pointer; font-weight: 500; }
+
+    /* ── Review summary ── */
+    .review-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 1.25rem; }
+    .review-table td { padding: 0.55rem 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .review-table tr:last-child td { border-bottom: none; }
+    .review-table td:first-child { color: var(--muted); font-weight: 600; width: 42%; padding-right: 1rem; }
+    .review-table td:last-child { color: var(--text); font-weight: 500; }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; gap: 0.75rem; justify-content: space-between; align-items: center; }
+    .btn-back {
+      padding: 0.75rem 1.25rem;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-back:hover { border-color: var(--text); color: var(--text); }
+    .btn-next, .btn-submit {
+      flex: 1;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .btn-next:hover, .btn-submit:hover { background: var(--primary-dk); }
+    .btn-next:active, .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .loading-ring {
+      width: 16px; height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Alert ── */
     .alert {
       background: #fef2f2; border: 1px solid #fecaca;
       border-radius: 8px; padding: 0.75rem 1rem;
@@ -126,54 +279,73 @@
     }
     .alert.show { display: block; }
 
-    .btn-submit {
-      width: 100%;
-      padding: 0.9rem;
-      background: var(--primary);
-      color: white; border: none; border-radius: 9px;
-      font-family: inherit; font-size: 1rem; font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    }
-    .btn-submit:hover { background: var(--primary-dk); }
-    .btn-submit:active { transform: scale(0.99); }
-    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
-
-    .loading-ring {
-      width: 16px; height: 16px;
-      border: 2.5px solid rgba(255,255,255,0.4);
-      border-top-color: white; border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     /* ── Success ── */
-    .success-panel { display: none; text-align: center; padding: 1rem 0 2rem; }
+    .success-panel { display: none; text-align: center; padding: 2rem 0; }
     .success-panel.show { display: block; animation: fadeUp 0.3s ease; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
     .success-icon {
       width: 64px; height: 64px;
-      background: var(--green-dim); border: 2px solid rgba(5,150,105,0.25);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: var(--green-dim);
+      border: 2px solid rgba(5,150,105,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       margin: 0 auto 1.25rem;
     }
     .success-icon svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .success-panel h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; }
-    .success-panel p  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+    .success-panel p  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+
+    .referral-link-box {
+      margin: 1.75rem auto 0;
+      max-width: 480px;
+      background: var(--primary-dim);
+      border: 1.5px solid rgba(37,99,235,0.2);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      text-align: left;
+    }
+    .referral-link-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.5rem;
+    }
+    .referral-link-url {
+      font-size: 0.88rem; font-weight: 600; color: var(--text);
+      word-break: break-all; margin-bottom: 0.75rem;
+    }
+    .btn-copy {
+      background: var(--primary); color: white; border: none;
+      border-radius: 7px; padding: 0.5rem 1rem;
+      font-family: inherit; font-size: 0.82rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-copy:hover { background: var(--primary-dk); }
+    .referral-link-note {
+      font-size: 0.8rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.5;
+    }
+
+    .success-next-steps {
+      margin: 2rem auto 0;
+      max-width: 420px;
+      text-align: left;
+    }
+    .success-next-steps h3 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 0.9rem; }
+    .next-step { display: flex; gap: 0.85rem; align-items: flex-start; margin-bottom: 0.9rem; }
+    .next-num {
+      width: 24px; height: 24px; flex-shrink: 0;
+      background: var(--primary-dim); border-radius: 50%;
+      font-size: 0.72rem; font-weight: 700; color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .next-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; padding-top: 3px; }
 
     @media (max-width: 500px) {
       .card { padding: 1.5rem; }
       .field-row { grid-template-columns: 1fr; }
+      .check-grid { grid-template-columns: 1fr; }
+      .progress-step-label { display: none; }
+      .btn-row { flex-direction: column-reverse; }
+      .btn-back { width: 100%; }
     }
   </style>
-
-
-
-
 
 <style id="fc-chrome">
 /* === FindConveyancers standardised chrome === */
@@ -223,6 +395,7 @@
 </style>
 </head>
 <body>
+
 <!-- fc-chrome:header (brand only, no consumer nav) -->
 <header class="fc-header">
   <div class="fc-header-in">
@@ -231,72 +404,163 @@
 </header>
 <!-- /fc-chrome:header -->
 
-
-
-
-
-
-
+<!-- Progress indicator -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-steps">
+    <div class="progress-step active" id="ps1">
+      <div class="progress-step-num">1</div>
+      <div class="progress-step-label">How it works</div>
+    </div>
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps2">
+      <div class="progress-step-num">2</div>
+      <div class="progress-step-label">Agency details</div>
+    </div>
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps3">
+      <div class="progress-step-num">3</div>
+      <div class="progress-step-label">Your details</div>
+    </div>
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps4">
+      <div class="progress-step-num">4</div>
+      <div class="progress-step-label">Areas</div>
+    </div>
+    <div class="progress-divider">›</div>
+    <div class="progress-step" id="ps5">
+      <div class="progress-step-num">5</div>
+      <div class="progress-step-label">Review</div>
+    </div>
+  </div>
+</div>
 
 <div class="page-body">
 
-  <div class="card" id="formCard">
-    <div class="card-title">Estate agent partnership</div>
-    <div class="card-subtitle">Tell us a little about your agency and we'll be in touch within 24 hours to discuss our referral partnership scheme.</div>
+  <!-- ── Step 1: How it works ── -->
+  <div class="step-panel active" id="step1">
+    <div class="card">
+      <div class="card-title">Refer buyers and sellers — earn on every completion</div>
+      <div class="card-subtitle">FindConveyancers partners with local estate agents in Northamptonshire, Bedfordshire and Buckinghamshire to connect their clients with regulated local conveyancers. You earn a referral fee for every matter that completes through your link — paid on completion only, with no upfront cost.</div>
 
-    <div class="benefits">
-      <div class="benefit">
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="benefit-body">
-          <h3>Add value for your clients</h3>
-          <p>Offer buyers and sellers an instant, free conveyancing comparison as part of your service — at no cost to you.</p>
+      <div class="how-section">
+        <div class="how-section-title">How it works</div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-num">1</div>
+            <div class="how-step-body">
+              <h3>You share your unique referral link with buyers and sellers</h3>
+              <p>We give you a personalised link to pass on at the point a sale is agreed. You can share it by email, in person, or on your website — however suits you.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">2</div>
+            <div class="how-step-body">
+              <h3>They submit their details and receive quotes from local conveyancers</h3>
+              <p>Your client fills in a quick form and receives fee quotes from regulated local firms. The comparison is free and takes under two minutes.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">3</div>
+            <div class="how-step-body">
+              <h3>They select a firm and instruct them</h3>
+              <p>The client chooses the conveyancer they want and instructs them directly through the platform. No paperwork on your end.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">4</div>
+            <div class="how-step-body">
+              <h3>The matter completes — you receive your referral fee</h3>
+              <p>Once the transaction completes, your referral fee is paid. Nothing is due if a matter doesn't complete — you only earn when your client does.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="benefit">
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12"/><path d="M6 13h8"/><path d="M9 13V7a4 4 0 0 1 7.33-2"/><path d="M7 18v-2a2 2 0 0 1 2-2h.5"/></svg>
-        </div>
-        <div class="benefit-body">
-          <h3>A revenue share for your referrals</h3>
-          <p>We pay a referral fee for every matter that completes through your introduction. We'll discuss rates when we call.</p>
-        </div>
-      </div>
-      <div class="benefit">
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div class="benefit-body">
-          <h3>Simple, trackable referrals</h3>
-          <p>We give you a unique referral link — no paperwork, no complicated processes, just a link to share.</p>
-        </div>
-      </div>
+
+      <div class="trust-line">No cost to you. No obligation. Pay-on-completion only.</div>
     </div>
 
-    <div class="section-label">Your details</div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="goTo(2)">
+        Get started
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
 
-    <div class="alert" id="errorAlert"></div>
+  <!-- ── Step 2: Agency details ── -->
+  <div class="step-panel" id="step2">
+    <div class="card">
+      <div class="card-title">Agency details</div>
+      <div class="card-subtitle">Tell us about your agency so we can set up your account correctly.</div>
 
-    <div class="field-row">
-      <div class="field" id="f-name">
-        <label>Your name <span class="req">*</span></label>
-        <input type="text" id="name" placeholder="First &amp; last name" autocomplete="name">
-        <div class="err-msg">Please enter your name</div>
-      </div>
+      <div class="alert" id="errorAlert2"></div>
+
       <div class="field" id="f-business">
         <label>Agency name <span class="req">*</span></label>
         <input type="text" id="business" placeholder="e.g. Smith &amp; Co Estate Agents" autocomplete="organization">
         <div class="err-msg">Please enter your agency name</div>
       </div>
+
+      <div class="field" id="f-website">
+        <label>Website URL</label>
+        <input type="url" id="website" placeholder="https://www.youragency.co.uk" autocomplete="url">
+        <div class="hint">Optional — helps us verify your agency.</div>
+      </div>
+
+      <div class="field" id="f-numOffices">
+        <label>Number of offices / branches</label>
+        <select id="numOffices">
+          <option value="">Select…</option>
+          <option value="1">1</option>
+          <option value="2-5">2–5</option>
+          <option value="6-10">6–10</option>
+          <option value="10+">10+</option>
+        </select>
+      </div>
     </div>
 
-    <div class="field-row">
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">Back</button>
+      <button class="btn-next" onclick="validateStep2()">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Your details ── -->
+  <div class="step-panel" id="step3">
+    <div class="card">
+      <div class="card-title">Your details</div>
+      <div class="card-subtitle">The contact who will manage the partnership and receive sign-up information.</div>
+
+      <div class="alert" id="errorAlert3"></div>
+
+      <div class="field-row">
+        <div class="field" id="f-firstName">
+          <label>First name <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="First name" autocomplete="given-name">
+          <div class="err-msg">Please enter your first name</div>
+        </div>
+        <div class="field" id="f-lastName">
+          <label>Last name <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Last name" autocomplete="family-name">
+          <div class="err-msg">Please enter your last name</div>
+        </div>
+      </div>
+
+      <div class="field" id="f-jobTitle">
+        <label>Job title / role</label>
+        <input type="text" id="jobTitle" placeholder="e.g. Director, Branch Manager, Partner" autocomplete="organization-title">
+      </div>
+
       <div class="field" id="f-email">
         <label>Email address <span class="req">*</span></label>
         <input type="email" id="email" placeholder="you@agency.co.uk" autocomplete="email">
-        <div class="err-msg">Please enter a valid email</div>
+        <div class="hint">Welcome information and referral submissions will be sent here.</div>
+        <div class="err-msg">Please enter a valid email address</div>
       </div>
+
       <div class="field" id="f-phone">
         <label>Phone number <span class="req">*</span></label>
         <input type="tel" id="phone" placeholder="01234 567890" autocomplete="tel">
@@ -304,91 +568,334 @@
       </div>
     </div>
 
-    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
-      Express interest
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </button>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">Back</button>
+      <button class="btn-next" onclick="validateStep3()">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
   </div>
 
+  <!-- ── Step 4: Areas and referrals ── -->
+  <div class="step-panel" id="step4">
+    <div class="card">
+      <div class="card-title">Areas and referrals</div>
+      <div class="card-subtitle">This helps us match your account to the right local conveyancers.</div>
+
+      <div class="alert" id="errorAlert4"></div>
+
+      <div class="field" id="f-regions">
+        <label>Areas covered <span class="req">*</span></label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="region" value="Northamptonshire"> Northamptonshire</label>
+          <label class="check-item"><input type="checkbox" name="region" value="Bedfordshire"> Bedfordshire</label>
+          <label class="check-item"><input type="checkbox" name="region" value="Buckinghamshire"> Buckinghamshire</label>
+          <label class="check-item"><input type="checkbox" name="region" value="Other" id="regionOther"> Other</label>
+        </div>
+        <div class="other-input-wrap" id="otherRegionWrap">
+          <input type="text" id="otherRegionText" placeholder="Please specify…">
+        </div>
+        <div class="err-msg" id="regionsErr" style="display:none;">Please select at least one area</div>
+      </div>
+
+      <div class="field" id="f-estReferrals">
+        <label>Estimated referrals per month</label>
+        <select id="estReferrals">
+          <option value="">Select…</option>
+          <option value="1-5">1–5</option>
+          <option value="6-10">6–10</option>
+          <option value="11-20">11–20</option>
+          <option value="20+">20+</option>
+        </select>
+      </div>
+
+      <div class="field" id="f-howHeard">
+        <label>How did you hear about us?</label>
+        <select id="howHeard">
+          <option value="">Select…</option>
+          <option value="Estate agent network">Estate agent network</option>
+          <option value="FindConveyancers website">FindConveyancers website</option>
+          <option value="Leaflet">Leaflet</option>
+          <option value="Existing partner">Existing partner</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(3)">Back</button>
+      <button class="btn-next" onclick="validateStep4()">
+        Review &amp; submit
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 5: Review & submit ── -->
+  <div class="step-panel" id="step5">
+    <div class="card">
+      <div class="card-title">Review your details</div>
+      <div class="card-subtitle">Check everything looks correct before submitting.</div>
+
+      <table class="review-table" id="reviewTable">
+        <tr><td>Agency name</td><td id="rv-business">—</td></tr>
+        <tr><td>Website</td><td id="rv-website">—</td></tr>
+        <tr><td>Offices</td><td id="rv-offices">—</td></tr>
+        <tr><td>Contact name</td><td id="rv-name">—</td></tr>
+        <tr><td>Job title</td><td id="rv-jobTitle">—</td></tr>
+        <tr><td>Email</td><td id="rv-email">—</td></tr>
+        <tr><td>Phone</td><td id="rv-phone">—</td></tr>
+        <tr><td>Areas covered</td><td id="rv-regions">—</td></tr>
+        <tr><td>Est. referrals/month</td><td id="rv-estReferrals">—</td></tr>
+        <tr><td>How you heard</td><td id="rv-howHeard">—</td></tr>
+      </table>
+
+      <div class="agree-row">
+        <input type="checkbox" id="agreeCheck">
+        <label for="agreeCheck">I confirm I have read and agree to the <a href="/legal.html" target="_blank" style="color:var(--primary)">Referral Supply Agreement</a>.</label>
+      </div>
+
+      <div class="alert" id="errorAlert5"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(4)">Back</button>
+      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+        Complete sign-up
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Success ── -->
   <div class="success-panel" id="successPanel">
     <div class="card" style="text-align:center; padding: 3rem 2rem;">
       <div class="success-icon" style="margin: 0 auto 1.5rem;">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h2>Thanks — we'll be in touch</h2>
-      <p>We've received your details. A member of the team will contact you within 24 hours to discuss how a partnership would work for your agency.</p>
+      <h2>You're signed up</h2>
+      <p>Your referral link is ready to share. Send it to buyers and sellers at the point a sale is agreed — you'll earn a fee for every matter that completes.</p>
+
+      <div class="referral-link-box">
+        <div class="referral-link-label">Your referral link</div>
+        <div class="referral-link-url" id="successRefUrl">—</div>
+        <button class="btn-copy" onclick="copyRefLink()">Copy link</button>
+        <div class="referral-link-note">Share this link with buyers and sellers. You'll receive a referral fee for every matter that completes through it.</div>
+      </div>
+
+      <div class="success-next-steps">
+        <h3>What happens next</h3>
+        <div class="next-step">
+          <div class="next-num">1</div>
+          <div class="next-text">Check your email — we've sent your welcome pack with your link and tips on sharing it</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">2</div>
+          <div class="next-text">Share your link with buyers and sellers when a sale is agreed</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">3</div>
+          <div class="next-text">Your clients compare quotes and instruct a local conveyancer through the platform</div>
+        </div>
+        <div class="next-step">
+          <div class="next-num">4</div>
+          <div class="next-text">When a matter completes, your referral fee is paid — automatically, no invoicing required</div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-  function validate() {
+  let currentStep = 1;
+  let successRefLink = '';
+
+  const TOTAL_STEPS = 5;
+
+  function goTo(step) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+
+    for (let n = 1; n <= TOTAL_STEPS; n++) {
+      const ps = document.getElementById('ps' + n);
+      if (!ps) continue;
+      ps.classList.remove('active', 'complete');
+      if (n < step)       ps.classList.add('complete');
+      else if (n === step) ps.classList.add('active');
+    }
+
+    currentStep = step;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Step 2 validation ──────────────────────────────────────────────────────
+  function validateStep2() {
+    const alertEl = document.getElementById('errorAlert2');
+    alertEl.classList.remove('show');
+
+    const business = document.getElementById('business').value.trim();
+    const bField   = document.getElementById('f-business');
+    bField.classList.toggle('error', !business);
+
+    if (!business) {
+      alertEl.textContent = 'Please fill in all required fields before continuing.';
+      alertEl.classList.add('show');
+      return;
+    }
+    goTo(3);
+  }
+
+  // ── Step 3 validation ──────────────────────────────────────────────────────
+  function validateStep3() {
+    const alertEl  = document.getElementById('errorAlert3');
+    alertEl.classList.remove('show');
+    const emailRe  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let ok = true;
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const checks = [
-      ['f-name',     document.getElementById('name').value.trim()],
-      ['f-business', document.getElementById('business').value.trim()],
-      ['f-email',    emailRe.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
-      ['f-phone',    document.getElementById('phone').value.trim()],
+      ['f-firstName', document.getElementById('firstName').value.trim()],
+      ['f-lastName',  document.getElementById('lastName').value.trim()],
+      ['f-email',     emailRe.test(document.getElementById('email').value.trim()) ? 'ok' : ''],
+      ['f-phone',     document.getElementById('phone').value.trim()],
     ];
     checks.forEach(([id, val]) => {
       const el = document.getElementById(id);
       el.classList.toggle('error', !val);
       if (!val) ok = false;
     });
-    return ok;
+
+    if (!ok) {
+      alertEl.textContent = 'Please fill in all required fields before continuing.';
+      alertEl.classList.add('show');
+      return;
+    }
+    goTo(4);
   }
 
-  async function handleSubmit() {
-    const alertEl = document.getElementById('errorAlert');
+  // ── Step 4 validation ──────────────────────────────────────────────────────
+  function validateStep4() {
+    const alertEl = document.getElementById('errorAlert4');
     alertEl.classList.remove('show');
 
-    if (!validate()) {
-      alertEl.textContent = 'Please fill in all required fields.';
+    const regions = getSelectedRegions();
+    const regionsErr  = document.getElementById('regionsErr');
+    const regionsField = document.getElementById('f-regions');
+
+    if (regions.length === 0) {
+      regionsErr.style.display = 'block';
+      regionsField.classList.add('error');
+      alertEl.textContent = 'Please select at least one area before continuing.';
+      alertEl.classList.add('show');
+      return;
+    }
+    regionsErr.style.display = 'none';
+    regionsField.classList.remove('error');
+
+    populateReview();
+    goTo(5);
+  }
+
+  function getSelectedRegions() {
+    const checked = Array.from(document.querySelectorAll('input[name="region"]:checked')).map(cb => cb.value);
+    // Replace "Other" with the typed value if provided
+    const otherText = document.getElementById('otherRegionText').value.trim();
+    return checked.map(r => (r === 'Other' && otherText) ? otherText : r);
+  }
+
+  // Show/hide "Other" text input
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('regionOther').addEventListener('change', function() {
+      document.getElementById('otherRegionWrap').classList.toggle('show', this.checked);
+    });
+  });
+
+  // ── Populate review summary ────────────────────────────────────────────────
+  function populateReview() {
+    const v = id => document.getElementById(id).value.trim();
+    document.getElementById('rv-business').textContent    = v('business') || '—';
+    document.getElementById('rv-website').textContent     = v('website')  || '—';
+    document.getElementById('rv-offices').textContent     = v('numOffices') || '—';
+    document.getElementById('rv-name').textContent        = (v('firstName') + ' ' + v('lastName')).trim() || '—';
+    document.getElementById('rv-jobTitle').textContent    = v('jobTitle')  || '—';
+    document.getElementById('rv-email').textContent       = v('email')     || '—';
+    document.getElementById('rv-phone').textContent       = v('phone')     || '—';
+    document.getElementById('rv-regions').textContent     = getSelectedRegions().join(', ') || '—';
+    document.getElementById('rv-estReferrals').textContent= v('estReferrals') || '—';
+    document.getElementById('rv-howHeard').textContent    = v('howHeard')  || '—';
+  }
+
+  // ── Submit ─────────────────────────────────────────────────────────────────
+  async function handleSubmit() {
+    const alertEl = document.getElementById('errorAlert5');
+    alertEl.classList.remove('show');
+
+    if (!document.getElementById('agreeCheck').checked) {
+      alertEl.textContent = 'Please read and tick the agreement box to continue.';
       alertEl.classList.add('show');
       return;
     }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerHTML = '<div class="loading-ring"></div> Sending…';
+    btn.innerHTML = '<div class="loading-ring"></div> Submitting…';
+
+    const v = id => document.getElementById(id).value.trim();
 
     const payload = {
-      name:     document.getElementById('name').value.trim(),
-      business: document.getElementById('business').value.trim(),
-      email:    document.getElementById('email').value.trim().toLowerCase(),
-      phone:    document.getElementById('phone').value.trim(),
+      contact_first_name: v('firstName'),
+      contact_last_name:  v('lastName'),
+      role:               v('jobTitle'),
+      business:           v('business'),
+      website:            v('website'),
+      num_offices:        v('numOffices'),
+      email:              v('email').toLowerCase(),
+      phone:              v('phone'),
+      regions:            getSelectedRegions(),
+      est_referrals:      v('estReferrals'),
+      how_heard:          v('howHeard'),
     };
 
     try {
-      const res = await fetch('/api/estate-agent/signup', {
+      const res  = await fetch('/api/estate-agent/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      const data = await res.json();
 
       if (res.ok) {
-        document.getElementById('formCard').style.display = 'none';
+        const agentRef = data.ref || data.id;
+        successRefLink = 'https://findconveyancers.co.uk/?ref=' + agentRef;
+        document.getElementById('successRefUrl').textContent = successRefLink;
+        document.getElementById('progressWrap').style.display = 'none';
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('successPanel').classList.add('show');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        const data = await res.json().catch(() => ({}));
         throw new Error('Server ' + res.status + ': ' + (data.error || 'Unknown error'));
       }
     } catch (e) {
-      alertEl.textContent = 'Error: ' + e.message;
+      alertEl.textContent = 'Error: ' + e.message + '. Please try again or email hello@findconveyancers.co.uk';
       alertEl.classList.add('show');
       btn.disabled = false;
-      btn.innerHTML = 'Express interest <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      btn.innerHTML = 'Complete sign-up <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
     }
   }
+
+  function copyRefLink() {
+    if (!successRefLink) return;
+    navigator.clipboard.writeText(successRefLink).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }).catch(() => {
+      prompt('Copy your referral link:', successRefLink);
+    });
+  }
 </script>
-
-
-
-
-
 
 <!-- fc-chrome:footer -->
 <footer class="fc-footer">
