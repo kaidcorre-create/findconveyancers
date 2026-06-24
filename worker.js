@@ -804,8 +804,17 @@ async function handlePatchConveyancer(path, request, env) {
   const fields = [];
   const values = [];
 
-  if (body.active !== undefined) { fields.push('active = ?'); values.push(body.active ? 1 : 0); }
-  if (body.fee_per_lead !== undefined) { fields.push('fee_per_lead = ?'); values.push(Number(body.fee_per_lead)); }
+  if (body.active        !== undefined) { fields.push('active = ?');         values.push(body.active ? 1 : 0); }
+  if (body.fee_per_lead  !== undefined) { fields.push('fee_per_lead = ?');   values.push(Number(body.fee_per_lead)); }
+  if (body.name          !== undefined) { fields.push('name = ?');           values.push(body.name); }
+  if (body.email         !== undefined) { fields.push('email = ?');          values.push(body.email); }
+  if (body.phone         !== undefined) { fields.push('phone = ?');          values.push(body.phone); }
+  if (body.contact_name  !== undefined) { fields.push('contact_name = ?');   values.push(body.contact_name); }
+  if (body.delivery_email !== undefined){ fields.push('delivery_email = ?'); values.push(body.delivery_email); }
+  if (body.regions       !== undefined) { fields.push('regions = ?');        values.push(body.regions); }
+  if (body.transaction_types !== undefined) { fields.push('transaction_types = ?'); values.push(body.transaction_types); }
+  if (body.notes         !== undefined) { fields.push('notes = ?');          values.push(body.notes); }
+  if (body.agreed_fees   !== undefined) { fields.push('agreed_fees = ?');    values.push(typeof body.agreed_fees === 'string' ? body.agreed_fees : JSON.stringify(body.agreed_fees)); }
 
   if (!fields.length) return jsonResponse({ error: 'Nothing to update' }, 400);
 

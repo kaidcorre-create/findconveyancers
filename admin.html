@@ -481,6 +481,37 @@
   </div>
 </div>
 
+<!-- Edit conveyancer modal -->
+<div class="modal-overlay" id="editConvModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit conveyancer</div>
+      <button class="modal-close" onclick="closeEditConv()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editConvId">
+      <div class="field"><label>Firm name</label><input type="text" class="modal-input" id="editConvName"></div>
+      <div class="field"><label>Contact name</label><input type="text" class="modal-input" id="editConvContact"></div>
+      <div class="field"><label>Email (login / correspondence)</label><input type="email" class="modal-input" id="editConvEmail"></div>
+      <div class="field"><label>Referral delivery email <span style="font-weight:400;color:var(--muted)">(where referrals are sent)</span></label><input type="email" class="modal-input" id="editConvDelivery"></div>
+      <div class="field"><label>Phone</label><input type="tel" class="modal-input" id="editConvPhone"></div>
+      <div class="field"><label>Counties / regions</label><input type="text" class="modal-input" id="editConvRegions" placeholder="e.g. Northamptonshire, Bedfordshire"></div>
+      <div class="field"><label>Transaction types</label><input type="text" class="modal-input" id="editConvTxTypes" placeholder="e.g. purchase, sale, remortgage"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div class="field"><label>Purchase fee (£)</label><input type="number" class="modal-input" id="editFeeP" min="0" step="10"></div>
+        <div class="field"><label>Sale fee (£)</label><input type="number" class="modal-input" id="editFeeS" min="0" step="10"></div>
+        <div class="field"><label>New build fee (£)</label><input type="number" class="modal-input" id="editFeeNB" min="0" step="10"></div>
+        <div class="field"><label>Remortgage fee (£)</label><input type="number" class="modal-input" id="editFeeR" min="0" step="10"></div>
+      </div>
+      <div class="field"><label>Internal notes</label><textarea class="notes-area" id="editConvNotes" placeholder="Internal notes…" style="height:80px"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeEditConv()">Cancel</button>
+      <button class="btn-save" onclick="saveEditConv()">Save changes</button>
+    </div>
+  </div>
+</div>
+
 <!-- Add agent modal -->
 <div class="modal-overlay" id="agentModal">
   <div class="modal">
@@ -886,15 +917,19 @@
 
         const tok = encodeURIComponent(ADMIN_PASSWORD);
         let actions = '';
+        const editBtn = `<button class="cv-act" style="background:var(--bg);border:1px solid var(--border);color:var(--text)" onclick='openEditConv(${JSON.stringify(c)})'>Edit</button>`;
         if (status === 'pending') {
           actions = `
             <button class="cv-act cv-approve" onclick="convAction('${c.id}','approve',this)">Approve</button>
             <button class="cv-act cv-counter" onclick="convCounter('${c.id}')">Counter</button>
-            <button class="cv-act cv-reject"  onclick="convAction('${c.id}','reject',this)">Reject</button>`;
+            <button class="cv-act cv-reject"  onclick="convAction('${c.id}','reject',this)">Reject</button>
+            ${editBtn}`;
         } else if (status === 'counter_sent') {
-          actions = `<span style="font-size:0.75rem;color:var(--muted)">Awaiting response</span>`;
+          actions = `<span style="font-size:0.75rem;color:var(--muted)">Awaiting response</span> ${editBtn}`;
         } else if (status === 'approved') {
-          actions = `<button class="cv-act cv-reject" onclick="convAction('${c.id}','reject',this)">Deactivate</button>`;
+          actions = `<button class="cv-act cv-reject" onclick="convAction('${c.id}','reject',this)">Deactivate</button> ${editBtn}`;
+        } else {
+          actions = editBtn;
         }
 
         return `<tr>
@@ -907,6 +942,60 @@
         </tr>`;
       }).join('');
     } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+  }
+
+  function openEditConv(c) {
+    document.getElementById('editConvId').value       = c.id;
+    document.getElementById('editConvName').value     = c.name || '';
+    document.getElementById('editConvContact').value  = c.contact_name || '';
+    document.getElementById('editConvEmail').value    = c.email || '';
+    document.getElementById('editConvDelivery').value = c.delivery_email || '';
+    document.getElementById('editConvPhone').value    = c.phone || '';
+    document.getElementById('editConvRegions').value  = c.regions || '';
+    document.getElementById('editConvTxTypes').value  = c.transaction_types || '';
+    document.getElementById('editConvNotes').value    = c.notes || '';
+    const fees = (() => { try { return JSON.parse(c.agreed_fees || c.proposed_fees || '{}'); } catch { return {}; } })();
+    document.getElementById('editFeeP').value  = fees.purchase   ?? 200;
+    document.getElementById('editFeeS').value  = fees.sale       ?? 200;
+    document.getElementById('editFeeNB').value = fees.new_build  ?? 200;
+    document.getElementById('editFeeR').value  = fees.remortgage ?? 100;
+    document.getElementById('editConvModal').classList.add('open');
+  }
+  function closeEditConv() { document.getElementById('editConvModal').classList.remove('open'); }
+  document.getElementById('editConvModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('editConvModal')) closeEditConv();
+  });
+
+  async function saveEditConv() {
+    const id = document.getElementById('editConvId').value;
+    const agreed_fees = {
+      purchase:   parseInt(document.getElementById('editFeeP').value)  || 200,
+      sale:       parseInt(document.getElementById('editFeeS').value)  || 200,
+      new_build:  parseInt(document.getElementById('editFeeNB').value) || 200,
+      remortgage: parseInt(document.getElementById('editFeeR').value)  || 100,
+    };
+    const btn = document.querySelector('#editConvModal .btn-save');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await apiPatch(`/api/admin/conveyancers/${id}`, {
+        name:              document.getElementById('editConvName').value.trim(),
+        contact_name:      document.getElementById('editConvContact').value.trim(),
+        email:             document.getElementById('editConvEmail').value.trim(),
+        delivery_email:    document.getElementById('editConvDelivery').value.trim(),
+        phone:             document.getElementById('editConvPhone').value.trim(),
+        regions:           document.getElementById('editConvRegions').value.trim(),
+        transaction_types: document.getElementById('editConvTxTypes').value.trim(),
+        notes:             document.getElementById('editConvNotes').value.trim(),
+        agreed_fees,
+      });
+      closeEditConv();
+      showToast('Saved ✓');
+      loadConveyancers();
+    } catch (e) {
+      showToast('Error: ' + e.message, true);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save changes';
+    }
   }
 
   async function convAction(id, action, btn) {
