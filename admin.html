@@ -126,6 +126,9 @@
     .cv-reject  { background:#FEE2E2;color:#991B1B; }
     .cv-reject:hover  { background:#FECACA; }
     .cv-act:disabled { opacity:0.5;cursor:not-allowed; }
+    .cv-sent { background:#F0FDF4;color:#166534;cursor:default; }
+    .assign-row { display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border); }
+    .assign-row:last-child { border-bottom:none; }
 
     /* ── Quote count pill ── */
     .quote-pill { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 0.72rem; font-weight: 700; background: var(--border); color: var(--muted); }
@@ -412,6 +415,9 @@
 
       <div class="modal-section-title">Pipeline Links</div>
       <div id="modalPipeLinks" style="font-size:0.8rem;display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.25rem"></div>
+
+      <div class="modal-section-title">Assign Firms to Quote</div>
+      <div id="modalAssign" style="margin-bottom:1.25rem"><div class="loading" style="padding:.5rem 0">Loading firms…</div></div>
 
       <div class="modal-section-title">Quotes Received (<span id="modalQuoteCount">0</span>)</div>
       <div id="modalQuotes" style="background:var(--bg);border-radius:6px;overflow:hidden;margin-bottom:1.25rem"></div>
@@ -775,10 +781,38 @@
         <a class="pipe-link" href="${origin}/compare.html?lead=${escHtml(id)}" target="_blank">${origin}/compare.html?lead=${escHtml(id)}</a></div>
     `;
 
+    // Load active conveyancers and render assign panel
+    document.getElementById('modalAssign').innerHTML = '<div class="loading" style="padding:.5rem 0">Loading firms…</div>';
+    document.getElementById('leadModal').classList.add('open');
+    const assigned = JSON.parse(lead.assigned_conveyancers || '[]');
+
+    try {
+      const { conveyancers } = await apiGet('/api/admin/conveyancers');
+      const active = (conveyancers || []).filter(c => c.active);
+      if (!active.length) {
+        document.getElementById('modalAssign').innerHTML = '<div style="font-size:0.82rem;color:var(--muted)">No active firms yet.</div>';
+      } else {
+        document.getElementById('modalAssign').innerHTML = active.map(c => {
+          const sent = assigned.includes(c.id);
+          return `<div class="assign-row" id="assign-${c.id}">
+            <div>
+              <div style="font-size:0.85rem;font-weight:600;color:var(--text)">${escHtml(c.name)}</div>
+              <div style="font-size:0.72rem;color:var(--muted)">${escHtml(c.delivery_email||c.email)}</div>
+            </div>
+            <button class="cv-act ${sent?'cv-sent':'cv-approve'}" id="assignBtn-${c.id}"
+              onclick="assignFirm('${id}','${c.id}',this)" ${sent?'disabled':''}>
+              ${sent ? '✓ Sent' : 'Send referral'}
+            </button>
+          </div>`;
+        }).join('');
+      }
+    } catch {
+      document.getElementById('modalAssign').innerHTML = '<div style="font-size:0.82rem;color:var(--red)">Failed to load firms</div>';
+    }
+
     // Load quotes for this lead
     document.getElementById('modalQuoteCount').textContent = '…';
     document.getElementById('modalQuotes').innerHTML = '<div class="loading" style="padding:1rem">Loading quotes…</div>';
-    document.getElementById('leadModal').classList.add('open');
 
     try {
       const { quotes } = await apiGet(`/api/quotes?lead=${id}`);
@@ -889,6 +923,29 @@
       showToast('Error: ' + e.message, true);
       btn.disabled = false;
       btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+    }
+  }
+
+  async function assignFirm(leadId, convId, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const res = await apiPost(`/api/admin/leads/${leadId}/assign`, { conveyancer_id: convId });
+      btn.textContent = '✓ Sent';
+      btn.classList.remove('cv-approve');
+      btn.classList.add('cv-sent');
+      // Update the in-memory lead so re-opening shows correct state
+      const lead = allLeads.find(l => l.id === leadId);
+      if (lead) {
+        const a = JSON.parse(lead.assigned_conveyancers || '[]');
+        if (!a.includes(convId)) a.push(convId);
+        lead.assigned_conveyancers = JSON.stringify(a);
+      }
+      showToast(`Referral sent to ${res.sent_to} ✓`);
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Send referral';
+      showToast('Failed: ' + e.message, true);
     }
   }
 
