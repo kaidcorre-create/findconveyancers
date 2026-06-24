@@ -627,7 +627,8 @@ async function handleConveyancerSignup(request, env) {
     <p style="font-size:14px;margin-bottom:8px">You pay on completion only, at the following rates:</p>${feesTable}
     <p style="font-size:13px;color:#6b7280">Fees are exclusive of VAT.</p>
     <h3 style="margin:20px 0 8px;font-size:15px">Referrals</h3>
-    <p style="font-size:14px">Each referral we send you includes the client's name, contact details, property address, indicative value, transaction type, and referral source. We warrant that each referral contains accurate contact details and relates to a genuine enquiry.</p>
+    <p style="font-size:14px">Each referral we send you includes: the property address (or &lsquo;TBC&rsquo; if not yet confirmed at point of enquiry), the indicative property value, the transaction type (purchase, sale, new build, or remortgage), tenure (freehold or leasehold), mortgage status, any relevant special circumstances (such as first time buyer, new build, shared ownership, help to buy, or buy to let), the client&rsquo;s purchase stage, and the number of applicants.</p>
+    <p style="font-size:14px"><strong>Client contact details are not included in the referral.</strong> The client&rsquo;s name, email address, and phone number are shared only once they have selected your firm and instructed you through the platform. We warrant that each referral relates to a genuine enquiry.</p>
     <h3 style="margin:20px 0 8px;font-size:15px">Your Obligations</h3>
     <ul style="font-size:14px;padding-left:20px;line-height:1.8">
       <li>You must hold a current SRA or CLC authorisation. Tell us immediately if that changes.</li>
