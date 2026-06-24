@@ -118,6 +118,14 @@
     .badge-contacted   { background: var(--primary-subtle);color: var(--primary); }
     .badge-converted   { background: var(--green-dim);  color: var(--green); }
     .badge-lost        { background: var(--red-dim);    color: var(--red); }
+    .cv-act { border:none;border-radius:6px;padding:4px 10px;font-size:0.73rem;font-weight:600;cursor:pointer;font-family:inherit; }
+    .cv-approve { background:#D1FAE5;color:#065F46; }
+    .cv-approve:hover { background:#A7F3D0; }
+    .cv-counter { background:#FEF3C7;color:#92400E; }
+    .cv-counter:hover { background:#FDE68A; }
+    .cv-reject  { background:#FEE2E2;color:#991B1B; }
+    .cv-reject:hover  { background:#FECACA; }
+    .cv-act:disabled { opacity:0.5;cursor:not-allowed; }
 
     /* ── Quote count pill ── */
     .quote-pill { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 0.72rem; font-weight: 700; background: var(--border); color: var(--muted); }
@@ -363,13 +371,14 @@
               <tr>
                 <th>Firm</th>
                 <th>Email</th>
-                <th>Phone</th>
                 <th>Status</th>
+                <th>Fees</th>
                 <th>Added</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="conveyancersTable">
-              <tr><td colspan="5"><div class="loading">Loading…</div></td></tr>
+              <tr><td colspan="6"><div class="loading">Loading…</div></td></tr>
             </tbody>
           </table>
         </div>
@@ -521,7 +530,8 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const API = 'https://findconveyancers.kai-d-corre-ea2.workers.dev';
+  const API            = 'https://findconveyancers.kai-d-corre-ea2.workers.dev';
+  const ADMIN_PASSWORD = localStorage.getItem('cl_token') || '';
 
   let token         = localStorage.getItem('cl_token') || '';
   let allLeads      = [];
@@ -822,16 +832,69 @@
           `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⚖️</div><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
         return;
       }
-      document.getElementById('conveyancersTable').innerHTML = convs.map(c => `
-        <tr>
-          <td><div class="td-name">${escHtml(c.name)}</div></td>
-          <td class="td-mono" style="font-size:0.8rem">${escHtml(c.email)}</td>
-          <td style="font-size:0.82rem">${escHtml(c.phone||'—')}</td>
-          <td><span class="badge ${c.active ? 'badge-instructed' : 'badge-lost'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+      document.getElementById('conveyancersTable').innerHTML = convs.map(c => {
+        const status   = c.signup_status || (c.active ? 'approved' : 'inactive');
+        const proposed = (() => { try { return JSON.parse(c.proposed_fees || '{}'); } catch { return {}; } })();
+        const agreed   = (() => { try { return JSON.parse(c.agreed_fees   || '{}'); } catch { return {}; } })();
+        const fees     = Object.keys(agreed).length ? agreed : proposed;
+        const feeStr   = Object.keys(fees).length
+          ? `P£${fees.purchase??200} S£${fees.sale??200} NB£${fees.new_build??200} R£${fees.remortgage??100}`
+          : '—';
+        const stdFees  = {purchase:200,sale:200,new_build:200,remortgage:100};
+        const isCustom = Object.keys(fees).some(k => fees[k] !== stdFees[k]);
+        const statusBadge = {
+          pending:          '<span class="badge" style="background:#FEF3C7;color:#92400E;">⏳ Pending</span>',
+          approved:         '<span class="badge badge-instructed">✓ Active</span>',
+          rejected:         '<span class="badge badge-lost">✗ Rejected</span>',
+          counter_sent:     '<span class="badge" style="background:#EDE9FE;color:#5B21B6;">↔ Counter sent</span>',
+          counter_declined: '<span class="badge badge-lost">↔ Declined</span>',
+        }[status] || `<span class="badge badge-lost">${escHtml(status)}</span>`;
+
+        const tok = encodeURIComponent(ADMIN_PASSWORD);
+        let actions = '';
+        if (status === 'pending') {
+          actions = `
+            <button class="cv-act cv-approve" onclick="convAction('${c.id}','approve',this)">Approve</button>
+            <button class="cv-act cv-counter" onclick="convCounter('${c.id}')">Counter</button>
+            <button class="cv-act cv-reject"  onclick="convAction('${c.id}','reject',this)">Reject</button>`;
+        } else if (status === 'counter_sent') {
+          actions = `<span style="font-size:0.75rem;color:var(--muted)">Awaiting response</span>`;
+        } else if (status === 'approved') {
+          actions = `<button class="cv-act cv-reject" onclick="convAction('${c.id}','reject',this)">Deactivate</button>`;
+        }
+
+        return `<tr>
+          <td><div class="td-name">${escHtml(c.name)}</div><div style="font-size:0.73rem;color:var(--muted)">${escHtml(c.phone||'')}</div></td>
+          <td class="td-mono" style="font-size:0.78rem">${escHtml(c.email)}</td>
+          <td>${statusBadge}</td>
+          <td class="td-mono" style="font-size:0.73rem;color:${isCustom?'#92400E':'var(--muted)'};" title="${escHtml(feeStr)}">${isCustom ? '⚠ '+feeStr : feeStr}</td>
           <td class="td-mono" style="color:var(--muted)">${formatDate(c.created_at)}</td>
-        </tr>
-      `).join('');
-    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+          <td style="white-space:nowrap">${actions}</td>
+        </tr>`;
+      }).join('');
+    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+  }
+
+  async function convAction(id, action, btn) {
+    if (!confirm(`${action === 'approve' ? 'Approve' : action === 'reject' ? 'Reject/deactivate' : action} this conveyancer?`)) return;
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const tok = encodeURIComponent(token);
+      const res = await fetch(`${API}/api/admin/conveyancers/${id}/${action}?token=${tok}`);
+      if (!res.ok) throw new Error(await res.text());
+      showToast(action === 'approve' ? 'Approved and activated ✓' : 'Done ✓');
+      loadConveyancers();
+    } catch (e) {
+      showToast('Error: ' + e.message, true);
+      btn.disabled = false;
+      btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+    }
+  }
+
+  function convCounter(id) {
+    const tok = encodeURIComponent(token);
+    window.open(`${API}/api/admin/conveyancers/${id}/counter-form?token=${tok}`, '_blank');
   }
 
   function openAddConveyancer() {
