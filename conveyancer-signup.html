@@ -215,6 +215,35 @@
     .field.error .err-msg { display: block; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
+    /* ── Fee inputs ── */
+    .fee-cell { display:flex; align-items:center; gap:4px; }
+    .fee-cell .fee-prefix { color:var(--muted); font-size:0.82rem; }
+    .fee-input {
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: var(--text);
+      width: 72px;
+      outline: none;
+      background: white;
+      transition: border-color 0.15s, background 0.15s;
+      -moz-appearance: textfield;
+    }
+    .fee-input::-webkit-outer-spin-button,
+    .fee-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .fee-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+    .fee-input.edited { background: #fefce8; border-color: #d97706; }
+    .fee-badge { display:none; font-size:0.68rem; color:#92400e; background:#fef3c7; border:1px solid #f59e0b; padding:1px 6px; border-radius:3px; white-space:nowrap; }
+    .fee-input.edited + .fee-badge { display:inline; }
+    .fee-negotiate-note {
+      display:none;
+      font-size:0.78rem; color:#92400e; background:#fef3c7;
+      border:1px solid #f59e0b; border-radius:5px;
+      padding:0.55rem 0.8rem; margin:0.5rem 0 0.6rem;
+    }
+
     /* ── Agreement text ── */
     .agreement-scroll {
       background: var(--bg);
@@ -718,14 +747,15 @@
         </table>
 
         <h2>Your Fees</h2>
-        <p>You pay on completion only, at the following rates:</p>
+        <p>You pay on completion only, at the following rates. Standard fees are shown — you can propose different rates and we'll confirm before your account goes live.</p>
         <table>
           <tr><th>Transaction type</th><th>Completion fee (ex-VAT)</th></tr>
-          <tr><td>Purchase</td><td>£200</td></tr>
-          <tr><td>Sale</td><td>£200</td></tr>
-          <tr><td>New Build</td><td>£200</td></tr>
-          <tr><td>Remortgage</td><td>£100</td></tr>
+          <tr><td>Purchase</td><td><div class="fee-cell"><span class="fee-prefix">£</span><input type="number" class="fee-input" id="feePurchase" data-fee-type="purchase" data-default="200" value="200" min="0" max="9999" step="10"><span class="fee-badge">Proposed</span></div></td></tr>
+          <tr><td>Sale</td><td><div class="fee-cell"><span class="fee-prefix">£</span><input type="number" class="fee-input" id="feeSale" data-fee-type="sale" data-default="200" value="200" min="0" max="9999" step="10"><span class="fee-badge">Proposed</span></div></td></tr>
+          <tr><td>New Build</td><td><div class="fee-cell"><span class="fee-prefix">£</span><input type="number" class="fee-input" id="feeNewBuild" data-fee-type="new_build" data-default="200" value="200" min="0" max="9999" step="10"><span class="fee-badge">Proposed</span></div></td></tr>
+          <tr><td>Remortgage</td><td><div class="fee-cell"><span class="fee-prefix">£</span><input type="number" class="fee-input" id="feeRemortgage" data-fee-type="remortgage" data-default="100" value="100" min="0" max="9999" step="10"><span class="fee-badge">Proposed</span></div></td></tr>
         </table>
+        <p id="feeNegotiateNote" class="fee-negotiate-note">You've proposed custom fees. We'll review your application and confirm the agreed rates before your account goes live.</p>
         <p>Fees are exclusive of VAT.</p>
 
         <h2>Referrals</h2>
@@ -1024,6 +1054,8 @@
       regions:           getSelectedCounties(),
       transaction_types: getSelectedTxTypes(),
       notes:          document.getElementById('notes').value.trim(),
+      proposed_fees:  getProposedFees(),
+      fees_negotiated: feesAreCustom(),
     };
 
     try {
@@ -1056,6 +1088,41 @@
   }
 
   initCountyDropdown();
+
+  // ── Fee input change detection ──────────────────────────────────────────────
+  const DEFAULT_FEES = { purchase: 200, sale: 200, new_build: 200, remortgage: 100 };
+
+  function checkFeeEdited(input) {
+    const def = parseInt(input.dataset.default) || 0;
+    const val = parseInt(input.value) || 0;
+    input.classList.toggle('edited', val !== def);
+    updateFeeNote();
+  }
+
+  function updateFeeNote() {
+    const anyEdited = document.querySelectorAll('.fee-input.edited').length > 0;
+    document.getElementById('feeNegotiateNote').style.display = anyEdited ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.fee-input').forEach(function(el) {
+    el.addEventListener('input', function() { checkFeeEdited(el); });
+    el.addEventListener('change', function() { checkFeeEdited(el); });
+  });
+
+  function getProposedFees() {
+    return {
+      purchase:   parseInt(document.getElementById('feePurchase').value)   || DEFAULT_FEES.purchase,
+      sale:       parseInt(document.getElementById('feeSale').value)       || DEFAULT_FEES.sale,
+      new_build:  parseInt(document.getElementById('feeNewBuild').value)   || DEFAULT_FEES.new_build,
+      remortgage: parseInt(document.getElementById('feeRemortgage').value) || DEFAULT_FEES.remortgage,
+    };
+  }
+
+  function feesAreCustom() {
+    const f = getProposedFees();
+    return f.purchase !== DEFAULT_FEES.purchase || f.sale !== DEFAULT_FEES.sale ||
+           f.new_build !== DEFAULT_FEES.new_build || f.remortgage !== DEFAULT_FEES.remortgage;
+  }
 </script>
 
 

@@ -84,6 +84,19 @@ export default {
       if (path === '/api/admin/migrate' && request.method === 'POST')
         return handleMigrate(request, env);
 
+      // Conveyancer fee approval workflow
+      const convAction = path.match(/^\/api\/admin\/conveyancers\/([^/]+)\/(approve|reject|counter-form|counter)$/);
+      if (convAction) {
+        const [, convId, action] = convAction;
+        if (action === 'approve'      && request.method === 'GET')  return handleApproveConveyancer(convId, request, env);
+        if (action === 'reject'       && request.method === 'GET')  return handleRejectConveyancer(convId, request, env);
+        if (action === 'counter-form' && request.method === 'GET')  return handleCounterForm(convId, request, env);
+        if (action === 'counter'      && request.method === 'POST') return handleCounterSubmit(convId, request, env);
+      }
+
+      if (path === '/api/conveyancer/counter-response' && request.method === 'GET')
+        return handleConveyancerCounterResponse(request, env);
+
       // ── Agent ───────────────────────────────────────────────────────────────
       if (path === '/api/agent/login' && request.method === 'POST')
         return handleAgentLogin(request, env);
@@ -526,6 +539,8 @@ async function handleConveyancerSignup(request, env) {
   const regions           = Array.isArray(body.regions)           ? body.regions           : [];
   const transaction_types = Array.isArray(body.transaction_types) ? body.transaction_types : [];
   const notes             = (body.notes          || '').trim();
+  const proposed_fees     = body.proposed_fees || { purchase: 200, sale: 200, new_build: 200, remortgage: 100 };
+  const fees_negotiated   = !!body.fees_negotiated;
 
   if (!name || !email || !phone || !contact_name || !regulated_by || !reg_number || regions.length === 0) {
     return jsonResponse({ error: 'Missing required fields' }, 400);
@@ -536,7 +551,7 @@ async function handleConveyancerSignup(request, env) {
   const agreement_version  = '1.0';
   const agreed_at          = now;
 
-  // Ensure columns exist (idempotent, errors from duplicate columns are swallowed)
+  // Ensure columns exist (idempotent)
   for (const col of [
     'ALTER TABLE conveyancers ADD COLUMN delivery_email TEXT',
     'ALTER TABLE conveyancers ADD COLUMN contact_name TEXT',
@@ -547,6 +562,10 @@ async function handleConveyancerSignup(request, env) {
     'ALTER TABLE conveyancers ADD COLUMN notes TEXT',
     'ALTER TABLE conveyancers ADD COLUMN agreed_at TEXT',
     'ALTER TABLE conveyancers ADD COLUMN agreement_version TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN signup_status TEXT DEFAULT \'pending\'',
+    'ALTER TABLE conveyancers ADD COLUMN proposed_fees TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN agreed_fees TEXT',
+    'ALTER TABLE conveyancers ADD COLUMN counter_fees TEXT',
   ]) {
     try { await env.DB.exec(col); } catch (_) {}
   }
@@ -556,13 +575,15 @@ async function handleConveyancerSignup(request, env) {
       INSERT INTO conveyancers
         (id, name, email, delivery_email, phone, contact_name, role,
          regulated_by, reg_number, regions, transaction_types, notes,
-         agreed_at, agreement_version, active, fee_per_lead, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
+         agreed_at, agreement_version, active, fee_per_lead,
+         signup_status, proposed_fees, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 'pending', ?, ?)
     `).bind(
       id, name, email, delivery_email, phone, contact_name, role,
       regulated_by, reg_number,
       JSON.stringify(regions), JSON.stringify(transaction_types), notes,
-      agreed_at, agreement_version, now
+      agreed_at, agreement_version,
+      JSON.stringify(proposed_fees), now
     ).run();
   } catch (err) {
     if (err.message?.includes('UNIQUE')) {
@@ -653,11 +674,18 @@ async function handleConveyancerSignup(request, env) {
       env
     );
 
-    // Notify admin
+    // Notify admin with action buttons
+    const base = 'https://findconveyancers.co.uk';
+    const tok  = `token=${encodeURIComponent(env.ADMIN_PASSWORD)}`;
+    const adminActions = {
+      approveUrl:     `${base}/api/admin/conveyancers/${id}/approve?${tok}`,
+      rejectUrl:      `${base}/api/admin/conveyancers/${id}/reject?${tok}`,
+      counterFormUrl: `${base}/api/admin/conveyancers/${id}/counter-form?${tok}`,
+    };
     await sendEmail(
       env.NOTIFY_EMAIL,
-      `New conveyancer signup: ${name}`,
-      emailAdminNewConveyancer(name, detailsTable, agreedDate, agreement_version, id),
+      `New conveyancer signup: ${name}${fees_negotiated ? ' [CUSTOM FEES]' : ''}`,
+      emailAdminNewConveyancer(name, detailsTable, agreedDate, agreement_version, id, proposed_fees, fees_negotiated, adminActions),
       env
     );
   } catch (e) {
@@ -1691,21 +1719,321 @@ function emailConsumerFirstQuoteArrived(lead) {
 }
 
 // ── New: admin notice of a conveyancer signup ─────────────────────────────────
-function emailAdminNewConveyancer(name, detailsTable, agreedDate, agreementVersion, id) {
+const STANDARD_FEES = { purchase: 200, sale: 200, new_build: 200, remortgage: 100 };
+
+function feeRow(label, key, proposed, isCustom) {
+  const val = proposed[key] ?? STANDARD_FEES[key];
+  const bg  = isCustom && val !== STANDARD_FEES[key] ? 'background:#fefce8;' : '';
+  const badge = isCustom && val !== STANDARD_FEES[key]
+    ? `<span style="margin-left:8px;font-size:10px;color:#92400e;background:#fef3c7;border:1px solid #f59e0b;padding:1px 5px;border-radius:3px;">Proposed (standard: £${STANDARD_FEES[key]})</span>`
+    : '';
+  return `<tr><td style="padding:5px 12px 5px 0;color:#6b7280;font-weight:600;">${label}</td><td style="${bg}padding:5px 8px;border-radius:4px;"><strong>£${val}</strong>${badge}</td></tr>`;
+}
+
+function emailAdminNewConveyancer(name, detailsTable, agreedDate, agreementVersion, id, proposed_fees, fees_negotiated, actions) {
+  proposed_fees = proposed_fees || STANDARD_FEES;
+  const feesTable =
+    `<table style="border-collapse:collapse;font-size:13px;width:100%;margin-bottom:16px">` +
+    feeRow('Purchase', 'purchase', proposed_fees, fees_negotiated) +
+    feeRow('Sale', 'sale', proposed_fees, fees_negotiated) +
+    feeRow('New Build', 'new_build', proposed_fees, fees_negotiated) +
+    feeRow('Remortgage', 'remortgage', proposed_fees, fees_negotiated) +
+    `</table>`;
+
+  const actionButtons = actions
+    ? `<table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 8px"><tr>
+        <td style="padding-right:8px"><a href="${actions.approveUrl}" style="display:inline-block;padding:10px 18px;background:#059669;color:#fff;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;">Approve</a></td>
+        <td style="padding-right:8px"><a href="${actions.counterFormUrl}" style="display:inline-block;padding:10px 18px;background:#D97706;color:#fff;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;">Counter offer</a></td>
+        <td><a href="${actions.rejectUrl}" style="display:inline-block;padding:10px 18px;background:#DC2626;color:#fff;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;">Reject</a></td>
+       </tr></table>
+       <p style="font-size:11px;color:#9CA3AF;margin:0;">Approve activates the account at the proposed fees. Counter opens a form to propose different rates. Reject sends a polite decline.</p>`
+    : '';
+
   const content =
-    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">A new firm has applied to join FindConveyancers and accepted the Referral Supply Agreement.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">A new firm has applied to join FindConveyancers. ${fees_negotiated ? '<strong style="color:#D97706;">They have proposed custom fees — review before approving.</strong>' : 'They accepted the standard fees.'}</p>` +
     eSectionLabel('Firm Details') + detailsTable +
+    eSectionLabel('Proposed Fees') + feesTable +
     eDataTable([
       ['Agreed at', agreedDate],
       ['Agreement version', agreementVersion],
       ['Reference', `<span style="font-family:'Courier New',monospace;font-size:11px;">${id}</span>`],
+    ]) +
+    actionButtons;
+
+  return emailWrap({
+    badge: fees_negotiated
+      ? { text: 'Custom Fees — Action Required', bg: '#FEF3C7', color: '#92400E' }
+      : { text: 'New Conveyancer', bg: '#EFF6FF', color: '#1D4ED8' },
+    headline: 'New conveyancer signup',
+    sub: `${name} has applied to join FindConveyancers.`,
+    content,
+    cta: { label: 'Open Admin Dashboard', href: 'https://findconveyancers.co.uk/admin.html', hideVisit: true },
+  });
+}
+
+// ── Conveyancer fee approval workflow ─────────────────────────────────────────
+
+function htmlPage(title, body) {
+  return new Response(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title} — FindConveyancers Admin</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:2.5rem;max-width:480px;width:100%;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+h1{font-size:1.3rem;font-weight:800;margin:0 0 0.6rem}p{color:#6b7280;font-size:0.9rem;line-height:1.6;margin:0 0 1.25rem}
+a.btn{display:inline-block;padding:.75rem 1.5rem;border-radius:9px;font-weight:700;font-size:.9rem;text-decoration:none;background:#2563eb;color:#fff}
+.icon{font-size:2.5rem;margin-bottom:1rem}</style></head>
+<body><div class="box">${body}</div></body></html>`, {
+    headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+  });
+}
+
+function adminAuth(request, env) {
+  const token = new URL(request.url).searchParams.get('token') || '';
+  return token === env.ADMIN_PASSWORD;
+}
+
+async function handleApproveConveyancer(convId, request, env) {
+  if (!adminAuth(request, env)) return new Response('Unauthorised', { status: 401 });
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(convId).first();
+  if (!conv) return htmlPage('Not found', '<div class="icon">❌</div><h1>Not found</h1><p>No conveyancer found with that ID.</p>');
+
+  const proposed = JSON.parse(conv.proposed_fees || '{}');
+  const fees = {
+    purchase:   proposed.purchase   ?? STANDARD_FEES.purchase,
+    sale:       proposed.sale       ?? STANDARD_FEES.sale,
+    new_build:  proposed.new_build  ?? STANDARD_FEES.new_build,
+    remortgage: proposed.remortgage ?? STANDARD_FEES.remortgage,
+  };
+
+  await env.DB.prepare(
+    `UPDATE conveyancers SET active = 1, signup_status = 'approved', agreed_fees = ?, fee_per_lead = ? WHERE id = ?`
+  ).bind(JSON.stringify(fees), fees.purchase, convId).run();
+
+  try {
+    await sendEmail(
+      conv.email,
+      'Your FindConveyancers application has been approved',
+      emailConveyancerApproved(conv, fees),
+      env, EMAIL_FROM_PARTNER
+    );
+  } catch (e) { console.error('Approve email failed:', e.message); }
+
+  return htmlPage('Approved', `<div class="icon">✅</div><h1>${conv.name} approved</h1><p>Their account is now active at the agreed fees. A confirmation email has been sent to ${conv.email}.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
+}
+
+async function handleRejectConveyancer(convId, request, env) {
+  if (!adminAuth(request, env)) return new Response('Unauthorised', { status: 401 });
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(convId).first();
+  if (!conv) return htmlPage('Not found', '<div class="icon">❌</div><h1>Not found</h1><p>No conveyancer found with that ID.</p>');
+
+  await env.DB.prepare(`UPDATE conveyancers SET signup_status = 'rejected' WHERE id = ?`).bind(convId).run();
+
+  try {
+    await sendEmail(
+      conv.email,
+      'Your FindConveyancers application',
+      emailConveyancerRejected(conv),
+      env, EMAIL_FROM_PARTNER
+    );
+  } catch (e) { console.error('Reject email failed:', e.message); }
+
+  return htmlPage('Rejected', `<div class="icon">❌</div><h1>Application rejected</h1><p>A decline email has been sent to ${conv.name} at ${conv.email}.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
+}
+
+async function handleCounterForm(convId, request, env) {
+  if (!adminAuth(request, env)) return new Response('Unauthorised', { status: 401 });
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(convId).first();
+  if (!conv) return htmlPage('Not found', '<div class="icon">❌</div><h1>Not found</h1><p>Conveyancer not found.</p>');
+
+  const proposed = JSON.parse(conv.proposed_fees || '{}');
+  const tok = new URL(request.url).searchParams.get('token') || '';
+  const f = (key, def) => proposed[key] ?? def;
+
+  return new Response(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Counter Offer — FindConveyancers</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:2.5rem;max-width:480px;width:100%;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+h1{font-size:1.2rem;font-weight:800;margin:0 0 0.4rem}p{color:#6b7280;font-size:0.875rem;margin:0 0 1.5rem}
+.field{margin-bottom:1rem}.field label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.3rem}
+.field input{width:100%;padding:0.6rem 0.8rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.9rem;font-family:inherit;outline:none}
+.field input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.hint{font-size:0.74rem;color:#9ca3af;margin-top:0.25rem}
+button{width:100%;padding:.85rem;background:#D97706;color:#fff;border:none;border-radius:9px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:.5rem}
+button:hover{background:#B45309}
+</style></head><body><div class="box">
+<h1>Counter offer for ${conv.name}</h1>
+<p>Enter the fees you'd like to offer. We'll email ${conv.contact_name || conv.name} with the counter and a link to accept or decline.</p>
+<form method="POST" action="/api/admin/conveyancers/${convId}/counter">
+<input type="hidden" name="token" value="${tok}">
+<div class="field"><label>Purchase fee (£, ex-VAT)</label><input type="number" name="purchase" value="${f('purchase', 200)}" min="0" max="9999" step="10" required><div class="hint">Proposed: £${f('purchase', 200)} &nbsp;|&nbsp; Standard: £200</div></div>
+<div class="field"><label>Sale fee (£, ex-VAT)</label><input type="number" name="sale" value="${f('sale', 200)}" min="0" max="9999" step="10" required><div class="hint">Proposed: £${f('sale', 200)} &nbsp;|&nbsp; Standard: £200</div></div>
+<div class="field"><label>New Build fee (£, ex-VAT)</label><input type="number" name="new_build" value="${f('new_build', 200)}" min="0" max="9999" step="10" required><div class="hint">Proposed: £${f('new_build', 200)} &nbsp;|&nbsp; Standard: £200</div></div>
+<div class="field"><label>Remortgage fee (£, ex-VAT)</label><input type="number" name="remortgage" value="${f('remortgage', 100)}" min="0" max="9999" step="10" required><div class="hint">Proposed: £${f('remortgage', 100)} &nbsp;|&nbsp; Standard: £100</div></div>
+<button type="submit">Send counter offer</button>
+</form></div></body></html>`, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+}
+
+async function handleCounterSubmit(convId, request, env) {
+  // Accepts both form POST and JSON
+  let data;
+  const ct = request.headers.get('Content-Type') || '';
+  if (ct.includes('application/json')) {
+    data = await request.json().catch(() => ({}));
+  } else {
+    const fd = await request.formData().catch(() => null);
+    data = fd ? Object.fromEntries(fd.entries()) : {};
+  }
+
+  const token = data.token || '';
+  if (token !== env.ADMIN_PASSWORD) return new Response('Unauthorised', { status: 401 });
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(convId).first();
+  if (!conv) return htmlPage('Not found', '<div class="icon">❌</div><h1>Not found</h1><p>Conveyancer not found.</p>');
+
+  const counterFees = {
+    purchase:   parseInt(data.purchase)   || STANDARD_FEES.purchase,
+    sale:       parseInt(data.sale)       || STANDARD_FEES.sale,
+    new_build:  parseInt(data.new_build)  || STANDARD_FEES.new_build,
+    remortgage: parseInt(data.remortgage) || STANDARD_FEES.remortgage,
+  };
+
+  await env.DB.prepare(
+    `UPDATE conveyancers SET signup_status = 'counter_sent', counter_fees = ? WHERE id = ?`
+  ).bind(JSON.stringify(counterFees), convId).run();
+
+  const base       = 'https://findconveyancers.co.uk';
+  const acceptUrl  = `${base}/api/conveyancer/counter-response?id=${convId}&action=accept&token=${encodeURIComponent(convId)}`;
+  const declineUrl = `${base}/api/conveyancer/counter-response?id=${convId}&action=decline&token=${encodeURIComponent(convId)}`;
+
+  try {
+    await sendEmail(
+      conv.email,
+      'Your FindConveyancers application — our proposed fees',
+      emailConveyancerCounter(conv, counterFees, acceptUrl, declineUrl),
+      env, EMAIL_FROM_PARTNER
+    );
+  } catch (e) { console.error('Counter email failed:', e.message); }
+
+  return htmlPage('Counter sent', `<div class="icon">📨</div><h1>Counter offer sent</h1><p>An email has been sent to ${conv.name} at ${conv.email} with the proposed fees and links to accept or decline.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
+}
+
+async function handleConveyancerCounterResponse(request, env) {
+  const url    = new URL(request.url);
+  const convId = url.searchParams.get('id')     || '';
+  const action = url.searchParams.get('action') || '';
+  const token  = url.searchParams.get('token')  || '';
+
+  if (!convId || token !== convId) return new Response('Invalid link', { status: 400 });
+
+  const conv = await env.DB.prepare('SELECT * FROM conveyancers WHERE id = ?').bind(convId).first();
+  if (!conv) return htmlPage('Not found', '<div class="icon">❌</div><h1>Not found</h1><p>Application not found.</p>');
+
+  if (action === 'accept') {
+    const fees = JSON.parse(conv.counter_fees || '{}');
+    await env.DB.prepare(
+      `UPDATE conveyancers SET active = 1, signup_status = 'approved', agreed_fees = ?, fee_per_lead = ? WHERE id = ?`
+    ).bind(JSON.stringify(fees), fees.purchase ?? 200, convId).run();
+
+    try {
+      await sendEmail(
+        conv.email,
+        'Welcome to FindConveyancers — your account is active',
+        emailConveyancerApproved(conv, fees),
+        env, EMAIL_FROM_PARTNER
+      );
+      await sendEmail(
+        env.NOTIFY_EMAIL,
+        `Counter offer accepted: ${conv.name}`,
+        `<p>${conv.name} accepted the counter offer. Account is now active.</p>`,
+        env
+      );
+    } catch (e) { console.error('Counter accept email failed:', e.message); }
+
+    return htmlPage('Accepted', `<div class="icon">✅</div><h1>You're in!</h1><p>Thank you for accepting. Your FindConveyancers account is now active and referrals matching your counties will be sent to ${conv.delivery_email || conv.email}.</p>`);
+  }
+
+  if (action === 'decline') {
+    await env.DB.prepare(`UPDATE conveyancers SET signup_status = 'counter_declined' WHERE id = ?`).bind(convId).run();
+
+    try {
+      await sendEmail(
+        env.NOTIFY_EMAIL,
+        `Counter offer declined: ${conv.name}`,
+        `<p>${conv.name} (${conv.email}) declined the counter offer. You may want to follow up directly.</p>`,
+        env
+      );
+    } catch (e) { console.error('Counter decline notify failed:', e.message); }
+
+    return htmlPage('Noted', `<div class="icon">👋</div><h1>Understood</h1><p>We've noted that you've declined our proposed fees. If you'd like to discuss further, please email us at <a href="mailto:partners@findconveyancers.co.uk">partners@findconveyancers.co.uk</a>.</p>`);
+  }
+
+  return new Response('Invalid action', { status: 400 });
+}
+
+// ── Conveyancer fee workflow emails ───────────────────────────────────────────
+
+function fmtFeeTable(fees) {
+  return eDataTable([
+    ['Purchase',   `£${fees.purchase   ?? 200}`],
+    ['Sale',       `£${fees.sale       ?? 200}`],
+    ['New Build',  `£${fees.new_build  ?? 200}`],
+    ['Remortgage', `£${fees.remortgage ?? 100}`],
+  ]);
+}
+
+function emailConveyancerApproved(conv, fees) {
+  const content =
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">Hi ${conv.contact_name || conv.name}, your application to join FindConveyancers has been approved. Your account is now active.</p>` +
+    eSectionLabel('Your Agreed Fee Schedule') +
+    fmtFeeTable(fees) +
+    `<p style="font-size:12px;color:#6B7280;margin:8px 0 16px;">Fees are exclusive of VAT and are only due on completion.</p>` +
+    eSectionLabel('What Happens Next') +
+    eSteps([
+      { title: 'Referrals sent to your inbox', desc: `New referrals matching your counties will be sent to ${conv.delivery_email || conv.email}.` },
+      { title: 'Submit your quote within 24 hours', desc: 'Each referral email contains a unique link to our quoting portal. Enter your fees and the client will see your quote alongside others.' },
+      { title: 'You only pay on completion', desc: 'No fee is due until the transaction completes. Report each completion within 5 working days.' },
     ]);
   return emailWrap({
-    badge: { text: 'New Conveyancer', bg: '#EFF6FF', color: '#1D4ED8' },
-    headline: 'New conveyancer signup',
-    sub: `${name} has applied to join and accepted the Referral Supply Agreement.`,
+    badge: { text: 'Application Approved', bg: '#F0FDF4', color: '#166534' },
+    headline: 'Welcome to<br>FindConveyancers',
+    sub: `${conv.name} is now active on the platform.`,
     content,
-    cta: { label: 'Activate in Admin Dashboard', href: 'https://findconveyancers.co.uk/admin.html' },
+  });
+}
+
+function emailConveyancerRejected(conv) {
+  const content =
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">Hi ${conv.contact_name || conv.name}, thank you for applying to join FindConveyancers.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">After reviewing your application we are not able to onboard your firm at this time. This may be due to capacity in your area or because we are unable to agree suitable terms.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">If you believe this is an error or would like to discuss further, please reply to this email or contact us at <a href="mailto:partners@findconveyancers.co.uk" style="color:#1D4ED8;">partners@findconveyancers.co.uk</a>.</p>`;
+  return emailWrap({
+    badge: { text: 'Application Update', bg: '#F9FAFB', color: '#374151' },
+    headline: 'Thank you for<br>your application',
+    sub: 'We have reviewed your application to join FindConveyancers.',
+    content,
+  });
+}
+
+function emailConveyancerCounter(conv, counterFees, acceptUrl, declineUrl) {
+  const content =
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">Hi ${conv.contact_name || conv.name}, thank you for applying to join FindConveyancers.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">We have reviewed your application and would like to propose the following fee schedule:</p>` +
+    eSectionLabel('Our Proposed Fee Schedule') +
+    fmtFeeTable(counterFees) +
+    `<p style="font-size:12px;color:#6B7280;margin:8px 0 16px;">Fees are exclusive of VAT and are only due on completion. No fee is due if the client does not instruct you or if the transaction falls through.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 8px;">Please use the buttons below to accept or decline. If you would like to discuss further, reply to this email.</p>`;
+  return emailWrap({
+    badge: { text: 'Fee Proposal', bg: '#FEF3C7', color: '#92400E' },
+    headline: 'Our proposed<br>fee schedule',
+    sub: `FindConveyancers would like to offer ${conv.name} a place on the platform at the rates below.`,
+    content,
+    cta: { label: 'Accept these fees', href: acceptUrl },
+    postCta:
+      `<div style="text-align:center;margin-top:12px;">` +
+      `<a href="${declineUrl}" style="font-size:12px;color:#6B7280;text-decoration:underline;">Decline and contact us instead</a>` +
+      `</div>`,
   });
 }
 
