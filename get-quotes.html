@@ -357,7 +357,7 @@
               <label class="form-label">Purchase price <span class="form-required">*</span></label>
               <div class="input-prefix-wrap">
                 <span class="prefix">£</span>
-                <input type="number" name="purchaseValue" class="form-input" placeholder="250000" min="0" step="1000">
+                <input type="text" name="purchaseValue" class="form-input fc-price" placeholder="250,000" inputmode="numeric">
               </div>
             </div>
             <div class="form-group">
@@ -444,7 +444,7 @@
               <label class="form-label">Sale price <span class="form-required">*</span></label>
               <div class="input-prefix-wrap">
                 <span class="prefix">£</span>
-                <input type="number" name="saleValue" class="form-input" placeholder="250000" min="0" step="1000">
+                <input type="text" name="saleValue" class="form-input fc-price" placeholder="250,000" inputmode="numeric">
               </div>
             </div>
             <div class="form-group">
@@ -502,7 +502,7 @@
               <label class="form-label">Current property value <span class="form-required">*</span></label>
               <div class="input-prefix-wrap">
                 <span class="prefix">£</span>
-                <input type="number" name="currentValue" class="form-input" placeholder="350000" min="0" step="1000">
+                <input type="text" name="currentValue" class="form-input fc-price" placeholder="350,000" inputmode="numeric">
               </div>
             </div>
             <div class="form-group">
@@ -525,7 +525,7 @@
               <label class="form-label">New mortgage amount <span class="form-required">*</span></label>
               <div class="input-prefix-wrap">
                 <span class="prefix">£</span>
-                <input type="number" name="newMortgageAmount" class="form-input" placeholder="200000" min="0" step="1000">
+                <input type="text" name="newMortgageAmount" class="form-input fc-price" placeholder="200,000" inputmode="numeric">
               </div>
             </div>
             <div class="form-group">
@@ -656,8 +656,20 @@
 
   function getVal(name) {
     var el = form.querySelector('[name="' + name + '"]');
-    return el ? el.value.trim() : '';
+    if (!el) return '';
+    // Strip commas from price fields before returning
+    return el.classList.contains('fc-price') ? el.value.replace(/,/g, '').trim() : el.value.trim();
   }
+
+  // Live comma formatter for price inputs
+  function formatPrice(el) {
+    var raw = el.value.replace(/[^\d]/g, '');
+    el.value = raw ? parseInt(raw, 10).toLocaleString('en-GB') : '';
+  }
+  document.querySelectorAll('.fc-price').forEach(function(el) {
+    el.addEventListener('input', function() { formatPrice(el); });
+    el.addEventListener('blur',  function() { formatPrice(el); });
+  });
 
   function getAllChecked(name) {
     var els = form.querySelectorAll('input[name="' + name + '"]:checked');
