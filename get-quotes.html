@@ -13,13 +13,13 @@
   <meta property="og:type" content="website">
 
   <!-- Canonical -->
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//www.googletagmanager.com">
   <link rel="dns-prefetch" href="//www.google-analytics.com">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
-    <!-- Favicon -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -33,13 +33,9 @@
   <title>Get Free Conveyancing Quotes - FindConveyancers</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
+    :root {
       --primary: #3B82F6;
       --primary-dark: #1D4ED8;
       --primary-subtle: #EFF6FF;
@@ -55,10 +51,8 @@
       --radius-sm: 6px;
       --radius-md: 10px;
       --radius-lg: 16px;
-      --radius-xl: 24px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
       --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
     }
 
     body {
@@ -68,164 +62,41 @@
       background-color: var(--bg);
     }
 
-    /* Header */
-    .header {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: var(--heading);
-    }
-
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    .brand-name {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .header-back {
-      color: var(--secondary);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-
-    .header-back:hover {
-      color: var(--primary);
-    }
-
-    /* Main Container */
     .container {
       max-width: 800px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
 
-    /* Progress Bar */
-    .progress-section {
-      margin-bottom: 2rem;
-    }
+    /* Progress */
+    .progress-section { margin-bottom: 2rem; }
+    .progress-label { font-size: 0.85rem; color: var(--secondary); margin-bottom: 0.75rem; font-weight: 600; }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--green) 100%); width: 25%; transition: width 0.3s ease; }
 
-    .progress-label {
-      font-size: 0.85rem;
-      color: var(--secondary);
-      margin-bottom: 0.75rem;
-      font-weight: 600;
-    }
+    /* Form container */
+    .form-container { background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
 
-    .progress-bar {
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary) 0%, var(--green) 100%);
-      width: 25%;
-      transition: width 0.3s ease;
-    }
-
-    /* Form Container */
-    .form-container {
-      background: white;
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
-    }
-
-    .form-step {
-      display: none;
-    }
-
-    .form-step.active {
-      display: block;
-      animation: slideIn 0.3s ease;
-    }
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: slideIn 0.3s ease; }
 
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .step-header {
-      margin-bottom: 2rem;
-    }
+    .step-header { margin-bottom: 2rem; }
+    .step-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--heading); }
+    .step-description { color: var(--secondary); font-size: 0.95rem; }
 
-    .step-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--heading);
-    }
+    /* Form groups */
+    .form-group { margin-bottom: 1.75rem; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--heading); font-size: 0.95rem; }
+    .form-sublabel { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary); font-size: 0.88rem; }
+    .form-required { color: #9CA3AF; margin-left: 0.25rem; }
 
-    .step-description {
-      color: var(--secondary);
-      font-size: 0.95rem;
-    }
-
-    /* Form Groups */
-    .form-group {
-      margin-bottom: 1.75rem;
-    }
-
-    .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .form-label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--heading);
-      font-size: 0.95rem;
-    }
-
-    .form-required {
-      color: var(--border);
-      margin-left: 0.25rem;
-    }
-
-    .form-input,
-    .form-select {
+    .form-input, .form-select {
       width: 100%;
       padding: 0.9rem 1rem;
       border: 2px solid var(--border);
@@ -234,366 +105,158 @@
       font-size: 1rem;
       transition: all 0.2s;
       color: var(--heading);
+      background: white;
     }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .form-input::placeholder { color: var(--secondary); }
+    .form-input.error { border-color: #EF4444; background-color: #FEE2E2; }
 
-    .form-input:focus,
-    .form-select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
+    .tbc-link { font-size: 0.82rem; color: var(--primary); cursor: pointer; margin-top: 0.4rem; display: inline-block; text-decoration: underline; }
+    .tbc-link:hover { color: var(--primary-dark); }
 
-    .form-input::placeholder {
-      color: var(--secondary);
-    }
+    /* Price input with £ prefix */
+    .input-prefix-wrap { position: relative; }
+    .input-prefix-wrap .prefix { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--secondary); font-weight: 600; pointer-events: none; }
+    .input-prefix-wrap .form-input { padding-left: 1.75rem; }
 
-    .form-input.error {
-      border-color: var(--border);
-      background-color: #FEE2E2;
-    }
+    /* Choice buttons (radios) */
+    .choice-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+    .choice-group.two-col { grid-template-columns: 1fr 1fr; }
+    .choice-group.four-col { grid-template-columns: repeat(4, 1fr); }
 
-    .form-input.success {
-      border-color: var(--green);
-      background-color: #F0FDF4;
-    }
-
-    .form-error {
-      color: var(--border);
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      display: none;
-    }
-
-    .form-input.error ~ .form-error {
-      display: block;
-    }
-
-    /* Radio & Checkbox Groups */
-    .choice-group {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-    }
-
-    .choice-button {
-      position: relative;
-    }
-
-    .choice-button input {
-      display: none;
-    }
-
+    .choice-button { position: relative; }
+    .choice-button input { display: none; }
     .choice-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.85rem 1rem;
       border: 2px solid var(--border);
       border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.9rem;
       transition: all 0.2s;
       background: white;
-      min-height: 80px;
+      min-height: 64px;
       text-align: center;
+      line-height: 1.3;
     }
+    .choice-label:hover { border-color: var(--primary); }
+    .choice-button input:checked + .choice-label { border-color: var(--primary); background: #DBEAFE; color: var(--primary); }
 
-    .choice-button input:checked + .choice-label {
-      border-color: var(--primary);
-      background: #DBEAFE;
-      color: var(--primary);
-    }
+    /* Checkboxes */
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .check-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: border-color 0.15s; }
+    .check-item:hover { border-color: var(--primary); }
+    .check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
+    .check-item label { font-size: 0.88rem; color: var(--body); cursor: pointer; line-height: 1.3; }
 
-    .choice-label:hover {
-      border-color: var(--primary);
-    }
-
-    /* Two Column Grid for Form */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
+    /* Property panels */
+    .property-panel { display: none; }
+    .property-panel.visible { display: block; }
+    .panel-title { font-size: 1rem; font-weight: 700; color: var(--heading); background: var(--bg-alt); padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .panel-divider { border: none; border-top: 2px dashed var(--border); margin: 2rem 0; }
 
     /* Buttons */
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: space-between;
-    }
+    .button-group { display: flex; gap: 1rem; margin-top: 2rem; justify-content: space-between; }
+    .btn { padding: 1rem 2rem; border-radius: 12px; font-weight: 600; font-size: 1rem; transition: all 0.2s; border: none; cursor: pointer; min-height: 48px; display: inline-flex; align-items: center; justify-content: center; min-width: 120px; }
+    .btn-primary { background: var(--primary); color: white; flex: 1; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(59,130,246,0.2); }
+    .btn-primary:disabled { background: var(--secondary); cursor: not-allowed; opacity: 0.5; }
+    .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-secondary:hover { background: #DBEAFE; }
 
-    .btn {
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 120px;
-    }
+    /* Form grid */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
 
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
+    /* Success panel */
+    .success-panel { display: none; background: #F0FDF4; border: 2px solid var(--green); border-radius: 16px; padding: 3rem 2rem; text-align: center; }
+    .success-panel.show { display: block; animation: slideIn 0.3s ease; }
+    .success-title { font-size: 1.75rem; font-weight: 700; color: var(--green); margin-bottom: 0.75rem; }
+    .success-message { color: var(--secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+    .success-next { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: left; }
+    .success-next h4 { font-size: 0.95rem; font-weight: 600; color: var(--heading); margin-bottom: 0.75rem; }
+    .success-next ol { margin-left: 1.5rem; color: var(--secondary); font-size: 0.9rem; }
+    .success-next li { margin-bottom: 0.5rem; line-height: 1.5; }
 
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
-    }
+    /* Error summary */
+    .error-summary { background: #FEE2E2; border: 2px solid #EF4444; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: none; }
+    .error-summary.show { display: block; }
+    .error-summary h3 { color: #991B1B; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .error-summary ul { list-style: none; font-size: 0.88rem; color: #B91C1C; }
+    .error-summary li { margin-bottom: 0.3rem; }
 
-    .btn-primary:disabled {
-      background: var(--secondary);
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+    /* Loading spinner */
+    .loading { display: inline-block; width: 1rem; height: 1rem; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.6s linear infinite; margin-right: 0.75rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .btn-secondary {
-      background: white;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
+    /* Review summary */
+    .summary-section { margin-bottom: 1.25rem; }
+    .summary-section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--secondary); margin-bottom: 0.6rem; }
+    .summary-row { display: flex; gap: 1rem; font-size: 0.9rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-key { min-width: 140px; font-weight: 600; color: var(--heading); }
+    .summary-val { color: var(--secondary); }
 
-    .btn-secondary:hover {
-      background: #DBEAFE;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* Success Panel */
-    .success-panel {
-      display: none;
-      background: #F0FDF4;
-      border: 2px solid var(--green);
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-
-    .success-panel.show {
-      display: block;
-      animation: slideIn 0.3s ease;
-    }
-
-    .success-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--green);
-      margin-bottom: 0.75rem;
-    }
-
-    .success-message {
-      color: var(--secondary);
-      margin-bottom: 1.5rem;
-      font-size: 1rem;
-    }
-
-    .success-next {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
-
-    .success-next h4 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--heading);
-      margin-bottom: 0.75rem;
-    }
-
-    .success-next ol {
-      margin-left: 1.5rem;
-      color: var(--secondary);
-      font-size: 0.9rem;
-    }
-
-    .success-next li {
-      margin-bottom: 0.5rem;
-      line-height: 1.5;
-    }
-
-    /* Error Summary */
-    .error-summary {
-      background: #FEE2E2;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-
-    .error-summary.show {
-      display: block;
-    }
-
-    .error-summary h3 {
-      color: var(--border);
-      font-size: 0.95rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .error-summary ul {
-      list-style: none;
-      font-size: 0.9rem;
-      color: var(--border);
-    }
-
-    .error-summary li {
-      margin-bottom: 0.5rem;
-    }
-
-    /* Mobile Responsive */
+    /* Mobile */
     @media (max-width: 768px) {
-      .form-container {
-        padding: 1.75rem;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .step-title {
-        font-size: 1.25rem;
-      }
-
-      .button-group {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .btn {
-        min-width: auto;
-      }
-
-      .choice-group {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-      }
-
-      .choice-label {
-        font-size: 0.85rem;
-        padding: 0.75rem;
-        min-height: 70px;
-      }
+      .form-container { padding: 1.5rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .step-title { font-size: 1.25rem; }
+      .button-group { flex-direction: column; gap: 0.75rem; }
+      .btn { min-width: auto; }
+      .choice-group { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .choice-group.four-col { grid-template-columns: repeat(2, 1fr); }
+      .choice-label { font-size: 0.85rem; padding: 0.75rem; min-height: 58px; }
+      .check-grid { grid-template-columns: 1fr; }
     }
 
-    /* Utility */
-    .text-center {
-      text-align: center;
-    }
-
-    .mt-2 {
-      margin-top: 2rem;
-    }
-
-    .loading {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.6s linear infinite;
-      margin-right: 0.75rem;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .hidden {
-      display: none;
-    }
-  
-    /* ── Mobile nav ─────────────────── */
-    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--heading);border-radius:6px;line-height:0}
-    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
-    .mob-overlay.open{display:block}
-    .mob-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
-    .mob-panel.open{transform:translateX(0)}
-    .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-    .mob-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:var(--heading);line-height:0}
-    .mob-links{display:flex;flex-direction:column}
-    .mob-links a{display:block;padding:0.9rem 0;font-size:1.05rem;font-weight:500;color:var(--heading);text-decoration:none;border-bottom:1px solid var(--border)}
-    .mob-links a:hover{color:var(--primary)}
-    .mob-cta{margin-top:1.5rem;display:block;background:var(--primary);color:#fff!important;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border-bottom:none!important}
-    @media(max-width:768px){
-      .nav-hamburger{display:flex!important;align-items:center;justify-content:center}
-      .header-nav{display:none!important}
-    }
+    /* fc-chrome */
+    .fc-header{background:#fff;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:1000}
+    .fc-header-in{max-width:1200px;margin:0 auto;padding:0.85rem 1.5rem;display:flex;align-items:center;gap:1.25rem}
+    .fc-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;flex-shrink:0}
+    .fc-brand img{display:block;width:32px;height:32px}
+    .fc-brand span{font-size:1.15rem;font-weight:700;color:#0F172A;letter-spacing:-0.3px;white-space:nowrap}
+    .fc-nav{display:flex;align-items:center;gap:1.55rem;margin-left:auto}
+    .fc-nav a{color:#6B7280;text-decoration:none;font-size:0.9rem;font-weight:500;white-space:nowrap;transition:color .15s}
+    .fc-nav a:hover{color:#3B82F6}
+    .fc-nav a.fc-partners{color:#3B82F6;font-weight:600;border:1.5px solid #3B82F6;padding:0.45rem 0.95rem;border-radius:8px}
+    .fc-nav a.fc-partners:hover{background:#3B82F6;color:#fff}
+    .fc-nav a.fc-cta{background:#3B82F6;color:#fff;padding:0.6rem 1.2rem;border-radius:10px;font-weight:600;font-size:0.88rem}
+    .fc-nav a.fc-cta:hover{background:#1D4ED8}
+    .fc-burger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;margin-left:auto;color:#0F172A;border-radius:6px;line-height:0}
+    .fc-burger:hover{background:#F3F4F6}
+    .fc-ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100}
+    .fc-ovl.open{display:block}
+    .fc-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:1200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+    .fc-drawer.open{transform:translateX(0)}
+    .fc-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid #E5E7EB}
+    .fc-drawer-head a{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+    .fc-drawer-head img{display:block;width:30px;height:30px}
+    .fc-drawer-head span{font-weight:700;font-size:1.05rem;color:#0F172A}
+    .fc-drawer-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:#0F172A;line-height:0}
+    .fc-drawer-links{display:flex;flex-direction:column}
+    .fc-drawer-links a{display:block;padding:0.85rem 0;font-size:1.02rem;font-weight:500;color:#0F172A;text-decoration:none;border-bottom:1px solid #E5E7EB}
+    .fc-drawer-links a:hover{color:#3B82F6}
+    .fc-drawer-links a.fc-drawer-cta{margin-top:1.4rem;background:#3B82F6;color:#fff;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;border-bottom:none}
+    .fc-drawer-links a.fc-drawer-cta:hover{background:#1D4ED8}
+    @media(max-width:880px){.fc-nav{display:none}.fc-burger{display:flex;align-items:center;justify-content:center}}
+    .fc-footer{background:#0F172A;color:#94A3B8;padding:3.5rem 1.5rem 2rem}
+    .fc-footer-in{max-width:1100px;margin:0 auto}
+    .fc-footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:2rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
+    .fc-footer-brand{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem}
+    .fc-footer-brand img{display:block;width:28px;height:28px}
+    .fc-footer-brand span{font-size:1rem;font-weight:700;color:#fff;letter-spacing:-0.3px}
+    .fc-footer-tag{font-size:0.82rem;color:#64748B;line-height:1.6;margin:0}
+    .fc-footer-col h4{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#CBD5E1;margin:0 0 1rem}
+    .fc-footer-col a{display:block;color:#94A3B8;text-decoration:none;font-size:0.85rem;margin-bottom:0.55rem;transition:color .15s}
+    .fc-footer-col a:hover{color:#93C5FD}
+    .fc-footer-bottom{font-size:0.78rem;color:#64748B;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem}
+    .fc-footer-disc{font-size:0.75rem;color:#475569;line-height:1.6;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.05);margin:0}
+    @media(max-width:860px){.fc-footer-top{grid-template-columns:1fr 1fr}}
+    @media(max-width:480px){.fc-footer-top{grid-template-columns:1fr}}
   </style>
-
-
-
-
-
-<style id="fc-chrome">
-/* === FindConveyancers standardised chrome === */
-.fc-header{background:#fff;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:1000}
-.fc-header-in{max-width:1200px;margin:0 auto;padding:0.85rem 1.5rem;display:flex;align-items:center;gap:1.25rem}
-.fc-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;flex-shrink:0}
-.fc-brand img{display:block;width:32px;height:32px}
-.fc-brand span{font-size:1.15rem;font-weight:700;color:#0F172A;letter-spacing:-0.3px;white-space:nowrap}
-.fc-nav{display:flex;align-items:center;gap:1.55rem;margin-left:auto}
-.fc-nav a{color:#6B7280;text-decoration:none;font-size:0.9rem;font-weight:500;white-space:nowrap;transition:color .15s}
-.fc-nav a:hover{color:#3B82F6}
-.fc-nav a.fc-partners{color:#3B82F6;font-weight:600;border:1.5px solid #3B82F6;padding:0.45rem 0.95rem;border-radius:8px}
-.fc-nav a.fc-partners:hover{background:#3B82F6;color:#fff}
-.fc-nav a.fc-cta{background:#3B82F6;color:#fff;padding:0.6rem 1.2rem;border-radius:10px;font-weight:600;font-size:0.88rem}
-.fc-nav a.fc-cta:hover{background:#1D4ED8}
-.fc-burger{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;margin-left:auto;color:#0F172A;border-radius:6px;line-height:0}
-.fc-burger:hover{background:#F3F4F6}
-.fc-ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100}
-.fc-ovl.open{display:block}
-.fc-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);background:#fff;z-index:1200;padding:1.25rem 1.5rem 2rem;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
-.fc-drawer.open{transform:translateX(0)}
-.fc-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid #E5E7EB}
-.fc-drawer-head a{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
-.fc-drawer-head img{display:block;width:30px;height:30px}
-.fc-drawer-head span{font-weight:700;font-size:1.05rem;color:#0F172A}
-.fc-drawer-close{background:none;border:none;cursor:pointer;padding:0.25rem;color:#0F172A;line-height:0}
-.fc-drawer-links{display:flex;flex-direction:column}
-.fc-drawer-links a{display:block;padding:0.85rem 0;font-size:1.02rem;font-weight:500;color:#0F172A;text-decoration:none;border-bottom:1px solid #E5E7EB}
-.fc-drawer-links a:hover{color:#3B82F6}
-.fc-drawer-links a.fc-drawer-cta{margin-top:1.4rem;background:#3B82F6;color:#fff;text-align:center;padding:.9rem 1.5rem;border-radius:10px;font-weight:700;border-bottom:none}
-.fc-drawer-links a.fc-drawer-cta:hover{background:#1D4ED8}
-@media(max-width:880px){.fc-nav{display:none}.fc-burger{display:flex;align-items:center;justify-content:center}}
-.fc-footer{background:#0F172A;color:#94A3B8;padding:3.5rem 1.5rem 2rem}
-.fc-footer-in{max-width:1100px;margin:0 auto}
-.fc-footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:2rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
-.fc-footer-brand{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem}
-.fc-footer-brand img{display:block;width:28px;height:28px}
-.fc-footer-brand span{font-size:1rem;font-weight:700;color:#fff;letter-spacing:-0.3px}
-.fc-footer-tag{font-size:0.82rem;color:#64748B;line-height:1.6;margin:0}
-.fc-footer-col h4{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#CBD5E1;margin:0 0 1rem}
-.fc-footer-col a{display:block;color:#94A3B8;text-decoration:none;font-size:0.85rem;margin-bottom:0.55rem;transition:color .15s}
-.fc-footer-col a:hover{color:#93C5FD}
-.fc-footer-bottom{font-size:0.78rem;color:#64748B;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem}
-.fc-footer-disc{font-size:0.75rem;color:#475569;line-height:1.6;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.05);margin:0}
-@media(max-width:860px){.fc-footer-top{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.fc-footer-top{grid-template-columns:1fr}}
-</style>
 </head>
 <body>
-<!-- Capture estate-agent referral (?ref=) in case the visitor lands here directly -->
 <script>(function(){try{var r=new URLSearchParams(location.search).get('ref');if(r){localStorage.setItem('fc_ref',r);localStorage.setItem('fc_ref_at',Date.now());}}catch(e){}})();</script>
 <!-- fc-chrome:header -->
 <div id="fcOvl" class="fc-ovl"></div>
@@ -630,200 +293,339 @@
 </header>
 <!-- /fc-chrome:header -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- Main Content -->
 <div class="container">
-  <!-- Progress Bar -->
   <div class="progress-section">
-    <div class="progress-label">Step <span class="current-step">1</span> of 3</div>
-    <div class="progress-bar">
-      <div class="progress-fill"></div>
-    </div>
+    <div class="progress-label">Step <span id="stepLabel">1</span> of 4</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
-  <!-- Error Summary -->
   <div class="error-summary" id="errorSummary">
-    <h3>Please fix the following errors:</h3>
+    <h3>Please fix the following:</h3>
     <ul id="errorList"></ul>
   </div>
 
-  <!-- Form Container -->
-  <div class="form-container">
-    <form id="quoteForm">
-      <!-- Step 1: Property & Transaction -->
+  <div class="form-container" id="formContainer">
+    <form id="quoteForm" novalidate>
+
+      <!-- Step 1: Transaction type -->
       <div class="form-step active" data-step="1">
         <div class="step-header">
-          <h2 class="step-title">About the Property</h2>
-          <p class="step-description">Tell us what you're buying, selling, or remortgaging</p>
+          <h2 class="step-title">What do you need?</h2>
+          <p class="step-description">Tell us what you're doing so we can tailor your quote request</p>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Property Address <span class="form-required">*</span></label>
-          <input type="text" name="propertyAddress" class="form-input" placeholder="e.g., 123 High Street, Northampton" required>
-          <div class="form-error">Please enter the property address</div>
-        </div>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Property Price <span class="form-required">*</span></label>
-            <input type="number" name="propertyPrice" class="form-input" placeholder="e.g., 250000" min="0" step="1000" required>
-            <div class="form-error">Please enter the property price</div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Property Type <span class="form-required">*</span></label>
-            <select name="propertyType" class="form-select" required>
-              <option value="">Select type</option>
-              <option value="freehold-house">Freehold House</option>
-              <option value="leasehold-flat">Leasehold Flat</option>
-              <option value="leasehold-house">Leasehold House</option>
-              <option value="new-build">New Build</option>
-              <option value="other">Other</option>
-            </select>
-            <div class="form-error">Please select a property type</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">What do you need? <span class="form-required">*</span></label>
-          <div class="choice-group">
+          <div class="choice-group two-col">
             <div class="choice-button">
-              <input type="radio" id="buying" name="transactionType" value="buying" required>
-              <label for="buying" class="choice-label">Buying</label>
+              <input type="radio" id="txBuying" name="transactionType" value="buying">
+              <label for="txBuying" class="choice-label">Buying only</label>
             </div>
             <div class="choice-button">
-              <input type="radio" id="selling" name="transactionType" value="selling">
-              <label for="selling" class="choice-label">Selling</label>
+              <input type="radio" id="txSelling" name="transactionType" value="selling">
+              <label for="txSelling" class="choice-label">Selling only</label>
             </div>
             <div class="choice-button">
-              <input type="radio" id="both" name="transactionType" value="both">
-              <label for="both" class="choice-label">Buy & Sell</label>
+              <input type="radio" id="txBoth" name="transactionType" value="both">
+              <label for="txBoth" class="choice-label">Buying &amp; Selling</label>
             </div>
             <div class="choice-button">
-              <input type="radio" id="remortgage" name="transactionType" value="remortgage">
-              <label for="remortgage" class="choice-label">Remortgage</label>
+              <input type="radio" id="txRemortgage" name="transactionType" value="remortgage">
+              <label for="txRemortgage" class="choice-label">Remortgage</label>
             </div>
           </div>
-          <div class="form-error">Please select a transaction type</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">When do you need to complete?</label>
-          <select name="timeline" class="form-select">
-            <option value="">No preference</option>
-            <option value="urgent">Urgent (4–6 weeks)</option>
-            <option value="soon">Soon (6–8 weeks)</option>
-            <option value="standard">Standard (8–12 weeks)</option>
-            <option value="flexible">Flexible (12+ weeks)</option>
-          </select>
         </div>
       </div>
 
-      <!-- Step 2: Contact Details -->
+      <!-- Step 2: Property details (conditional) -->
       <div class="form-step" data-step="2">
+        <div class="step-header">
+          <h2 class="step-title">Property Details</h2>
+          <p class="step-description" id="step2Desc">Tell us about the property involved</p>
+        </div>
+
+        <!-- Purchase panel -->
+        <div class="property-panel" id="panelPurchase">
+          <div class="panel-title">Purchase Property</div>
+
+          <div class="form-group">
+            <label class="form-label">Property address</label>
+            <input type="text" name="purchaseAddress" class="form-input" placeholder="e.g. 14 Church Lane, Northampton, NN1 1AA">
+            <span class="tbc-link" onclick="setTBC('purchaseAddress')">Address not yet confirmed? Click here</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Purchase price <span class="form-required">*</span></label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">£</span>
+                <input type="number" name="purchaseValue" class="form-input" placeholder="250000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Property type</label>
+              <div class="choice-group two-col" style="margin-top:0.25rem;">
+                <div class="choice-button">
+                  <input type="radio" id="tenureFreehold" name="tenure" value="freehold">
+                  <label for="tenureFreehold" class="choice-label" style="min-height:48px;">Freehold</label>
+                </div>
+                <div class="choice-button">
+                  <input type="radio" id="tenureLeasehold" name="tenure" value="leasehold">
+                  <label for="tenureLeasehold" class="choice-label" style="min-height:48px;">Leasehold</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Will the property be mortgaged?</label>
+            <div class="choice-group two-col">
+              <div class="choice-button">
+                <input type="radio" id="mortgagedYes" name="mortgaged" value="yes">
+                <label for="mortgagedYes" class="choice-label" style="min-height:48px;">Yes</label>
+              </div>
+              <div class="choice-button">
+                <input type="radio" id="mortgagedNo" name="mortgaged" value="no">
+                <label for="mortgagedNo" class="choice-label" style="min-height:48px;">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Where are you in the process?</label>
+            <div class="choice-group two-col">
+              <div class="choice-button">
+                <input type="radio" id="stageResearching" name="purchaseStage" value="researching">
+                <label for="stageResearching" class="choice-label">Just researching</label>
+              </div>
+              <div class="choice-button">
+                <input type="radio" id="stageViewing" name="purchaseStage" value="viewing">
+                <label for="stageViewing" class="choice-label">Viewing properties</label>
+              </div>
+              <div class="choice-button">
+                <input type="radio" id="stageOfferMade" name="purchaseStage" value="offer_made">
+                <label for="stageOfferMade" class="choice-label">Offer made</label>
+              </div>
+              <div class="choice-button">
+                <input type="radio" id="stageOfferAccepted" name="purchaseStage" value="offer_accepted">
+                <label for="stageOfferAccepted" class="choice-label">Offer accepted</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Any special circumstances? <span style="font-weight:400;color:var(--secondary)">(select all that apply)</span></label>
+            <div class="check-grid">
+              <div class="check-item"><input type="checkbox" id="circFTB" name="specialCircumstances" value="first_time_buyer"><label for="circFTB">First Time Buyer</label></div>
+              <div class="check-item"><input type="checkbox" id="circNewBuild" name="specialCircumstances" value="new_build"><label for="circNewBuild">New Build</label></div>
+              <div class="check-item"><input type="checkbox" id="circBTL" name="specialCircumstances" value="buy_to_let"><label for="circBTL">Buy to Let</label></div>
+              <div class="check-item"><input type="checkbox" id="circShared" name="specialCircumstances" value="shared_ownership"><label for="circShared">Shared Ownership</label></div>
+              <div class="check-item"><input type="checkbox" id="circGifted" name="specialCircumstances" value="gifted_deposit"><label for="circGifted">Gifted Deposit</label></div>
+              <div class="check-item"><input type="checkbox" id="circHTB" name="specialCircumstances" value="help_to_buy"><label for="circHTB">Help to Buy (Equity Loan)</label></div>
+              <div class="check-item"><input type="checkbox" id="circRTB" name="specialCircumstances" value="right_to_buy"><label for="circRTB">Right to Buy</label></div>
+              <div class="check-item"><input type="checkbox" id="circUnregPurchase" name="specialCircumstances" value="unregistered_title"><label for="circUnregPurchase">Unregistered Title</label></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider for buy+sell -->
+        <hr class="panel-divider" id="panelDivider" style="display:none;">
+
+        <!-- Sale panel -->
+        <div class="property-panel" id="panelSale">
+          <div class="panel-title">Sale Property</div>
+
+          <div class="form-group">
+            <label class="form-label">Property address</label>
+            <input type="text" name="saleAddress" class="form-input" placeholder="e.g. 8 Mill Road, Bedford, MK40 2AA">
+            <span class="tbc-link" onclick="setTBC('saleAddress')">Address not yet confirmed? Click here</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Sale price <span class="form-required">*</span></label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">£</span>
+                <input type="number" name="saleValue" class="form-input" placeholder="250000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Property type</label>
+              <div class="choice-group two-col" style="margin-top:0.25rem;">
+                <div class="choice-button">
+                  <input type="radio" id="saleTenureFreehold" name="saleTenure" value="freehold">
+                  <label for="saleTenureFreehold" class="choice-label" style="min-height:48px;">Freehold</label>
+                </div>
+                <div class="choice-button">
+                  <input type="radio" id="saleTenureLeasehold" name="saleTenure" value="leasehold">
+                  <label for="saleTenureLeasehold" class="choice-label" style="min-height:48px;">Leasehold</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Is there a mortgage to redeem?</label>
+            <div class="choice-group two-col">
+              <div class="choice-button">
+                <input type="radio" id="saleMortgagedYes" name="saleMortgaged" value="yes">
+                <label for="saleMortgagedYes" class="choice-label" style="min-height:48px;">Yes</label>
+              </div>
+              <div class="choice-button">
+                <input type="radio" id="saleMortgagedNo" name="saleMortgaged" value="no">
+                <label for="saleMortgagedNo" class="choice-label" style="min-height:48px;">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Any special circumstances? <span style="font-weight:400;color:var(--secondary)">(select all that apply)</span></label>
+            <div class="check-grid">
+              <div class="check-item"><input type="checkbox" id="saleCircShared" name="saleSpecialCircs" value="shared_ownership"><label for="saleCircShared">Shared Ownership</label></div>
+              <div class="check-item"><input type="checkbox" id="saleCircUnreg" name="saleSpecialCircs" value="unregistered_title"><label for="saleCircUnreg">Unregistered Title</label></div>
+              <div class="check-item"><input type="checkbox" id="saleCircBSA" name="saleSpecialCircs" value="building_safety_act"><label for="saleCircBSA">Building Safety Act (tall building)</label></div>
+              <div class="check-item"><input type="checkbox" id="saleCircPOA" name="saleSpecialCircs" value="power_of_attorney"><label for="saleCircPOA">Power of Attorney involved</label></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remortgage panel -->
+        <div class="property-panel" id="panelRemortgage">
+          <div class="panel-title">Remortgage</div>
+
+          <div class="form-group">
+            <label class="form-label">Property address</label>
+            <input type="text" name="remortgageAddress" class="form-input" placeholder="e.g. 14 Church Lane, Northampton, NN1 1AA">
+            <span class="tbc-link" onclick="setTBC('remortgageAddress')">Address not yet confirmed? Click here</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Current property value <span class="form-required">*</span></label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">£</span>
+                <input type="number" name="currentValue" class="form-input" placeholder="350000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Property type</label>
+              <div class="choice-group two-col" style="margin-top:0.25rem;">
+                <div class="choice-button">
+                  <input type="radio" id="reTenureFreehold" name="remortgageTenure" value="freehold">
+                  <label for="reTenureFreehold" class="choice-label" style="min-height:48px;">Freehold</label>
+                </div>
+                <div class="choice-button">
+                  <input type="radio" id="reTenureLeasehold" name="remortgageTenure" value="leasehold">
+                  <label for="reTenureLeasehold" class="choice-label" style="min-height:48px;">Leasehold</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">New mortgage amount <span class="form-required">*</span></label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">£</span>
+                <input type="number" name="newMortgageAmount" class="form-input" placeholder="200000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lender name</label>
+              <input type="text" name="lenderName" class="form-input" placeholder="e.g. Halifax">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Any special circumstances? <span style="font-weight:400;color:var(--secondary)">(select all that apply)</span></label>
+            <div class="check-grid">
+              <div class="check-item"><input type="checkbox" id="reCircShared" name="remortgageSpecialCircs" value="shared_ownership"><label for="reCircShared">Shared Ownership</label></div>
+              <div class="check-item"><input type="checkbox" id="reCircUnreg" name="remortgageSpecialCircs" value="unregistered_title"><label for="reCircUnreg">Unregistered Title</label></div>
+              <div class="check-item"><input type="checkbox" id="reCircHTB" name="remortgageSpecialCircs" value="help_to_buy_redemption"><label for="reCircHTB">Help to Buy Redemption</label></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Contact details -->
+      <div class="form-step" data-step="3">
         <div class="step-header">
           <h2 class="step-title">Your Contact Details</h2>
           <p class="step-description">Solicitors will use this to send you their quotes</p>
         </div>
-
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">First Name <span class="form-required">*</span></label>
-            <input type="text" name="firstName" class="form-input" placeholder="John" required>
-            <div class="form-error">Please enter your first name</div>
+            <label class="form-label" for="firstName">First Name <span class="form-required">*</span></label>
+            <input type="text" id="firstName" name="firstName" class="form-input" placeholder="Jane" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Last Name <span class="form-required">*</span></label>
-            <input type="text" name="lastName" class="form-input" placeholder="Smith" required>
-            <div class="form-error">Please enter your last name</div>
+            <label class="form-label" for="lastName">Last Name <span class="form-required">*</span></label>
+            <input type="text" id="lastName" name="lastName" class="form-input" placeholder="Smith" required>
           </div>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Email Address <span class="form-required">*</span></label>
-          <input type="email" name="email" class="form-input" placeholder="john@example.com" required>
-          <div class="form-error">Please enter a valid email address</div>
+          <label class="form-label" for="email">Email Address <span class="form-required">*</span></label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="jane@example.com" required>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Phone Number <span class="form-required">*</span></label>
-          <input type="tel" name="phone" class="form-input" placeholder="07700 900000" required>
-          <div class="form-error">Please enter a valid phone number</div>
+          <label class="form-label" for="phone">Phone Number <span class="form-required">*</span></label>
+          <input type="tel" id="phone" name="phone" class="form-input" placeholder="07700 900000" required>
         </div>
       </div>
 
-      <!-- Step 3: Review & Submit -->
-      <div class="form-step" data-step="3">
+      <!-- Step 4: Review & Submit -->
+      <div class="form-step" data-step="4">
         <div class="step-header">
-          <h2 class="step-title">Review & Submit</h2>
-          <p class="step-description">Check your details are correct before we send your request</p>
+          <h2 class="step-title">Review &amp; Submit</h2>
+          <p class="step-description">Check your details before we send your request to local solicitors</p>
         </div>
 
-        <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-          <div id="summaryContent" style="color: var(--secondary); font-size: 0.9rem; line-height: 1.9;"></div>
+        <div style="background:var(--bg-alt);padding:1.5rem;border-radius:12px;margin-bottom:1.5rem;">
+          <div id="summaryContent"></div>
         </div>
 
-        <div style="background: #DBEAFE; border: 1px solid var(--primary); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-          <p style="font-size: 0.9rem; color: var(--primary); line-height: 1.6;">
-            <strong>Free & no obligation</strong> - solicitors send you quotes, you choose if and who to instruct. We never charge you a fee.
+        <div style="background:#DBEAFE;border:1px solid var(--primary);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;">
+          <p style="font-size:0.9rem;color:var(--primary);line-height:1.6;">
+            <strong>Free &amp; no obligation.</strong> Solicitors send you quotes; you choose if and who to instruct. We never charge you a fee.
           </p>
         </div>
 
-        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-          <input type="checkbox" id="termsCheckbox" name="terms" style="margin-top: 0.25rem;">
-          <label for="termsCheckbox" style="font-size: 0.9rem; color: var(--secondary);">
-            I agree to the <a href="/legal/terms-and-conditions.html" style="color: var(--primary); text-decoration: none;">Terms & Conditions</a> and <a href="/legal/privacy-policy.html" style="color: var(--primary); text-decoration: none;">Privacy Policy</a>
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+          <input type="checkbox" id="termsCheckbox" style="margin-top:0.25rem;accent-color:var(--primary);">
+          <label for="termsCheckbox" style="font-size:0.9rem;color:var(--secondary);">
+            I agree to the <a href="/legal/terms-and-conditions.html" style="color:var(--primary);text-decoration:none;">Terms &amp; Conditions</a> and <a href="/legal/privacy-policy.html" style="color:var(--primary);text-decoration:none;">Privacy Policy</a>
           </label>
         </div>
       </div>
+
     </form>
 
-    <!-- Success Panel -->
+    <!-- Success panel -->
     <div class="success-panel" id="successPanel">
-      <div class="success-icon">✅</div>
+      <div style="font-size:3rem;margin-bottom:1rem;">&#9989;</div>
       <h3 class="success-title">Quotes On The Way!</h3>
-      <p class="success-message">
-        We've received your quote request. Solicitors in your area will be in touch within 24 hours.
-      </p>
-
+      <p class="success-message">We've received your request. Solicitors in your area will be in touch within 24 hours.</p>
       <div class="success-next">
         <h4>What Happens Next:</h4>
         <ol>
           <li><strong>Solicitors review:</strong> Local solicitors will review your request and prepare quotes</li>
           <li><strong>Receive quotes:</strong> You'll get quotes via email within 24 hours</li>
-          <li><strong>Compare & choose:</strong> Review the quotes and choose the solicitor that's right for you</li>
+          <li><strong>Compare &amp; choose:</strong> Review the quotes and choose the solicitor that's right for you</li>
           <li><strong>Get started:</strong> Instruct your chosen solicitor and begin your conveyancing</li>
         </ol>
       </div>
-
-      <div style="display: flex; gap: 1rem; flex-direction: column;">
-        <a href="/" class="btn btn-primary" style="text-decoration: none; background: var(--primary); color: white;">Explore Our Guides</a>
-        <a href="/" class="btn btn-secondary" style="text-decoration: none; color: var(--primary); border-color: var(--primary);">Back to Home</a>
+      <div style="display:flex;gap:1rem;flex-direction:column;">
+        <a href="/guides/" class="btn btn-primary" style="text-decoration:none;">Explore Our Guides</a>
+        <a href="/" class="btn btn-secondary" style="text-decoration:none;color:var(--primary);border-color:var(--primary);">Back to Home</a>
       </div>
     </div>
 
-    <!-- Button Group -->
+    <!-- Nav buttons -->
     <div class="button-group" id="buttonGroup">
-      <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" style="display: none;">← Previous</button>
-      <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">Next →</button>
+      <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" style="display:none;">&#8592; Previous</button>
+      <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">Next &#8594;</button>
     </div>
   </div>
-
-  
-
 </div>
 
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -832,251 +634,356 @@
   gtag('config', 'GA_ID');
 </script>
 
-<!-- Form Logic -->
 <script>
-  let currentStep = 1;
-  const totalSteps = 3;
-  const form = document.getElementById('quoteForm');
-  const formSteps = document.querySelectorAll('.form-step');
-  const nextBtn = document.getElementById('nextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const successPanel = document.getElementById('successPanel');
-  const formContainer = document.querySelector('.form-container');
-  const errorSummary = document.getElementById('errorSummary');
-  const errorList = document.getElementById('errorList');
+(function () {
+  'use strict';
 
-  function showStep(step) {
-    formSteps.forEach(el => el.classList.remove('active'));
-    document.querySelector(`[data-step="${step}"]`).classList.add('active');
+  var currentStep = 1;
+  var totalSteps  = 4;
+  var form        = document.getElementById('quoteForm');
+  var nextBtn     = document.getElementById('nextBtn');
+  var prevBtn     = document.getElementById('prevBtn');
+  var successPanel = document.getElementById('successPanel');
+  var formContainer = document.getElementById('formContainer');
+  var errorSummary = document.getElementById('errorSummary');
+  var errorList    = document.getElementById('errorList');
 
-    // Update progress
-    document.querySelector('.current-step').textContent = step;
-    const progressPercent = (step / totalSteps) * 100;
-    document.querySelector('.progress-fill').style.width = progressPercent + '%';
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  function getRadio(name) {
+    var el = form.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
 
-    // Update buttons
-    prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
-    nextBtn.textContent = step === totalSteps ? '✓ Submit' : 'Next →';
+  function getVal(name) {
+    var el = form.querySelector('[name="' + name + '"]');
+    return el ? el.value.trim() : '';
+  }
 
-    // Update button state
-    updateNextButtonState();
+  function getAllChecked(name) {
+    var els = form.querySelectorAll('input[name="' + name + '"]:checked');
+    return Array.prototype.map.call(els, function(el) { return el.value; });
+  }
 
-    // Update summary on final step
-    if (step === 3) {
-      updateSummary();
+  function txType() { return getRadio('transactionType'); }
+  function isBuying()      { var t = txType(); return t === 'buying' || t === 'both'; }
+  function isSelling()     { var t = txType(); return t === 'selling' || t === 'both'; }
+  function isRemortgage()  { return txType() === 'remortgage'; }
+
+  // ── Address TBC shortcut ─────────────────────────────────────────────────────
+  window.setTBC = function(name) {
+    var el = form.querySelector('[name="' + name + '"]');
+    if (el) el.value = 'TBC';
+  };
+
+  // ── Update panels visibility ─────────────────────────────────────────────────
+  function updatePanels() {
+    var panelPurchase  = document.getElementById('panelPurchase');
+    var panelSale      = document.getElementById('panelSale');
+    var panelRemortgage = document.getElementById('panelRemortgage');
+    var panelDivider   = document.getElementById('panelDivider');
+    var step2Desc      = document.getElementById('step2Desc');
+
+    panelPurchase.classList.toggle('visible', isBuying());
+    panelSale.classList.toggle('visible', isSelling());
+    panelRemortgage.classList.toggle('visible', isRemortgage());
+    panelDivider.style.display = (isBuying() && isSelling()) ? 'block' : 'none';
+
+    if (txType() === 'both') {
+      step2Desc.textContent = 'Tell us about both properties involved in your move';
+    } else if (isRemortgage()) {
+      step2Desc.textContent = 'Tell us about the property you are remortgaging';
+    } else if (isSelling()) {
+      step2Desc.textContent = 'Tell us about the property you are selling';
+    } else {
+      step2Desc.textContent = 'Tell us about the property you are buying';
     }
+  }
+
+  // ── Show step ────────────────────────────────────────────────────────────────
+  function showStep(step) {
+    document.querySelectorAll('.form-step').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    document.querySelector('[data-step="' + step + '"]').classList.add('active');
+
+    document.getElementById('stepLabel').textContent = step;
+    document.getElementById('progressFill').style.width = ((step / totalSteps) * 100) + '%';
+
+    prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+    nextBtn.textContent   = step === totalSteps ? '✓ Submit' : 'Next →';
+
+    if (step === 2) updatePanels();
+    if (step === totalSteps) updateSummary();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // ── Validate step ────────────────────────────────────────────────────────────
   function validateStep(step) {
-    const currentStepEl = document.querySelector(`[data-step="${step}"]`);
-    const inputs = currentStepEl.querySelectorAll('[required]');
-    const radios = currentStepEl.querySelectorAll('input[type="radio"][required]');
-    let isValid = true;
-    const errors = [];
+    var errors = [];
+    errorSummary.classList.remove('show');
 
-    inputs.forEach(input => {
-      if (!input.value.trim()) {
-        input.classList.add('error');
-        isValid = false;
-        const label = document.querySelector(`label[for="${input.name}"]`) ||
-                     currentStepEl.querySelector(`label:contains("${input.name}")`);
-        if (label) {
-          errors.push(label.textContent.split('*')[0].trim());
-        }
-      } else {
-        input.classList.remove('error');
+    if (step === 1) {
+      if (!getRadio('transactionType')) errors.push('Please select what you need (buying, selling, etc.)');
+    }
 
-        // Validate email format
-        if (input.type === 'email') {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(input.value)) {
-            input.classList.add('error');
-            isValid = false;
-            errors.push('Valid email address');
-          }
-        }
-
-        // Validate phone format
-        if (input.type === 'tel') {
-          const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
-          if (!phoneRegex.test(input.value)) {
-            input.classList.add('error');
-            isValid = false;
-            errors.push('Valid phone number');
-          }
-        }
+    if (step === 2) {
+      if (isBuying()) {
+        if (!getVal('purchaseValue')) errors.push('Please enter the purchase price');
       }
-    });
-
-    // Check radio buttons
-    if (radios.length > 0) {
-      const radioName = radios[0].name;
-      const radioChecked = document.querySelector(`input[name="${radioName}"]:checked`);
-      if (!radioChecked) {
-        isValid = false;
-        errors.push('Please select ' + radioName);
+      if (isSelling()) {
+        if (!getVal('saleValue')) errors.push('Please enter the sale price');
+      }
+      if (isRemortgage()) {
+        if (!getVal('currentValue'))       errors.push('Please enter the current property value');
+        if (!getVal('newMortgageAmount'))  errors.push('Please enter the new mortgage amount');
       }
     }
 
-    // Show/hide error summary
-    if (!isValid) {
-      errorList.innerHTML = errors.map(err => `<li>• ${err}</li>`).join('');
+    if (step === 3) {
+      var checks = [
+        { name: 'firstName', label: 'First name' },
+        { name: 'lastName',  label: 'Last name' },
+        { name: 'email',     label: 'Email address' },
+        { name: 'phone',     label: 'Phone number' },
+      ];
+      checks.forEach(function(c) {
+        var el = form.querySelector('[name="' + c.name + '"]');
+        if (!el || !el.value.trim()) {
+          el && el.classList.add('error');
+          errors.push(c.label + ' is required');
+        } else {
+          el.classList.remove('error');
+        }
+      });
+      var emailEl = form.querySelector('[name="email"]');
+      if (emailEl && emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        emailEl.classList.add('error');
+        errors.push('Please enter a valid email address');
+      }
+      var phoneEl = form.querySelector('[name="phone"]');
+      if (phoneEl && phoneEl.value && !/^[\d\s\-\+\(\)]{10,}$/.test(phoneEl.value)) {
+        phoneEl.classList.add('error');
+        errors.push('Please enter a valid phone number');
+      }
+    }
+
+    if (errors.length) {
+      errorList.innerHTML = errors.map(function(e) { return '<li>&#8226; ' + e + '</li>'; }).join('');
       errorSummary.classList.add('show');
-    } else {
-      errorSummary.classList.remove('show');
+      return false;
     }
-
-    return isValid;
+    return true;
   }
 
-  function changeStep(direction) {
-    if (direction === 1) {
+  // ── Change step ──────────────────────────────────────────────────────────────
+  window.changeStep = function(dir) {
+    if (dir === 1) {
       if (!validateStep(currentStep)) return;
       if (currentStep < totalSteps) {
         currentStep++;
-      } else if (currentStep === totalSteps) {
+        showStep(currentStep);
+      } else {
         submitForm();
-        return;
       }
-    } else if (direction === -1) {
-      if (currentStep > 1) {
-        currentStep--;
-      }
+    } else {
+      if (currentStep > 1) { currentStep--; showStep(currentStep); }
     }
-    showStep(currentStep);
+  };
+
+  // ── Summary ──────────────────────────────────────────────────────────────────
+  function fmtPrice(v) {
+    var n = parseInt(v);
+    return isNaN(n) ? '-' : '£' + n.toLocaleString('en-GB');
   }
 
-  function updateNextButtonState() {
-    const currentStepEl = document.querySelector(`[data-step="${currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    let isStepValid = true;
+  function labelMap(v) {
+    var map = {
+      buying: 'Buying only', selling: 'Selling only', both: 'Buying & Selling', remortgage: 'Remortgage',
+      freehold: 'Freehold', leasehold: 'Leasehold',
+      yes: 'Yes', no: 'No',
+      researching: 'Just researching', viewing: 'Viewing properties',
+      offer_made: 'Offer made', offer_accepted: 'Offer accepted',
+      first_time_buyer: 'First Time Buyer', new_build: 'New Build',
+      buy_to_let: 'Buy to Let', shared_ownership: 'Shared Ownership',
+      gifted_deposit: 'Gifted Deposit', help_to_buy: 'Help to Buy (Equity Loan)',
+      right_to_buy: 'Right to Buy', unregistered_title: 'Unregistered Title',
+      building_safety_act: 'Building Safety Act', power_of_attorney: 'Power of Attorney',
+      help_to_buy_redemption: 'Help to Buy Redemption',
+    };
+    return map[v] || v;
+  }
 
-    requiredInputs.forEach(input => {
-      if (!input.value.trim()) {
-        isStepValid = false;
-      }
+  function summarySection(title, rows) {
+    if (!rows.length) return '';
+    var html = '<div class="summary-section"><div class="summary-section-title">' + title + '</div>';
+    rows.forEach(function(r) {
+      if (r[1]) html += '<div class="summary-row"><span class="summary-key">' + r[0] + '</span><span class="summary-val">' + r[1] + '</span></div>';
     });
-
-    nextBtn.disabled = !isStepValid;
+    return html + '</div>';
   }
 
   function updateSummary() {
-    const formData = new FormData(form);
-    const price = parseInt(formData.get('propertyPrice'));
-    const timeline = formData.get('timeline');
-    const rows = [
-      ['Address', formData.get('propertyAddress')],
-      ['Price', isNaN(price) ? ' - ' : '£' + price.toLocaleString('en-GB')],
-      ['Property type', formData.get('propertyType')],
-      ['Transaction', formData.get('transactionType')],
-      ...(timeline ? [['Timeline', timeline]] : []),
-      ['Name', `${formData.get('firstName')} ${formData.get('lastName')}`],
-      ['Email', formData.get('email')],
-      ['Phone', formData.get('phone')],
-    ];
-    document.getElementById('summaryContent').innerHTML = rows
-      .map(([k, v]) => `<div style="display:flex;gap:1rem;"><span style="min-width:110px;font-weight:600;color:var(--heading)">${k}</span><span>${v || ' - '}</span></div>`)
-      .join('');
+    var tx = getRadio('transactionType');
+    var circs = getAllChecked('specialCircumstances').map(labelMap).join(', ') || 'None';
+    var saleCircs = getAllChecked('saleSpecialCircs').map(labelMap).join(', ') || 'None';
+    var reCircs = getAllChecked('remortgageSpecialCircs').map(labelMap).join(', ') || 'None';
+    var stage = getRadio('purchaseStage');
+
+    var html = summarySection('Transaction', [
+      ['Type', labelMap(tx)],
+    ]);
+
+    if (isBuying()) {
+      html += summarySection('Purchase Property', [
+        ['Address', getVal('purchaseAddress') || '-'],
+        ['Price', fmtPrice(getVal('purchaseValue'))],
+        ['Tenure', labelMap(getRadio('tenure'))],
+        ['Mortgaged', labelMap(getRadio('mortgaged'))],
+        ['Stage', stage ? labelMap(stage) : '-'],
+        ['Circumstances', circs],
+      ]);
+    }
+
+    if (isSelling()) {
+      html += summarySection('Sale Property', [
+        ['Address', getVal('saleAddress') || '-'],
+        ['Price', fmtPrice(getVal('saleValue'))],
+        ['Tenure', labelMap(getRadio('saleTenure'))],
+        ['Mortgage to redeem', labelMap(getRadio('saleMortgaged'))],
+        ['Circumstances', saleCircs],
+      ]);
+    }
+
+    if (isRemortgage()) {
+      html += summarySection('Remortgage', [
+        ['Address', getVal('remortgageAddress') || '-'],
+        ['Current value', fmtPrice(getVal('currentValue'))],
+        ['Tenure', labelMap(getRadio('remortgageTenure'))],
+        ['New mortgage', fmtPrice(getVal('newMortgageAmount'))],
+        ['Lender', getVal('lenderName') || '-'],
+        ['Circumstances', reCircs],
+      ]);
+    }
+
+    html += summarySection('Your Details', [
+      ['Name', (getVal('firstName') + ' ' + getVal('lastName')).trim()],
+      ['Email', getVal('email')],
+      ['Phone', getVal('phone')],
+    ]);
+
+    document.getElementById('summaryContent').innerHTML = html;
   }
 
+  // ── Submit ────────────────────────────────────────────────────────────────────
   async function submitForm() {
-    const formData = new FormData(form);
-
-    // Check terms checkbox
     if (!document.getElementById('termsCheckbox').checked) {
-      alert('Please agree to the Terms & Conditions');
+      alert('Please agree to the Terms & Conditions to continue.');
       return;
     }
 
     nextBtn.disabled = true;
     nextBtn.innerHTML = '<span class="loading"></span>Submitting...';
 
-    // Estate-agent referral: prefer ?ref= on this URL, else the value captured
-    // and stored when the visitor first landed via a referral link.
-    let fcRef = '';
-    try { fcRef = new URLSearchParams(location.search).get('ref') || localStorage.getItem('fc_ref') || ''; } catch (e) {}
+    var fcRef = '';
+    try { fcRef = new URLSearchParams(location.search).get('ref') || localStorage.getItem('fc_ref') || ''; } catch(e) {}
+
+    var tx = txType();
+    var transactionTypes = tx === 'both' ? ['buying', 'selling'] : [tx];
+
+    // Primary property fields depend on transaction type
+    var propertyAddress = isBuying() ? getVal('purchaseAddress') : isRemortgage() ? getVal('remortgageAddress') : getVal('saleAddress');
+    var propertyValue   = isBuying() ? getVal('purchaseValue')   : isRemortgage() ? getVal('currentValue')       : getVal('saleValue');
+    var tenure          = isBuying() ? getRadio('tenure')        : isRemortgage() ? getRadio('remortgageTenure') : getRadio('saleTenure');
+
+    var payload = {
+      // Required
+      firstName: getVal('firstName'),
+      lastName:  getVal('lastName'),
+      email:     getVal('email'),
+      phone:     getVal('phone'),
+      ref:       fcRef,
+
+      // Transaction
+      transactionTypes: transactionTypes,
+      propertyAddress:  propertyAddress || '',
+      propertyValue:    propertyValue   || 0,
+      propertyType:     tenure          || '',
+
+      // Purchase details
+      tenure:               getRadio('tenure'),
+      mortgaged:            getRadio('mortgaged'),
+      purchaseStage:        getRadio('purchaseStage'),
+      specialCircumstances: getAllChecked('specialCircumstances'),
+
+      // Sale details
+      saleAddress:     getVal('saleAddress'),
+      saleValue:       getVal('saleValue')   || 0,
+      saleTenure:      getRadio('saleTenure'),
+      saleMortgaged:   getRadio('saleMortgaged'),
+      saleSpecialCircs: getAllChecked('saleSpecialCircs'),
+
+      // Remortgage details
+      remortgageAmount:        getVal('newMortgageAmount') || 0,
+      lenderName:              getVal('lenderName'),
+      remortgageTenure:        getRadio('remortgageTenure'),
+      remortgageSpecialCircs:  getAllChecked('remortgageSpecialCircs'),
+
+      numApplicants: 1,
+    };
 
     try {
-      const response = await fetch('/api/leads', {
+      var res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.get('firstName'),
-          lastName: formData.get('lastName'),
-          email: formData.get('email'),
-          phone: formData.get('phone'),
-          propertyAddress: formData.get('propertyAddress'),
-          propertyValue: formData.get('propertyPrice'),
-          propertyType: formData.get('propertyType'),
-          transactionTypes: [formData.get('transactionType')],
-          timeline: formData.get('timeline') || '',
-          ref: fcRef,
-        })
+        body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        // Hide form, show success
+      if (res.ok) {
         formContainer.style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
         successPanel.classList.add('show');
-
-        // Track event
-        gtag('event', 'form_submission', {
-          'event_category': 'quotes',
-          'event_label': 'quote_request_submitted'
-        });
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_submission', { event_category: 'quotes', event_label: 'quote_request_submitted' });
+        }
       } else {
         alert('Error submitting form. Please try again.');
         nextBtn.disabled = false;
-        nextBtn.innerHTML = '✓ Submit';
+        nextBtn.textContent = '✓ Submit';
       }
-    } catch (error) {
-      console.error('Error:', error);
+    } catch(err) {
+      console.error(err);
       alert('Error submitting form. Please try again.');
       nextBtn.disabled = false;
-      nextBtn.innerHTML = '✓ Submit';
+      nextBtn.textContent = '✓ Submit';
     }
   }
 
-  // Add input listeners for validation
-  form.querySelectorAll('[required]').forEach(input => {
-    input.addEventListener('change', () => {
-      updateNextButtonState();
-      if (input.value.trim()) {
-        input.classList.remove('error');
-      }
-    });
-    input.addEventListener('blur', () => {
-      if (input.value.trim()) {
-        input.classList.remove('error');
-      }
+  // Auto-advance on step 1 selection
+  form.querySelectorAll('input[name="transactionType"]').forEach(function(el) {
+    el.addEventListener('change', function() {
+      setTimeout(function() { changeStep(1); }, 200);
     });
   });
 
-  // Initialize
+  // Clear error state on input
+  form.querySelectorAll('.form-input').forEach(function(el) {
+    el.addEventListener('input', function() { el.classList.remove('error'); });
+  });
+
   showStep(1);
+})();
 </script>
 
-<!-- Structured Data - Form -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "Get Free Conveyancing Quotes",
   "description": "Get free conveyancing quotes from trusted solicitors",
-  "mainEntity": {
-    "@type": "Thing",
-    "name": "Conveyancing Quote Form"
-  }
+  "mainEntity": { "@type": "Thing", "name": "Conveyancing Quote Form" }
 }
 </script>
-
-
-
-
-
 
 <!-- fc-chrome:footer -->
 <footer class="fc-footer">

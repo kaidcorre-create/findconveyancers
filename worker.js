@@ -81,6 +81,9 @@ export default {
       if (path === '/api/admin/preview-emails' && request.method === 'POST')
         return handlePreviewEmails(request, env);
 
+      if (path === '/api/admin/migrate' && request.method === 'POST')
+        return handleMigrate(request, env);
+
       // ── Agent ───────────────────────────────────────────────────────────────
       if (path === '/api/agent/login' && request.method === 'POST')
         return handleAgentLogin(request, env);
@@ -120,8 +123,7 @@ async function handleLeadSubmission(request, env) {
   const agentRef  = agent ? agent.ref  : 'findconveyancers';
   const agentName = agent ? agent.name : 'FindConveyancers';
 
-  // Save the consumer lead, single source of truth (was previously
-  // dual-written into a separate `quotes` table; now consolidated here).
+  // Save the consumer lead, single source of truth.
   await env.DB.prepare(`
     INSERT INTO leads (
       id, agent_ref, agent_name,
@@ -130,8 +132,12 @@ async function handleLeadSubmission(request, env) {
       postcode, timeline,
       first_name, last_name, email, phone,
       status, created_at, updated_at,
-      instructed_conveyancer_id, quotes_sent_at, instructed_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, ?, '', '', '')
+      instructed_conveyancer_id, quotes_sent_at, instructed_at,
+      tenure, mortgaged, purchase_stage, special_circumstances,
+      sale_tenure, sale_mortgaged, sale_special_circs,
+      lender_name, remortgage_amount, num_applicants
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, ?, '', '', '',
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     id,
     agentRef,
@@ -140,13 +146,23 @@ async function handleLeadSubmission(request, env) {
     body.propertyType  || '',
     body.propertyValue || 0,
     body.propertyAddress || '',
-    body.freehold || '',
-    body.newBuild || 'no',
+    body.tenure || body.freehold || '',
+    (body.specialCircumstances || []).includes('new_build') ? 'yes' : (body.newBuild || 'no'),
     body.city || body.postcode || 'UK',
     body.timeline  || '',
     body.firstName, body.lastName,
     body.email.toLowerCase(), body.phone,
-    now, now
+    now, now,
+    body.tenure               || '',
+    body.mortgaged            || '',
+    body.purchaseStage        || '',
+    JSON.stringify(body.specialCircumstances  || []),
+    body.saleTenure           || '',
+    body.saleMortgaged        || '',
+    JSON.stringify(body.saleSpecialCircs      || []),
+    body.lenderName           || '',
+    parseInt(body.remortgageAmount) || null,
+    parseInt(body.numApplicants)    || 1
   ).run();
 
   // Email conveyancers, admin, confirm to client, and notify the referring agent.
@@ -1146,6 +1162,39 @@ async function emailConveyancers(body, leadUuid, env) {
   }));
 }
 
+// ── Admin: DB migration ───────────────────────────────────────────────────────
+async function migrateLeadsTable(env) {
+  const cols = [
+    'ALTER TABLE leads ADD COLUMN tenure TEXT',
+    'ALTER TABLE leads ADD COLUMN mortgaged TEXT',
+    'ALTER TABLE leads ADD COLUMN purchase_stage TEXT',
+    'ALTER TABLE leads ADD COLUMN special_circumstances TEXT',
+    'ALTER TABLE leads ADD COLUMN sale_tenure TEXT',
+    'ALTER TABLE leads ADD COLUMN sale_mortgaged TEXT',
+    'ALTER TABLE leads ADD COLUMN sale_special_circs TEXT',
+    'ALTER TABLE leads ADD COLUMN lender_name TEXT',
+    'ALTER TABLE leads ADD COLUMN remortgage_amount INTEGER',
+    'ALTER TABLE leads ADD COLUMN num_applicants INTEGER DEFAULT 1',
+  ];
+  const results = [];
+  for (const sql of cols) {
+    try {
+      await env.DB.exec(sql);
+      results.push({ sql, ok: true });
+    } catch (e) {
+      results.push({ sql, ok: false, msg: e.message });
+    }
+  }
+  return results;
+}
+
+async function handleMigrate(request, env) {
+  const auth = request.headers.get('Authorization') || '';
+  if (auth !== `Bearer ${env.ADMIN_PASSWORD}`) return jsonResponse({ error: 'Unauthorised' }, 401);
+  const results = await migrateLeadsTable(env);
+  return jsonResponse({ ok: true, results });
+}
+
 // ── Email templates (email-safe: table-based layout, inlined styles) ───────────
 // Recreated from the design references in ./email templates/. No external fonts
 // and no flexbox/grid, for broad email-client compatibility. A single <style>
@@ -1348,17 +1397,35 @@ function emailClientConfirmation(body, leadUuid) {
 }
 
 function emailConveyancerNewLead(body, leadUuid, conv, quoteLink) {
-  const tx = Array.isArray(body.transactionTypes) ? body.transactionTypes.join(', ') : (body.transactionType || 'Not specified');
+  const tx = Array.isArray(body.transactionTypes) ? body.transactionTypes.join(' + ') : (body.transactionType || 'Not specified');
+  const tenure    = body.tenure || body.freehold || '';
+  const tenureLabel = tenure === 'freehold' ? 'Freehold' : tenure === 'leasehold' ? 'Leasehold' : 'Not specified';
+  const isNewBuild = (body.specialCircumstances || []).includes('new_build') || body.newBuild === 'yes';
+
+  const stageMap = { researching: 'Just researching', viewing: 'Viewing properties', offer_made: 'Offer made', offer_accepted: 'Offer accepted' };
+  const stage = stageMap[body.purchaseStage] || '';
+
+  const circs = Array.isArray(body.specialCircumstances) && body.specialCircumstances.length
+    ? body.specialCircumstances.map(c => c.replace(/_/g, ' ')).join(', ')
+    : 'None';
+
   const content =
     `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">Hi ${conv.name}, you have a new referral from FindConveyancers. Please submit your quote within <strong>24 hours</strong>.</p>` +
     eSectionLabel('Property Details') +
     eDataTable([
-      ['Address', body.propertyAddress || 'Not provided'],
-      ['Price', fmtPrice(body.propertyValue)],
-      ['Type', body.propertyType || 'Not specified'],
-      ['Freehold / Leasehold', body.freehold || 'Not specified'],
-      ['New build', body.newBuild === 'yes' ? 'Yes' : 'No'],
+      ['Address',    body.propertyAddress || 'TBC'],
+      ['Price',      fmtPrice(body.propertyValue)],
       ['Transaction', tx],
+      ['Tenure',     tenureLabel],
+      ['New build',  isNewBuild ? 'Yes' : 'No'],
+    ]) +
+    eSectionLabel('Transaction Details') +
+    eDataTable([
+      ['Mortgaged',             body.mortgaged === 'yes' ? 'Yes' : body.mortgaged === 'no' ? 'No' : 'Not specified'],
+      ...(stage ? [['Purchase stage', stage]] : []),
+      ['Special circumstances', circs],
+      ...(body.lenderName ? [['Lender', body.lenderName]] : []),
+      ['Number of applicants',  body.numApplicants || 1],
     ]) +
     eInfoBox('This referral has been sent to a small number of firms. First to submit a competitive quote wins. The client&rsquo;s contact details are shared only if they select your quote.');
   return emailWrap({
