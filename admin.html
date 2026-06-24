@@ -254,24 +254,24 @@
     <nav class="sidebar">
       <div class="nav-section">
         <div class="nav-label">Overview</div>
-        <button class="nav-item active" data-view="dashboard">📊 Dashboard</button>
+        <button class="nav-item active" data-view="dashboard">Dashboard</button>
       </div>
       <div class="nav-section">
         <div class="nav-label">Leads</div>
         <button class="nav-item" data-view="leads" data-filter="all">
-          📋 All Leads <span class="nav-badge" id="navBadgeAll">—</span>
+          All Leads <span class="nav-badge" id="navBadgeAll">—</span>
         </button>
         <button class="nav-item" data-view="leads" data-filter="new">
-          🔵 New <span class="nav-badge" id="navBadgeNew">—</span>
+          New <span class="nav-badge" id="navBadgeNew">—</span>
         </button>
-        <button class="nav-item" data-view="leads" data-filter="quotes_sent">🟠 Quotes Sent</button>
-        <button class="nav-item" data-view="leads" data-filter="instructed">🟢 Instructed</button>
-        <button class="nav-item" data-view="leads" data-filter="completed">✅ Completed</button>
+        <button class="nav-item" data-view="leads" data-filter="quotes_sent">Quotes Sent</button>
+        <button class="nav-item" data-view="leads" data-filter="instructed">Instructed</button>
+        <button class="nav-item" data-view="leads" data-filter="completed">Completed</button>
       </div>
       <div class="nav-section">
         <div class="nav-label">Partners</div>
-        <button class="nav-item" data-view="conveyancers">⚖️ Conveyancers</button>
-        <button class="nav-item" data-view="agents">🏘 Agents</button>
+        <button class="nav-item" data-view="conveyancers">Conveyancers</button>
+        <button class="nav-item" data-view="agents">Agents</button>
       </div>
     </nav>
 
@@ -424,13 +424,13 @@
 
       <div class="modal-section-title">Update Status</div>
       <select class="status-select" id="modalStatus" style="margin-bottom:1rem">
-        <option value="new">🔵 New</option>
-        <option value="quotes_sent">🟠 Quotes Sent</option>
-        <option value="instructed">🟢 Instructed</option>
-        <option value="completed">✅ Completed</option>
-        <option value="contacted">🟡 Contacted</option>
-        <option value="converted">🟢 Converted</option>
-        <option value="lost">🔴 Lost</option>
+        <option value="new">New</option>
+        <option value="quotes_sent">Quotes Sent</option>
+        <option value="instructed">Instructed</option>
+        <option value="completed">Completed</option>
+        <option value="contacted">Contacted</option>
+        <option value="converted">Converted</option>
+        <option value="lost">Lost</option>
       </select>
       <div class="modal-section-title">Notes</div>
       <textarea class="notes-area" id="modalNotes" placeholder="Internal notes…"></textarea>
@@ -712,7 +712,7 @@
       // Populate agent breakdown
       buildAgentList();
     } catch {
-      document.getElementById('leadsTable').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load leads.</div></div></td></tr>`;
+      document.getElementById('leadsTable').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-text">Could not load leads.</div></div></td></tr>`;
     }
   }
 
@@ -735,7 +735,7 @@
             <div class="agent-count">${a.count} lead${a.count!==1?'s':''}</div>
           </div>`)
         .join('')
-      : '<div class="empty-state"><div class="empty-icon">🏘</div><div class="empty-text">No agent data</div></div>';
+      : '<div class="empty-state"><div class="empty-text">No agent data</div></div>';
     document.getElementById('agentBreakdown').innerHTML = html;
     document.getElementById('agentsList').innerHTML = html;
   }
@@ -754,7 +754,7 @@
 
     if (!leads.length) {
       document.getElementById('leadsTable').innerHTML =
-        `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No leads found</div></div></td></tr>`;
+        `<tr><td colspan="8"><div class="empty-state"><div class="empty-text">No leads found</div></div></td></tr>`;
       return;
     }
 
@@ -894,7 +894,7 @@
       const convs = data.conveyancers || [];
       if (!convs.length) {
         document.getElementById('conveyancersTable').innerHTML =
-          `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⚖️</div><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
+          `<tr><td colspan="6"><div class="empty-state"><div class="empty-text">No conveyancers yet. Add your first firm.</div></div></td></tr>`;
         return;
       }
       document.getElementById('conveyancersTable').innerHTML = convs.map(c => {
@@ -908,7 +908,7 @@
         const stdFees  = {purchase:200,sale:200,new_build:200,remortgage:100};
         const isCustom = Object.keys(fees).some(k => fees[k] !== stdFees[k]);
         const statusBadge = {
-          pending:          '<span class="badge" style="background:#FEF3C7;color:#92400E;">⏳ Pending</span>',
+          pending:          '<span class="badge" style="background:#FEF3C7;color:#92400E;">Pending</span>',
           approved:         '<span class="badge badge-instructed">✓ Active</span>',
           rejected:         '<span class="badge badge-lost">✗ Rejected</span>',
           counter_sent:     '<span class="badge" style="background:#EDE9FE;color:#5B21B6;">↔ Counter sent</span>',
@@ -941,7 +941,7 @@
           <td style="white-space:nowrap">${actions}</td>
         </tr>`;
       }).join('');
-    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Failed to load</div></div></td></tr>`; }
+    } catch { document.getElementById('conveyancersTable').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-text">Failed to load</div></div></td></tr>`; }
   }
 
   function openEditConv(c) {

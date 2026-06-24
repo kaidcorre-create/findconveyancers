@@ -559,12 +559,12 @@
       <div class="stat-card card accent-gold">
         <div class="stat-val" id="statTotal">—</div>
         <div class="stat-lbl">Total referrals</div>
-        <div class="stat-bg">📋</div>
+        <div class="stat-bg"></div>
       </div>
       <div class="stat-card card">
         <div class="stat-val" id="statInProg">—</div>
         <div class="stat-lbl">In progress</div>
-        <div class="stat-bg">🔄</div>
+        <div class="stat-bg"></div>
       </div>
       <div class="stat-card card accent-sage">
         <div class="stat-val" id="statConverted">—</div>
@@ -870,7 +870,7 @@
     if (!leads.length) {
       document.getElementById('leadsTable').innerHTML = `
         <tr><td colspan="7"><div class="empty">
-          <div class="empty-icon">📋</div>
+          <div class="empty-icon"></div>
           <div class="empty-text">${activeFilter === 'all' ? 'No referrals yet' : 'No ' + activeFilter + ' leads'}</div>
           <div class="empty-sub">${activeFilter === 'all' ? 'Share your referral link to get started' : 'Try a different filter'}</div>
         </div></td></tr>`;

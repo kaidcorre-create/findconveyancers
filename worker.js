@@ -186,7 +186,8 @@ async function handleLeadSubmission(request, env) {
       property_address: body.propertyAddress || '', postcode: body.city || body.postcode || 'UK',
     };
     await Promise.all([
-      emailConveyancers(body, id, env),
+      // emailConveyancers disabled — referrals are assigned manually via admin
+      Promise.resolve(),
       sendEmail(env.NOTIFY_EMAIL, `New lead: ${body.firstName} ${body.lastName}`, emailAdminNewLead(body, id), env),
       sendEmail(body.email.toLowerCase(), 'Your conveyancing quote request is confirmed ✓', emailClientConfirmation(body, id), env),
       agent
@@ -304,34 +305,29 @@ async function handleQuoteSubmit(request, env) {
 
   const address = lead.property_address || lead.postcode;
 
-  // Email failures must never break the API response.
+  // Email the client every time a new quote arrives.
   try {
-    if (count >= 3 && lead.status === 'new') {
-      // Enough quotes in, mark sent and email the side-by-side comparison.
+    const { results: quoteRows } = await env.DB.prepare(`
+      SELECT cq.total_quote, c.name AS firm_name
+      FROM conveyancer_quotes cq JOIN conveyancers c ON cq.conveyancer_id = c.id
+      WHERE cq.lead_uuid = ? ORDER BY cq.total_quote ASC
+    `).bind(lead_uuid).all();
+
+    const subject = count === 1
+      ? 'Your first conveyancing quote has arrived'
+      : `You have ${count} conveyancing quotes to compare`;
+
+    await sendEmail(
+      lead.email,
+      subject,
+      emailConsumerQuotesReady(lead, address, lead_uuid, quoteRows),
+      env
+    );
+
+    if (lead.status === 'new') {
       await env.DB.prepare(
         'UPDATE leads SET status = ?, quotes_sent_at = ?, updated_at = ? WHERE id = ?'
       ).bind('quotes_sent', now, now, lead_uuid).run();
-
-      const { results: quoteRows } = await env.DB.prepare(`
-        SELECT cq.total_quote, c.name AS firm_name
-        FROM conveyancer_quotes cq JOIN conveyancers c ON cq.conveyancer_id = c.id
-        WHERE cq.lead_uuid = ? ORDER BY cq.total_quote ASC
-      `).bind(lead_uuid).all();
-
-      await sendEmail(
-        lead.email,
-        'Your conveyancing quotes are ready to compare',
-        emailConsumerQuotesReady(lead, address, lead_uuid, quoteRows),
-        env
-      );
-    } else if (count === 1 && lead.status === 'new') {
-      // First quote in, nudge the consumer that things are moving.
-      await sendEmail(
-        lead.email,
-        'Your first conveyancing quote has arrived',
-        emailConsumerFirstQuoteArrived(lead),
-        env
-      );
     }
   } catch (e) {
     console.error('Quote-submission emails failed:', e.message);
@@ -352,9 +348,7 @@ async function handleInstruct(request, env) {
   const lead = await env.DB.prepare('SELECT * FROM leads WHERE id = ?').bind(lead_uuid).first();
   if (!lead) return jsonResponse({ error: 'Lead not found' }, 404);
 
-  if (lead.status === 'instructed') {
-    return jsonResponse({ error: 'Already instructed' }, 409);
-  }
+
 
   const quote = await env.DB.prepare(`
     SELECT cq.*, c.name AS firm_name, c.email AS conveyancer_email, c.phone AS conveyancer_phone
@@ -1828,7 +1822,7 @@ async function handleApproveConveyancer(convId, request, env) {
     );
   } catch (e) { console.error('Approve email failed:', e.message); }
 
-  return htmlPage('Approved', `<div class="icon">✅</div><h1>${conv.name} approved</h1><p>Their account is now active at the agreed fees. A confirmation email has been sent to ${conv.email}.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
+  return htmlPage('Approved', `<div class="icon" style="color:#16a34a;font-size:2rem;">&#10003;</div><h1>${conv.name} approved</h1><p>Their account is now active at the agreed fees. A confirmation email has been sent to ${conv.email}.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
 }
 
 async function handleRejectConveyancer(convId, request, env) {
@@ -1926,7 +1920,7 @@ async function handleCounterSubmit(convId, request, env) {
     );
   } catch (e) { console.error('Counter email failed:', e.message); }
 
-  return htmlPage('Counter sent', `<div class="icon">📨</div><h1>Counter offer sent</h1><p>An email has been sent to ${conv.name} at ${conv.email} with the proposed fees and links to accept or decline.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
+  return htmlPage('Counter sent', `<div class="icon" style="font-size:2rem;">&#9993;</div><h1>Counter offer sent</h1><p>An email has been sent to ${conv.name} at ${conv.email} with the proposed fees and links to accept or decline.</p><a class="btn" href="/admin.html">Back to Admin</a>`);
 }
 
 async function handleConveyancerCounterResponse(request, env) {
@@ -1961,7 +1955,7 @@ async function handleConveyancerCounterResponse(request, env) {
       );
     } catch (e) { console.error('Counter accept email failed:', e.message); }
 
-    return htmlPage('Accepted', `<div class="icon">✅</div><h1>You're in!</h1><p>Thank you for accepting. Your FindConveyancers account is now active and referrals matching your counties will be sent to ${conv.delivery_email || conv.email}.</p>`);
+    return htmlPage('Accepted', `<div class="icon" style="color:#16a34a;font-size:2rem;">&#10003;</div><h1>You're in!</h1><p>Thank you for accepting. Your FindConveyancers account is now active and referrals matching your counties will be sent to ${conv.delivery_email || conv.email}.</p>`);
   }
 
   if (action === 'decline') {
@@ -1976,7 +1970,7 @@ async function handleConveyancerCounterResponse(request, env) {
       );
     } catch (e) { console.error('Counter decline notify failed:', e.message); }
 
-    return htmlPage('Noted', `<div class="icon">👋</div><h1>Understood</h1><p>We've noted that you've declined our proposed fees. If you'd like to discuss further, please email us at <a href="mailto:partners@findconveyancers.co.uk">partners@findconveyancers.co.uk</a>.</p>`);
+    return htmlPage('Noted', `<div class="icon" style="font-size:2rem;">&#8212;</div><h1>Understood</h1><p>We've noted that you've declined our proposed fees. If you'd like to discuss further, please email us at <a href="mailto:partners@findconveyancers.co.uk">partners@findconveyancers.co.uk</a>.</p>`);
   }
 
   return new Response('Invalid action', { status: 400 });
