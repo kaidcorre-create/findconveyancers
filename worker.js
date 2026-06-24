@@ -993,6 +993,8 @@ async function handlePreviewEmails(request, env) {
   for (const [label, subject, html, from] of previews) {
     const ok = await sendEmail(to, `[PREVIEW] ${label}: ${subject}`, html, env, from);
     results.push({ label, ok });
+    // Pace sends to stay under Resend's rate limit (preview-only utility).
+    await new Promise(r => setTimeout(r, 700));
   }
   const sent = results.filter(r => r.ok).length;
   return jsonResponse({ success: true, to, sent, total: previews.length, results });
