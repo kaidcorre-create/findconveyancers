@@ -663,14 +663,14 @@ async function handleConveyancerSignup(request, env) {
   // Referral Supply Agreement embedded as their legal record. Email failures
   // must never break the API response.
   const agreementRecord =
-    `<h2 style="font-size:16px;margin:0 0 6px;color:#0F172A;">Your Referral Supply Agreement</h2>
-     <p style="font-size:12px;color:#6B7280;margin:0 0 14px;">This confirms your acceptance of our Referral Supply Agreement. Please keep it for your records. We&rsquo;ll review your application and confirm your account within 1 working day.</p>
+    `<h2 style="font-size:16px;margin:0 0 6px;color:#0F172A;">Your Referral Supply Agreement — copy for your records</h2>
+     <p style="font-size:12px;color:#6B7280;margin:0 0 14px;">This is the agreement you accepted when applying. Please keep it. The completion fees in this copy reflect what you proposed — we will confirm the agreed rates when we activate your account.</p>
      ${agreementBody}`;
   try {
     await sendEmail(
       email,
-      `You're now a FindConveyancers partner`,
-      emailConveyancerWelcome({ name, contact_name, email, delivery_email }, agreementRecord),
+      'Application received — FindConveyancers',
+      emailConveyancerApplicationReceived({ name, contact_name, email, delivery_email }, detailsTable, agreementRecord),
       env
     );
 
@@ -1981,6 +1981,22 @@ function fmtFeeTable(fees) {
     ['New Build',  `£${fees.new_build  ?? 200}`],
     ['Remortgage', `£${fees.remortgage ?? 100}`],
   ]);
+}
+
+function emailConveyancerApplicationReceived(conv, detailsTable, agreementRecord) {
+  const content =
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">Hi ${conv.contact_name || conv.name}, thank you for applying to join FindConveyancers. We've received your application and will review it within 1 working day.</p>` +
+    `<p style="font-size:12.5px;color:#374151;line-height:1.6;margin:0 0 16px;">You'll hear from us by email once we've reviewed your details. If you proposed custom fees, we'll confirm the agreed rates at that point.</p>` +
+    eSectionLabel('Your Application Details') +
+    detailsTable +
+    eInfoBox('Your Referral Supply Agreement is attached below for your records. The agreed completion fees will be confirmed when we activate your account.') +
+    `<div style="margin-top:20px;padding:16px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:11.5px;color:#6B7280;line-height:1.7;">${agreementRecord}</div>`;
+  return emailWrap({
+    badge: { text: 'Application Received', bg: '#EFF6FF', color: '#1D4ED8' },
+    headline: 'We&rsquo;ve received<br>your application',
+    sub: 'Thank you for applying. We\'ll review your details and be in touch within 1 working day.',
+    content,
+  });
 }
 
 function emailConveyancerApproved(conv, fees) {
