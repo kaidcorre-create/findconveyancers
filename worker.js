@@ -1146,19 +1146,34 @@ async function emailConveyancers(body, leadUuid, env) {
   }));
 }
 
-// ── Email templates (email-safe: table-based layout, fully inlined styles) ─────
-// Recreated from the design references in ./email templates/. No external fonts,
-// no <style> blocks, no flexbox/grid, for broad email-client compatibility.
+// ── Email templates (email-safe: table-based layout, inlined styles) ───────────
+// Recreated from the design references in ./email templates/. No external fonts
+// and no flexbox/grid, for broad email-client compatibility. A single <style>
+// block carries mobile media queries only; every base style is also inline, so
+// clients that strip <style> still render correctly.
 
 const EMAIL_FONT = "-apple-system,'Helvetica Neue',Arial,sans-serif";
 const EMAIL_FROM_CONSUMER = 'FindConveyancers <noreply@findconveyancers.co.uk>';
 const EMAIL_FROM_PARTNER  = 'FindConveyancers Partners <partners@findconveyancers.co.uk>';
-// Brand favicon (blue rounded square, white house, green tick) inlined as base64.
-const EMAIL_LOGO = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAKICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzI1NjNlYiI+PC9jaXJjbGU+CiAgCiAgCiAgPGcgZmlsbD0iI2ZmZmZmZiI+CiAgICAKICAgIDxwYXRoIGQ9Ik0xNiA2IEwyNCAxMyBMMjMgMTMgTDIzIDI1IEwyMCAyNSBMMjAgMTggTDEyIDE4IEwxMiAyNSBMOSAyNSBMOSAxMyBMOCAxMyBaIj48L3BhdGg+CiAgICAKICAgIAogICAgPHJlY3QgeD0iMTQiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI1IiBmaWxsPSIjMjU2M2ViIj48L3JlY3Q+CiAgICAKICAgIAogICAgPHJlY3QgeD0iMTQiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIzIiByeD0iMC41IiBmaWxsPSIjMjU2M2ViIj48L3JlY3Q+CiAgPC9nPgogIAogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjUiIGZpbGw9IiMxMGI5ODEiPjwvY2lyY2xlPgogIDxwYXRoIGQ9Ik0yMS41IDI0IEwyMyAyNS41IEwyNi41IDIyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiPjwvcGF0aD4KPC9zdmc+';
+// Hosted PNG favicon — SVG/data-URI logos are blocked by Gmail and most clients,
+// so we reference a real hosted raster (192px source, displayed small for retina).
+const EMAIL_LOGO = 'https://findconveyancers.co.uk/android-chrome-192x192.png';
 
 function emailLogo(size) {
-  return `<img src="${EMAIL_LOGO}" width="${size}" height="${size}" alt="FindConveyancers" style="display:block;border:0;border-radius:7px;width:${size}px;height:${size}px;">`;
+  return `<img src="${EMAIL_LOGO}" width="${size}" height="${size}" alt="FindConveyancers" style="display:block;border:0;width:${size}px;height:${size}px;">`;
 }
+
+// Mobile refinements (inline styles remain the desktop baseline).
+const EMAIL_MEDIA = `<style>
+@media only screen and (max-width:600px){
+  .fc-wrap{width:100%!important}
+  .fc-hero{padding:20px 18px 16px!important}
+  .fc-content{padding:18px 18px 4px!important}
+  .fc-cta{padding:4px 18px 22px!important}
+  .fc-band{padding-left:18px!important;padding-right:18px!important}
+  .fc-h1{font-size:21px!important;letter-spacing:-0.5px!important}
+}
+</style>`;
 
 // Shared shell. opts: { partner, badge:{text,bg,color}, headline, sub, content,
 // cta:{label,href,hideVisit}, postCta, dark:{label,items[]}, refer:{url} }
@@ -1170,26 +1185,26 @@ function emailWrap(opts) {
     ? `<div style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:${o.badge.bg};color:${o.badge.color};margin-bottom:13px;">${o.badge.text}</div>`
     : '';
   const hero = (o.headline || o.sub || badge) ? `
-    <tr><td style="padding:24px 28px 20px;background:#EFF6FF;">
+    <tr><td class="fc-hero" style="padding:24px 28px 20px;background:#EFF6FF;">
       ${badge}
-      ${o.headline ? `<div style="font-size:27px;font-weight:800;line-height:1.15;color:#0F172A;letter-spacing:-1.2px;margin-bottom:10px;">${o.headline}</div>` : ''}
+      ${o.headline ? `<div class="fc-h1" style="font-size:27px;font-weight:800;line-height:1.15;color:#0F172A;letter-spacing:-1.2px;margin-bottom:10px;">${o.headline}</div>` : ''}
       ${o.sub ? `<div style="font-size:12.5px;color:#6B7280;line-height:1.65;">${o.sub}</div>` : ''}
     </td></tr>` : '';
-  const content = o.content ? `<tr><td style="padding:22px 28px 8px;background:#fff;">${o.content}</td></tr>` : '';
+  const content = o.content ? `<tr><td class="fc-content" style="padding:22px 28px 8px;background:#fff;">${o.content}</td></tr>` : '';
   const cta = o.cta ? `
-    <tr><td style="padding:4px 28px 24px;background:#fff;text-align:center;">
+    <tr><td class="fc-cta" style="padding:4px 28px 24px;background:#fff;text-align:center;">
       <a href="${o.cta.href}" style="display:inline-block;background:#3B82F6;color:#fff;padding:13px 36px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:-0.2px;text-decoration:none;">${o.cta.label}</a>
       ${o.cta.hideVisit ? '' : `<div style="margin-top:10px;font-size:10px;color:#9CA3AF;">Or visit <a href="https://findconveyancers.co.uk" style="color:#3B82F6;text-decoration:none;font-weight:500;">findconveyancers.co.uk</a></div>`}
     </td></tr>` : '';
-  const postCta = o.postCta ? `<tr><td style="padding:0 28px 22px;background:#fff;">${o.postCta}</td></tr>` : '';
+  const postCta = o.postCta ? `<tr><td class="fc-band" style="padding:0 28px 22px;background:#fff;">${o.postCta}</td></tr>` : '';
   const refer = o.refer ? `
-    <tr><td style="padding:18px 28px;background:#F8FAFC;border-top:1px solid #E5E7EB;">
+    <tr><td class="fc-band" style="padding:18px 28px;background:#F8FAFC;border-top:1px solid #E5E7EB;">
       <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#3B82F6;margin-bottom:8px;">Refer a friend, earn &pound;75</div>
       <div style="font-size:11.5px;color:#374151;line-height:1.6;margin-bottom:10px;">Recommend FindConveyancers to a friend. If their matter completes, we&rsquo;ll send you &pound;75 as a thank you. Share your link:</div>
       ${eReferralBox(o.refer.url)}
     </td></tr>` : '';
   const dark = o.dark ? `
-    <tr><td style="padding:18px 28px;background:#0F172A;">
+    <tr><td class="fc-band" style="padding:18px 28px;background:#0F172A;">
       <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#60A5FA;margin-bottom:12px;">${o.dark.label}</div>
       ${o.dark.items.map(t => `
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;"><tr>
@@ -1198,10 +1213,11 @@ function emailWrap(opts) {
         </tr></table>`).join('')}
     </td></tr>` : '';
 
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="x-apple-disable-message-reformatting"></head>
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="x-apple-disable-message-reformatting">${EMAIL_MEDIA}</head>
 <body style="margin:0;padding:0;background:#E5E7EB;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#E5E7EB;"><tr><td align="center" style="padding:24px 12px;">
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;font-family:${EMAIL_FONT};">
+  <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td><![endif]-->
+  <table role="presentation" class="fc-wrap" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;font-family:${EMAIL_FONT};">
     <tr><td style="height:4px;line-height:4px;font-size:0;background:#3B82F6;">&nbsp;</td></tr>
     <tr><td style="background:#ffffff;border-bottom:1px solid #E5E7EB;padding:11px 22px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
@@ -1239,6 +1255,7 @@ function emailWrap(opts) {
       FindConveyancers, operated by Corre Connections &middot; England &amp; Wales
     </td></tr>
   </table>
+  <!--[if mso]></td></tr></table><![endif]-->
 </td></tr></table>
 </body></html>`;
 }
