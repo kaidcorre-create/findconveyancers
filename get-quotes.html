@@ -601,15 +601,18 @@
     <!-- Success panel -->
     <div class="success-panel" id="successPanel">
       <div style="font-size:3rem;margin-bottom:1rem;">&#9989;</div>
-      <h3 class="success-title">Quotes On The Way!</h3>
-      <p class="success-message">We've received your request. Solicitors in your area will be in touch within 24 hours.</p>
+      <h3 class="success-title">Request Submitted!</h3>
+      <p class="success-message">We've sent your details to solicitors in your area. You'll receive quotes by email within 24 hours.</p>
+      <div style="background:#FEF9C3;border:1px solid #FDE047;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;text-align:left;">
+        <p style="font-size:0.9rem;color:#713F12;margin:0;"><strong>Check your spam folder.</strong> Quotes arrive from individual solicitors' email addresses, so they may land in spam or junk — especially the first one. Add the sender to your contacts to make sure you don't miss anything.</p>
+      </div>
       <div class="success-next">
         <h4>What Happens Next:</h4>
         <ol>
-          <li><strong>Solicitors review:</strong> Local solicitors will review your request and prepare quotes</li>
-          <li><strong>Receive quotes:</strong> You'll get quotes via email within 24 hours</li>
-          <li><strong>Compare &amp; choose:</strong> Review the quotes and choose the solicitor that's right for you</li>
-          <li><strong>Get started:</strong> Instruct your chosen solicitor and begin your conveyancing</li>
+          <li><strong>Solicitors review your request</strong> and prepare a personalised quote</li>
+          <li><strong>Quotes arrive by email</strong> — check your inbox and spam folder within 24 hours</li>
+          <li><strong>Compare and choose</strong> the solicitor that's right for you, with no obligation</li>
+          <li><strong>Instruct your chosen firm</strong> and your conveyancing begins</li>
         </ol>
       </div>
       <div style="display:flex;gap:1rem;flex-direction:column;">
@@ -952,7 +955,7 @@
       });
 
       if (res.ok) {
-        formContainer.style.display = 'none';
+        form.style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
         successPanel.classList.add('show');
         if (typeof gtag === 'function') {
