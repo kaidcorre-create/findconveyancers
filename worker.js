@@ -1233,10 +1233,12 @@ async function handleMigrate(request, env) {
 const EMAIL_FONT = "-apple-system,'Helvetica Neue',Arial,sans-serif";
 const EMAIL_FROM_CONSUMER = 'FindConveyancers <noreply@findconveyancers.co.uk>';
 const EMAIL_FROM_PARTNER  = 'FindConveyancers Partners <partners@findconveyancers.co.uk>';
-// Text-based logo mark — no external image, renders in all email clients.
+// Hosted PNG — regenerated from favicon.svg (house + tick in blue circle).
+// Referenced as a real URL so Gmail and all other clients can load it.
+const EMAIL_LOGO = 'https://findconveyancers.co.uk/android-chrome-192x192.png';
+
 function emailLogo(size) {
-  const fs = Math.round(size * 0.45);
-  return `<div style="display:inline-block;width:${size}px;height:${size}px;border-radius:50%;background:#2563EB;text-align:center;line-height:${size}px;font-size:${fs}px;font-weight:800;color:#ffffff;font-family:Arial,sans-serif;letter-spacing:-0.5px;">FC</div>`;
+  return `<img src="${EMAIL_LOGO}" width="${size}" height="${size}" alt="FindConveyancers" style="display:block;border:0;width:${size}px;height:${size}px;">`;
 }
 
 // Mobile refinements (inline styles remain the desktop baseline).
