@@ -146,26 +146,8 @@
       selectedQuoteId = null;
     }
 
-    async function confirmInstruct() {
-      const btn = document.getElementById('confirm-btn');
-      btn.disabled = true;
-      btn.textContent = 'Confirming...';
-
-      try {
-        const res = await fetch('/api/instruct', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lead_uuid: leadUuid, quote_id: selectedQuoteId }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to confirm');
-
-        location.href = `/instruct.html?lead=${leadUuid}&quote=${selectedQuoteId}`;
-      } catch (err) {
-        alert('Error: ' + err.message);
-        btn.disabled = false;
-        btn.textContent = 'Yes, choose this firm';
-      }
+    function confirmInstruct() {
+      location.href = `/instruct.html?lead=${leadUuid}&quote=${selectedQuoteId}`;
     }
 
     function buildCard(quote, index, isCheapest) {

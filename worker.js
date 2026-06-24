@@ -350,6 +350,10 @@ async function handleInstruct(request, env) {
 
 
 
+  if (lead.status === 'instructed') {
+    return jsonResponse({ error: 'Already instructed' }, 409);
+  }
+
   const quote = await env.DB.prepare(`
     SELECT cq.*, c.name AS firm_name, c.email AS conveyancer_email, c.phone AS conveyancer_phone
     FROM conveyancer_quotes cq
