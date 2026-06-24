@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS leads (
   transaction_types TEXT NOT NULL DEFAULT '[]',
   property_type     TEXT NOT NULL DEFAULT '',
   property_value    INTEGER NOT NULL DEFAULT 0,
+  property_address  TEXT NOT NULL DEFAULT '',
+  freehold_leasehold TEXT NOT NULL DEFAULT '',
+  new_build         TEXT NOT NULL DEFAULT 'no',
   postcode          TEXT NOT NULL DEFAULT '',
   timeline          TEXT NOT NULL DEFAULT '',
 
@@ -20,6 +23,11 @@ CREATE TABLE IF NOT EXISTS leads (
   status            TEXT NOT NULL DEFAULT 'new',
   notes             TEXT NOT NULL DEFAULT '',
   assigned_to       TEXT NOT NULL DEFAULT '',
+
+  -- pipeline tracking (originally added via schema_migration.sql)
+  instructed_conveyancer_id TEXT NOT NULL DEFAULT '',
+  quotes_sent_at            TEXT NOT NULL DEFAULT '',
+  instructed_at             TEXT NOT NULL DEFAULT '',
 
   created_at        TEXT NOT NULL,
   updated_at        TEXT NOT NULL
@@ -50,28 +58,24 @@ CREATE TABLE IF NOT EXISTS conveyancers (
   created_at   TEXT NOT NULL
 );
 
--- ── Quotes (FindConveyancers) ─────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS quotes (
-  id                TEXT PRIMARY KEY,
-  city              TEXT NOT NULL DEFAULT '',
-  property_address  TEXT NOT NULL DEFAULT '',
-  property_price    INTEGER NOT NULL DEFAULT 0,
-  property_type     TEXT NOT NULL DEFAULT '',
-  freehold_leasehold TEXT NOT NULL DEFAULT '',
-  new_build         TEXT NOT NULL DEFAULT 'no',
-  transaction_type  TEXT NOT NULL DEFAULT '',
+-- ── Conveyancer price quotes ───────────────────────────────────────────────
+-- The actual fee quotes that conveyancers submit against each lead.
+CREATE TABLE IF NOT EXISTS conveyancer_quotes (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  lead_uuid       TEXT    NOT NULL,  -- references leads.id
+  conveyancer_id  TEXT    NOT NULL,  -- references conveyancers.id
 
-  first_name        TEXT NOT NULL,
-  last_name         TEXT NOT NULL,
-  email             TEXT NOT NULL,
-  phone             TEXT NOT NULL,
+  legal_fee       INTEGER NOT NULL DEFAULT 0,  -- pence, ex-VAT
+  vat_amount      INTEGER NOT NULL DEFAULT 0,  -- pence (20%)
+  searches        INTEGER NOT NULL DEFAULT 0,  -- pence
+  land_registry   INTEGER NOT NULL DEFAULT 0,  -- pence
+  other_fees      INTEGER NOT NULL DEFAULT 0,  -- pence
+  disbursements   INTEGER NOT NULL DEFAULT 0,  -- pence (searches + land_reg + other)
+  total_quote     INTEGER NOT NULL DEFAULT 0,  -- pence (legal + vat + disbursements)
 
-  status            TEXT NOT NULL DEFAULT 'new',
-  notes             TEXT NOT NULL DEFAULT '',
-  assigned_to       TEXT NOT NULL DEFAULT '',
-
-  created_at        TEXT NOT NULL,
-  updated_at        TEXT NOT NULL
+  breakdown_text  TEXT    NOT NULL DEFAULT '',
+  submitted_at    TEXT    NOT NULL DEFAULT '',
+  chosen          INTEGER NOT NULL DEFAULT 0   -- 1 when consumer selects this firm
 );
 
 -- ── Page Events (funnel tracking) ──────────────────────────────────────────
@@ -89,7 +93,6 @@ CREATE INDEX IF NOT EXISTS idx_leads_agent_ref  ON leads(agent_ref);
 CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
 CREATE INDEX IF NOT EXISTS idx_leads_postcode   ON leads(postcode);
 CREATE INDEX IF NOT EXISTS idx_agents_ref       ON agents(ref);
-CREATE INDEX IF NOT EXISTS idx_quotes_status    ON quotes(status);
-CREATE INDEX IF NOT EXISTS idx_quotes_city      ON quotes(city);
-CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON quotes(created_at);
-CREATE INDEX IF NOT EXISTS idx_quotes_email     ON quotes(email);
+CREATE INDEX IF NOT EXISTS idx_cq_lead          ON conveyancer_quotes(lead_uuid);
+CREATE INDEX IF NOT EXISTS idx_cq_conveyancer   ON conveyancer_quotes(conveyancer_id);
+CREATE INDEX IF NOT EXISTS idx_cq_chosen        ON conveyancer_quotes(chosen);

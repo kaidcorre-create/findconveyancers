@@ -593,6 +593,8 @@
 </style>
 </head>
 <body>
+<!-- Capture estate-agent referral (?ref=) in case the visitor lands here directly -->
+<script>(function(){try{var r=new URLSearchParams(location.search).get('ref');if(r){localStorage.setItem('fc_ref',r);localStorage.setItem('fc_ref_at',Date.now());}}catch(e){}})();</script>
 <!-- fc-chrome:header -->
 <div id="fcOvl" class="fc-ovl"></div>
 <nav id="fcDrawer" class="fc-drawer" aria-label="Mobile navigation">
@@ -991,6 +993,11 @@
     nextBtn.disabled = true;
     nextBtn.innerHTML = '<span class="loading"></span>Submitting...';
 
+    // Estate-agent referral: prefer ?ref= on this URL, else the value captured
+    // and stored when the visitor first landed via a referral link.
+    let fcRef = '';
+    try { fcRef = new URLSearchParams(location.search).get('ref') || localStorage.getItem('fc_ref') || ''; } catch (e) {}
+
     try {
       const response = await fetch('/api/leads', {
         method: 'POST',
@@ -1005,6 +1012,7 @@
           propertyType: formData.get('propertyType'),
           transactionTypes: [formData.get('transactionType')],
           timeline: formData.get('timeline') || '',
+          ref: fcRef,
         })
       });
 

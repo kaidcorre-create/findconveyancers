@@ -658,6 +658,8 @@
 </style>
 </head>
 <body>
+<!-- Capture estate-agent referral (?ref=) so it survives to the quote form -->
+<script>(function(){try{var r=new URLSearchParams(location.search).get('ref');if(r){localStorage.setItem('fc_ref',r);localStorage.setItem('fc_ref_at',Date.now());}}catch(e){}})();</script>
 <!-- fc-chrome:header -->
 <div id="fcOvl" class="fc-ovl"></div>
 <nav id="fcDrawer" class="fc-drawer" aria-label="Mobile navigation">
