@@ -104,6 +104,9 @@ export default {
       if (path === '/api/agent/me' && request.method === 'GET')
         return handleAgentMe(request, env);
 
+      if (path === '/api/agent/profile' && request.method === 'GET')
+        return handleAgentProfile(request, env);
+
       return jsonResponse({ error: 'Not found' }, 404);
 
     } catch (err) {
@@ -1132,6 +1135,15 @@ async function handleAgentMe(request, env) {
     earnings: { feePerLead: agent.fee_per_lead, totalEarned: converted * (agent.fee_per_lead || 0), converted, paid: 0 },
     byStatus: ['new','quoted','instructed','completed','lost'].map(s => ({ status: s, count: leads.filter(l => l.status === s).length })),
   });
+}
+
+// Public endpoint — returns only the agency name for co-branding on the quote form
+async function handleAgentProfile(request, env) {
+  const ref = new URL(request.url).searchParams.get('ref') || '';
+  if (!ref) return jsonResponse({ error: 'Missing ref' }, 400);
+  const agent = await env.DB.prepare('SELECT name FROM agents WHERE (id = ? OR ref = ?) AND active = 1').bind(ref, ref).first();
+  if (!agent) return jsonResponse({ error: 'Not found' }, 404);
+  return jsonResponse({ name: agent.name });
 }
 
 // ── Auth helpers ───────────────────────────────────────────────────────────────

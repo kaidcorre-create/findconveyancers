@@ -279,7 +279,12 @@
 <header class="fc-header">
   <div class="fc-header-in">
     <a href="/" class="fc-brand"><img src="/favicon.svg" alt="FindConveyancers" width="32" height="32"><span>FindConveyancers</span></a>
-    <nav class="fc-nav">
+    <!-- Co-branding strip: only shown when ?ref= matches an active agent -->
+    <div id="agentBrand" style="display:none;align-items:center;gap:0.6rem;margin-left:auto;padding-left:1rem;border-left:1px solid #E5E7EB;">
+      <span style="font-size:0.75rem;color:#9CA3AF;white-space:nowrap;">Referred by</span>
+      <span id="agentBrandName" style="font-size:0.9rem;font-weight:700;color:#0F172A;white-space:nowrap;"></span>
+    </div>
+    <nav class="fc-nav" style="margin-left:auto;">
       <a href="/#how-it-works">How It Works</a>
       <a href="/#why-us">Why Us</a>
       <a href="/#faq">FAQ</a>
@@ -291,6 +296,24 @@
     <button id="fcBurger" class="fc-burger" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   </div>
 </header>
+<script>
+(function(){
+  var ref = new URLSearchParams(location.search).get('ref');
+  if(!ref) return;
+  fetch('/api/agent/profile?ref=' + encodeURIComponent(ref))
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(!d || !d.name) return;
+      var el = document.getElementById('agentBrand');
+      document.getElementById('agentBrandName').textContent = d.name;
+      el.style.display = 'flex';
+      // Push nav to the right still by removing auto margin from nav
+      var nav = document.querySelector('.fc-nav');
+      if(nav) nav.style.marginLeft = '0';
+    })
+    .catch(function(){});
+})();
+</script>
 <!-- /fc-chrome:header -->
 
 <div class="container">
