@@ -688,16 +688,17 @@
 
       <div class="section-label">Coverage</div>
 
-      <div class="field" id="f-regions">
-        <label>Counties covered <span class="req">*</span></label>
-        <div class="county-wrap" id="countyWrap">
-          <div class="county-tags" id="countyTags" onclick="document.getElementById('countyInput').focus()">
-            <input type="text" id="countyInput" class="county-search-input" placeholder="Search and select counties…" autocomplete="off">
-          </div>
-          <div class="county-dropdown" id="countyDropdown"></div>
-        </div>
-        <div class="err-msg" id="regionsErr" style="display:none;">Please select at least one county</div>
+   <div class="field" id="f-regions">
+  <label>Counties covered <span class="req">*</span></label>
+  <div class="county-wrap" id="countyWrap">
+    <div class="county-tags" id="countyTags" onclick="document.getElementById('countyInput').focus()">
+      <input type="text" id="countyInput" class="county-search-input" placeholder="Search and select counties…" autocomplete="off">
+    </div>
+    <div class="county-dropdown" id="countyDropdown">
       </div>
+  </div>
+  <div class="err-msg" id="regionsErr" style="display:none;">Please select at least one county</div>
+</div>
 
       <div class="field" id="f-txTypes">
         <label>Transaction types <span class="req">*</span></label>
@@ -867,93 +868,129 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const ALL_COUNTIES = [
-    'Bedfordshire','Berkshire','Bristol','Buckinghamshire','Cambridgeshire','Cheshire',
-    'City of London','Cornwall','Cumbria','Derbyshire','Devon','Dorset','Durham',
-    'East Riding of Yorkshire','East Sussex','Essex','Gloucestershire','Greater London',
-    'Greater Manchester','Hampshire','Herefordshire','Hertfordshire','Isle of Wight',
-    'Kent','Lancashire','Leicestershire','Lincolnshire','Merseyside','Norfolk',
-    'North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire',
-    'Rutland','Shropshire','Somerset','South Yorkshire','Staffordshire','Suffolk',
-    'Surrey','Tyne and Wear','Warwickshire','West Midlands','West Sussex',
-    'West Yorkshire','Wiltshire','Worcestershire'
-  ];
-  let selectedCounties = new Set();
+ const ALL_COUNTIES = [
+  'Bedfordshire','Berkshire','Bristol','Buckinghamshire','Cambridgeshire','Cheshire',
+  'City of London','Cornwall','Cumbria','Derbyshire','Devon','Dorset','Durham',
+  'East Riding of Yorkshire','East Sussex','Essex','Gloucestershire','Greater London',
+  'Greater Manchester','Hampshire','Herefordshire','Hertfordshire','Isle of Wight',
+  'Kent','Lancashire','Leicestershire','Lincolnshire','Merseyside','Norfolk',
+  'North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire',
+  'Rutland','Shropshire','Somerset','South Yorkshire','Staffordshire','Suffolk',
+  'Surrey','Tyne and Wear','Warwickshire','West Midlands','West Sussex',
+  'West Yorkshire','Wiltshire','Worcestershire'
+];
+let selectedCounties = new Set();
 
-  function renderCountyTags() {
-    const tags = document.getElementById('countyTags');
-    const input = document.getElementById('countyInput');
-    Array.from(tags.querySelectorAll('.county-tag')).forEach(t => t.remove());
-    selectedCounties.forEach(c => {
-      const tag = document.createElement('span');
-      tag.className = 'county-tag';
-      tag.innerHTML = c + '<button type="button" aria-label="Remove ' + c + '" onclick="removeCounty(\'' + c.replace(/'/g,"\\'") + '\')">×</button>';
-      tags.insertBefore(tag, input);
-    });
-    input.placeholder = selectedCounties.size ? '' : 'Search and select counties…';
+function renderCountyTags() {
+  const tags = document.getElementById('countyTags');
+  const input = document.getElementById('countyInput');
+  Array.from(tags.querySelectorAll('.county-tag')).forEach(t => t.remove());
+  selectedCounties.forEach(c => {
+    const tag = document.createElement('span');
+    tag.className = 'county-tag';
+    tag.innerHTML = c + '<button type="button" aria-label="Remove ' + c + '" onclick="removeCounty(\'' + c.replace(/'/g,"\\'") + '\')">×</button>';
+    tags.insertBefore(tag, input);
+  });
+  input.placeholder = selectedCounties.size ? '' : 'Search and select counties…';
+}
+
+function removeCounty(c) {
+  selectedCounties.delete(c);
+  renderCountyTags();
+  renderCountyDropdown(document.getElementById('countyInput').value);
+}
+
+// Global action to toggle all items
+function toggleSelectAll() {
+  if (selectedCounties.size === ALL_COUNTIES.length) {
+    selectedCounties.clear();
+  } else {
+    selectedCounties = new Set(ALL_COUNTIES);
+  }
+  renderCountyTags();
+  renderCountyDropdown(document.getElementById('countyInput').value);
+}
+
+function renderCountyDropdown(query) {
+  const dd = document.getElementById('countyDropdown');
+  const filtered = ALL_COUNTIES.filter(c => c.toLowerCase().includes(query.toLowerCase()));
+  
+  if (filtered.length === 0) {
+    dd.innerHTML = '<div class="county-no-results">No counties match</div>';
+    return;
   }
 
-  function removeCounty(c) {
-    selectedCounties.delete(c);
-    renderCountyTags();
-    renderCountyDropdown(document.getElementById('countyInput').value);
+  // 1. Build the "Select All" control block conditionally (only when not searching)
+  let bulkHtml = '';
+  if (!query) {
+    const isAllSelected = selectedCounties.size === ALL_COUNTIES.length;
+    bulkHtml = `
+      <div class="county-bulk-actions" style="padding: 8px 12px; border-bottom: 1px solid #eee; background: #f9f9f9; font-size: 0.9em;">
+        <button type="button" id="btnSelectAll" style="background:none; border:none; color:#0056b3; cursor:pointer; font-weight:bold; padding:0;">
+          ${isAllSelected ? '❌ Deselect All' : '✅ Select All (' + ALL_COUNTIES.length + ')'}
+        </button>
+      </div>
+    `;
   }
 
-  function renderCountyDropdown(query) {
-    const dd = document.getElementById('countyDropdown');
-    const filtered = ALL_COUNTIES.filter(c => c.toLowerCase().includes(query.toLowerCase()));
-    if (filtered.length === 0) {
-      dd.innerHTML = '<div class="county-no-results">No counties match</div>';
-    } else {
-      dd.innerHTML = filtered.map(c =>
-        '<div class="county-opt' + (selectedCounties.has(c) ? ' selected' : '') + '" data-county="' + c.replace(/"/g,'&quot;') + '">' + c + '</div>'
-      ).join('');
+  // 2. Build options list
+  const optionsHtml = filtered.map(c =>
+    '<div class="county-opt' + (selectedCounties.has(c) ? ' selected' : '') + '" data-county="' + c.replace(/"/g,'&quot;') + '">' + c + '</div>'
+  ).join('');
+
+  // 3. Render into DOM
+  dd.innerHTML = bulkHtml + optionsHtml;
+}
+
+function toggleCounty(c) {
+  if (selectedCounties.has(c)) selectedCounties.delete(c);
+  else selectedCounties.add(c);
+  renderCountyTags();
+  renderCountyDropdown(document.getElementById('countyInput').value);
+}
+
+function initCountyDropdown() {
+  const input = document.getElementById('countyInput');
+  const dd = document.getElementById('countyDropdown');
+  const tagsEl = document.getElementById('countyTags');
+
+  input.addEventListener('focus', () => {
+    renderCountyDropdown(input.value);
+    dd.classList.add('open');
+    tagsEl.classList.add('open');
+  });
+  input.addEventListener('input', () => renderCountyDropdown(input.value));
+
+  // mousedown fires before blur — preventDefault keeps focus on the input
+  dd.addEventListener('mousedown', e => {
+    e.preventDefault();
+    
+    // Check if they clicked the bulk select button
+    if (e.target.id === 'btnSelectAll') {
+      toggleSelectAll();
+      return;
     }
-  }
 
-  function toggleCounty(c) {
-    if (selectedCounties.has(c)) selectedCounties.delete(c);
-    else selectedCounties.add(c);
-    renderCountyTags();
-    renderCountyDropdown(document.getElementById('countyInput').value);
-  }
+    const opt = e.target.closest('.county-opt');
+    if (opt) toggleCounty(opt.dataset.county);
+  });
 
-  function initCountyDropdown() {
-    const input = document.getElementById('countyInput');
-    const dd = document.getElementById('countyDropdown');
-    const tagsEl = document.getElementById('countyTags');
+  input.addEventListener('blur', () => {
+    setTimeout(() => {
+      dd.classList.remove('open');
+      tagsEl.classList.remove('open');
+      input.value = '';
+    }, 150);
+  });
+}
 
-    input.addEventListener('focus', () => {
-      renderCountyDropdown(input.value);
-      dd.classList.add('open');
-      tagsEl.classList.add('open');
-    });
-    input.addEventListener('input', () => renderCountyDropdown(input.value));
+function getSelectedCounties() {
+  return Array.from(selectedCounties);
+}
 
-    // mousedown fires before blur — preventDefault keeps focus on the input
-    dd.addEventListener('mousedown', e => {
-      e.preventDefault();
-      const opt = e.target.closest('.county-opt');
-      if (opt) toggleCounty(opt.dataset.county);
-    });
-
-    input.addEventListener('blur', () => {
-      setTimeout(() => {
-        dd.classList.remove('open');
-        tagsEl.classList.remove('open');
-        input.value = '';
-      }, 150);
-    });
-  }
-
-  function getSelectedCounties() {
-    return Array.from(selectedCounties);
-  }
-
-  function getSelectedTxTypes() {
-    return Array.from(document.querySelectorAll('input[name="txType"]:checked')).map(cb => cb.value);
-  }
-
+function getSelectedTxTypes() {
+  return Array.from(document.querySelectorAll('input[name="txType"]:checked')).map(cb => cb.value);
+}
   function validateStep2() {
     let ok = true;
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
