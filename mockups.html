@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Walkthrough – FindConveyancers</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root{--blue:#2563eb;--blue-dark:#1d4ed8;--blue-subtle:#eff6ff;--green:#059669;--green-subtle:#f0fdf4;--dark:#0f172a;--body:#374151;--muted:#6b7280;--light:#9ca3af;--border:#e5e7eb;--bg:#f8fafc;--white:#fff;--radius:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);line-height:1.6}
+
+/* ── TOP NAV ── */
+.topnav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 2rem}
+.topnav-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:2rem;height:56px}
+.topnav-brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:1rem;color:var(--dark);text-decoration:none;flex-shrink:0}
+.topnav-brand img{width:28px;height:28px}
+.tab-nav{display:flex;gap:0;margin-left:auto;border:1.5px solid var(--border);border-radius:9px;overflow:hidden}
+.tab-btn{padding:0.45rem 1.1rem;font-size:0.82rem;font-weight:600;border:none;background:none;cursor:pointer;color:var(--muted);transition:all .15s;white-space:nowrap}
+.tab-btn.active{background:var(--blue);color:#fff}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--dark) 0%,#1e3a5f 100%);color:#fff;padding:3rem 2rem 2.5rem;text-align:center}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin-bottom:0.6rem}
+.hero p{font-size:1rem;color:#94a3b8;max-width:560px;margin:0 auto}
+.hero-tabs{display:flex;gap:0.75rem;justify-content:center;margin-top:1.75rem;flex-wrap:wrap}
+.hero-tab{padding:0.55rem 1.3rem;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#cbd5e1;transition:all .2s}
+.hero-tab.active{background:#fff;color:var(--dark);border-color:#fff}
+
+/* ── JOURNEY CONTAINER ── */
+.journey{display:none;max-width:920px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.journey.active{display:block}
+
+/* ── STEP ── */
+.step{margin-bottom:3rem}
+.step-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem}
+.step-num{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-num.green{background:var(--green)}
+.step-num.amber{background:#d97706}
+.step-meta{}
+.step-who{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin-bottom:0.2rem}
+.step-title{font-size:1.15rem;font-weight:700;color:var(--dark)}
+.step-desc{font-size:0.87rem;color:var(--muted);margin-top:0.25rem}
+.connector{width:2px;height:2rem;background:var(--border);margin:0 0 0 17px}
+
+/* ── BROWSER FRAME ── */
+.browser{background:var(--white);border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,0,0,.10);overflow:hidden;border:1px solid var(--border)}
+.browser-bar{background:#f1f5f9;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.6rem;border-bottom:1px solid var(--border)}
+.browser-dots{display:flex;gap:5px}
+.browser-dot{width:11px;height:11px;border-radius:50%}
+.browser-dot.r{background:#ef4444}.browser-dot.y{background:#f59e0b}.browser-dot.g{background:#22c55e}
+.browser-url{flex:1;background:#e2e8f0;border-radius:5px;padding:0.3rem 0.7rem;font-size:0.72rem;color:var(--muted);font-family:monospace}
+.browser-body{padding:1.5rem}
+
+/* ── EMAIL FRAME ── */
+.email-frame{background:#f1f5f9;border-radius:var(--radius);padding:1rem;box-shadow:0 4px 24px rgba(0,0,0,.10);border:1px solid var(--border)}
+.email-header-bar{background:var(--white);border-radius:8px 8px 0 0;padding:0.75rem 1rem;border:1px solid var(--border);border-bottom:none}
+.email-meta{font-size:0.75rem;color:var(--muted);line-height:1.8}
+.email-meta strong{color:var(--dark)}
+.email-body{background:var(--white);border:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden}
+.email-content{max-width:540px;margin:0 auto;padding:1.5rem 1rem}
+
+/* ── EMAIL COMPONENTS (matching real templates) ── */
+.em-logo-wrap{text-align:center;padding-bottom:1.25rem;margin-bottom:1.25rem;border-bottom:1px solid #f1f5f9}
+.em-logo{width:48px;height:48px;border-radius:50%;background:var(--blue);display:inline-flex;align-items:center;justify-content:center;position:relative}
+.em-logo svg{width:26px;height:26px;color:#fff}
+.em-logo-badge{position:absolute;bottom:-2px;right:-4px;width:18px;height:18px;background:var(--green);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.em-logo-badge svg{width:10px;height:10px;color:#fff}
+.em-badge{display:inline-block;padding:0.3rem 0.85rem;border-radius:20px;font-size:0.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+.em-headline{font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:0.4rem;line-height:1.3}
+.em-sub{font-size:0.85rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6}
+.em-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--light);margin:1rem 0 0.5rem}
+.em-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:0.75rem}
+.em-table td{padding:5px 0;border-bottom:1px solid #f3f4f6;vertical-align:top}
+.em-table td:first-child{color:var(--muted);font-weight:500;width:42%;padding-right:0.75rem}
+.em-table td:last-child{color:var(--dark);font-weight:600}
+.em-steps{list-style:none;margin-bottom:0.75rem}
+.em-step-item{display:flex;gap:0.75rem;margin-bottom:0.75rem;font-size:0.82rem}
+.em-step-dot{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.em-step-title{font-weight:700;color:var(--dark)}
+.em-step-desc{color:var(--muted);margin-top:1px}
+.em-info{background:#f8fafc;border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:0.6rem 0.85rem;font-size:0.78rem;color:var(--body);margin-bottom:0.75rem;line-height:1.5}
+.em-cta{display:block;background:var(--blue);color:#fff;text-align:center;padding:0.75rem 1.5rem;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;margin:1rem 0 0.5rem}
+.em-cta.green{background:var(--green)}
+.em-quote-card{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center}
+.em-quote-firm{font-size:0.85rem;font-weight:700;color:var(--dark)}
+.em-quote-price{font-size:1rem;font-weight:800;color:var(--blue)}
+.em-refbox{background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 0.85rem;font-size:0.72rem;font-family:monospace;color:var(--dark);word-break:break-all;margin-bottom:0.75rem}
+.em-check-item{display:flex;gap:0.75rem;margin-bottom:0.6rem;font-size:0.82rem;align-items:flex-start}
+.em-check-dot{width:20px;height:20px;border-radius:50%;background:var(--green-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.em-check-dot svg{width:11px;height:11px;color:var(--green)}
+.em-footer{text-align:center;padding:1rem 0 0.5rem;font-size:0.7rem;color:var(--light)}
+
+/* ── FORM MOCKUP ── */
+.form-mock{font-size:0.88rem}
+.form-mock-progress{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.25rem}
+.prog-step{flex:1;text-align:center;padding:0.6rem 0.25rem;font-size:0.72rem;font-weight:600;color:var(--light);border-bottom:3px solid transparent}
+.prog-step.active{color:var(--blue);border-bottom-color:var(--blue)}
+.prog-step.done{color:var(--muted);border-bottom-color:var(--muted)}
+.form-mock-title{font-size:1.05rem;font-weight:700;margin-bottom:0.25rem}
+.form-mock-sub{font-size:0.8rem;color:var(--muted);margin-bottom:1.1rem}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
+.choice-item{border:2px solid var(--border);border-radius:9px;padding:0.75rem;text-align:center;font-size:0.82rem;font-weight:600;color:var(--dark)}
+.choice-item.sel{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+.mock-field{margin-bottom:0.85rem}
+.mock-label{font-size:0.78rem;font-weight:600;color:var(--dark);margin-bottom:0.3rem}
+.mock-input{width:100%;padding:0.55rem 0.75rem;border:2px solid var(--border);border-radius:8px;font-size:0.85rem;color:var(--dark);background:var(--white)}
+.mock-input.filled{border-color:#d1d5db;color:var(--dark)}
+.mock-btn{width:100%;padding:0.75rem;background:var(--blue);color:#fff;border-radius:9px;font-weight:700;font-size:0.9rem;text-align:center;margin-top:0.75rem}
+
+/* ── COMPARE MOCKUP ── */
+.quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem}
+.quote-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;font-size:0.8rem}
+.quote-card.best{border-color:#86efac;box-shadow:0 0 0 1px #86efac}
+.quote-card-head{padding:0.75rem;background:var(--white)}
+.quote-badge{font-size:0.65rem;font-weight:700;background:#dcfce7;color:#166534;padding:0.2rem 0.5rem;border-radius:20px;display:inline-block;margin-bottom:0.4rem}
+.quote-firm{font-weight:700;font-size:0.85rem;color:var(--dark)}
+.quote-reg{font-size:0.68rem;color:var(--light);margin-bottom:0.5rem}
+.quote-price-box{background:#f8fafc;border-radius:7px;padding:0.5rem;text-align:center;margin-bottom:0.5rem}
+.quote-price-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--light);font-weight:600}
+.quote-price{font-size:1.4rem;font-weight:900;color:var(--dark)}
+.quote-row{display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;font-size:0.75rem;color:var(--muted)}
+.quote-row span:last-child{font-weight:600;color:var(--dark)}
+.quote-btn{display:block;width:100%;padding:0.6rem;text-align:center;font-weight:700;font-size:0.8rem;color:#fff;border-radius:0 0 8px 8px}
+
+/* ── SUCCESS MOCKUP ── */
+.success-mock{text-align:center;padding:2rem 1rem}
+.success-icon-wrap{width:70px;height:70px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.success-icon-wrap svg{width:38px;height:38px;color:var(--green)}
+.success-h{font-size:1.3rem;font-weight:800;margin-bottom:0.4rem}
+.success-p{font-size:0.85rem;color:var(--muted);margin-bottom:1.25rem}
+.next-steps-box{background:#f8fafc;border-radius:10px;padding:1rem;text-align:left}
+.next-step-row{display:flex;gap:0.75rem;margin-bottom:0.75rem;font-size:0.82rem;align-items:flex-start}
+.ns-dot{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ns-dot.g{background:var(--green)}
+
+/* ── QUOTE FORM MOCKUP ── */
+.conv-card{background:var(--blue);color:#fff;border-radius:10px 10px 0 0;padding:1rem 1.25rem;margin-bottom:0}
+.conv-card-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin-bottom:0.25rem}
+.conv-card-addr{font-size:1.05rem;font-weight:800;margin-bottom:0.5rem}
+.conv-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;background:var(--white);border-radius:0 0 10px 10px;padding:0.75rem 1.25rem;border:1px solid var(--border);border-top:none;margin-bottom:1rem}
+.conv-card-cell-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--light);font-weight:600;margin-bottom:0.15rem}
+.conv-card-cell-val{font-size:0.85rem;font-weight:700;color:var(--dark)}
+.fee-row{display:flex;gap:0.75rem;margin-bottom:0.6rem}
+.fee-input-wrap{flex:1}
+.fee-input-label{font-size:0.75rem;font-weight:600;color:var(--dark);margin-bottom:0.3rem}
+.fee-input{width:100%;padding:0.55rem 0.75rem 0.55rem 1.5rem;border:2px solid var(--border);border-radius:7px;font-size:0.88rem;font-weight:600;color:var(--dark);position:relative;background:var(--white)}
+.fee-prefix{position:relative;display:flex;align-items:center}
+.fee-prefix::before{content:'£';position:absolute;left:0.6rem;color:var(--muted);font-weight:600;font-size:0.82rem;z-index:1}
+.total-box{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:9px;padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem}
+.total-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--blue)}
+.total-price{font-size:1.5rem;font-weight:900;color:var(--blue)}
+
+/* ── AGENT SIGNUP MOCKUP ── */
+.signup-progress{display:flex;gap:0.5rem;margin-bottom:1.5rem}
+.sp-step{flex:1;height:4px;border-radius:2px;background:var(--border)}
+.sp-step.done{background:var(--blue)}
+.sp-step.active{background:var(--blue);opacity:.5}
+.signup-section-title{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--light);margin-bottom:0.85rem}
+
+/* ── REFERRAL HEADER ── */
+.ref-header{background:#fff;border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;display:flex;align-items:center;gap:0.75rem}
+.ref-header-brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.95rem}
+.ref-header-brand img{width:26px;height:26px}
+.ref-divider{width:1px;height:1.4rem;background:var(--border);margin:0 0.25rem}
+.ref-by{font-size:0.7rem;color:var(--light)}
+.ref-agent-name{font-size:0.9rem;font-weight:700;color:var(--dark)}
+
+/* ── SECTION LABEL ── */
+.section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--light);margin:1.25rem 0 0.6rem;padding-bottom:0.3rem;border-bottom:1px solid var(--border)}
+
+/* ── JOURNEY HEADER ── */
+.journey-header{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.journey-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.journey-icon.blue{background:#eff6ff}
+.journey-icon.green{background:#f0fdf4}
+.journey-icon.amber{background:#fffbeb}
+.journey-icon svg{width:24px;height:24px}
+.journey-title{font-size:1.1rem;font-weight:800;color:var(--dark)}
+.journey-sub{font-size:0.85rem;color:var(--muted)}
+
+@media(max-width:640px){
+  .quotes-grid{grid-template-columns:1fr}
+  .choice-row{grid-template-columns:1fr}
+  .tab-btn{padding:0.4rem 0.7rem;font-size:0.75rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-in">
+    <a href="/" class="topnav-brand"><img src="/favicon.svg" alt="">FindConveyancers</a>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="showJourney('consumer')">Consumer</button>
+      <button class="tab-btn" onclick="showJourney('conveyancer')">Conveyancer</button>
+      <button class="tab-btn" onclick="showJourney('agent')">Estate Agent</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Platform Walkthrough</h1>
+  <p>The complete end-to-end flow — every screen, every email, in the order each party sees them.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ CONSUMER JOURNEY -->
+<div id="journey-consumer" class="journey active">
+
+  <div class="journey-header">
+    <div class="journey-icon blue">
+      <svg fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+    </div>
+    <div>
+      <div class="journey-title">Consumer Journey</div>
+      <div class="journey-sub">What a buyer or seller sees from first click to completion</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · findconveyancers.co.uk/get-quotes</div>
+        <div class="step-title">Quote request form</div>
+        <div class="step-desc">4-step form — takes under 2 minutes to complete</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/get-quotes.html</div>
+      </div>
+      <div class="browser-body">
+        <div class="form-mock">
+          <div class="form-mock-progress">
+            <div class="prog-step done">1 Transaction</div>
+            <div class="prog-step done">2 Property</div>
+            <div class="prog-step active">3 Contact</div>
+            <div class="prog-step">4 Review</div>
+          </div>
+          <div class="form-mock-title">Your Contact Details</div>
+          <div class="form-mock-sub">Solicitors will use this to send you their quotes</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem">
+            <div class="mock-field">
+              <div class="mock-label">First Name</div>
+              <div class="mock-input filled">Sarah</div>
+            </div>
+            <div class="mock-field">
+              <div class="mock-label">Last Name</div>
+              <div class="mock-input filled">Johnson</div>
+            </div>
+          </div>
+          <div class="mock-field">
+            <div class="mock-label">Email Address</div>
+            <div class="mock-input filled">sarah.johnson@email.com</div>
+          </div>
+          <div class="mock-field">
+            <div class="mock-label">Phone Number</div>
+            <div class="mock-input filled">07712 345678</div>
+          </div>
+          <div style="font-size:0.72rem;color:var(--light);margin:0.75rem 0;line-height:1.5"><strong style="color:var(--muted)">Your privacy matters:</strong> By submitting, you agree to be contacted by regulated solicitors about your enquiry. We never sell your data to third parties.</div>
+          <div style="display:flex;gap:0.6rem">
+            <div style="flex:0 0 auto;padding:0.75rem 1rem;border:2px solid var(--blue);border-radius:9px;font-weight:700;font-size:0.85rem;color:var(--blue)">← Back</div>
+            <div class="mock-btn" style="margin-top:0">Get my quotes →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 2: confirmation email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · Email from noreply@findconveyancers.co.uk</div>
+        <div class="step-title">Request confirmation email</div>
+        <div class="step-desc">Sent immediately after form submission</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers &lt;noreply@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> sarah.johnson@email.com<br>
+          <strong>Subject:</strong> We're finding your best conveyancing quotes
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#eff6ff;color:#1d4ed8">Quote Request Received</div>
+            <div class="em-headline">We're finding your best<br>conveyancing quotes</div>
+            <div class="em-sub">Regulated solicitors are reviewing your property details right now. You'll receive quotes directly to this inbox, typically within a few hours.</div>
+          </div>
+          <div class="em-label">What Happens Next</div>
+          <ul class="em-steps">
+            <li class="em-step-item"><div class="em-step-dot">1</div><div><div class="em-step-title">We share your details</div><div class="em-step-desc">Your property information is sent to regulated solicitors who specialise in your area and transaction type.</div></div></li>
+            <li class="em-step-item"><div class="em-step-dot">2</div><div><div class="em-step-title">Quotes arrive in your inbox</div><div class="em-step-desc">You'll receive competitive quotes directly to this email address, typically within a few hours of submitting.</div></div></li>
+            <li class="em-step-item"><div class="em-step-dot">3</div><div><div class="em-step-title">Compare, choose, get moving</div><div class="em-step-desc">Review quotes side by side. No obligation, no hidden fees. Choose the firm that works best for you.</div></div></li>
+          </ul>
+          <div class="em-info">All firms are SRA or CLC regulated &nbsp;·&nbsp; Free to use &nbsp;·&nbsp; No obligation</div>
+          <a class="em-cta" href="#">Track Your Request</a>
+          <div class="em-footer">FindConveyancers · findconveyancers.co.uk<br>Privacy Policy · Terms of Service</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 3: quotes ready email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · Email from noreply@findconveyancers.co.uk</div>
+        <div class="step-title">Quotes ready email</div>
+        <div class="step-desc">Sent each time a new quote arrives for the lead</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers &lt;noreply@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> sarah.johnson@email.com<br>
+          <strong>Subject:</strong> Your conveyancing quotes are ready to compare
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#f0fdf4;color:#166534">Quotes Ready</div>
+            <div class="em-headline">Your conveyancing quotes<br>are ready to compare</div>
+            <div class="em-sub">We've matched you with regulated solicitors based on your property and location. All firms are SRA or CLC regulated, so you can compare and choose with no obligation.</div>
+          </div>
+          <div class="em-label">Your Quotes</div>
+          <div class="em-quote-card"><div><div class="em-quote-firm">Palmers Solicitors</div><div style="font-size:0.72rem;color:var(--light)">Fixed fee</div></div><div class="em-quote-price">£1,420</div></div>
+          <div class="em-quote-card"><div><div class="em-quote-firm">Heald Solicitors</div><div style="font-size:0.72rem;color:var(--light)">Fixed fee</div></div><div class="em-quote-price">£1,595</div></div>
+          <div class="em-quote-card"><div><div class="em-quote-firm">Evans Cook Solicitors</div><div style="font-size:0.72rem;color:var(--light)">Fixed fee</div></div><div class="em-quote-price">£1,650</div></div>
+          <div style="font-size:0.7rem;color:var(--light);margin-bottom:0.75rem;line-height:1.5">Prices shown include VAT and disbursements. Full breakdowns are available on the comparison page.</div>
+          <a class="em-cta green" href="#">Compare Your Quotes</a>
+          <div class="em-footer">FindConveyancers · findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 4: compare page -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · findconveyancers.co.uk/compare</div>
+        <div class="step-title">Compare quotes</div>
+        <div class="step-desc">Full fee breakdown for each firm — cheapest highlighted</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/compare.html?lead=••••••••</div>
+      </div>
+      <div class="browser-body">
+        <div style="margin-bottom:1rem">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin-bottom:0.2rem">Conveyancing quotes for</div>
+          <div style="font-size:1.1rem;font-weight:800;color:var(--dark)">14 Church Lane, Northampton, NN1 1AA</div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-top:0.3rem">£280,000 &nbsp;·&nbsp; Sarah Johnson</div>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem">3 quotes received. All firms are regulated by the SRA or CLC. <strong>No obligation</strong> – choose or walk away for free.</div>
+        <div class="quotes-grid">
+          <div class="quote-card best">
+            <div class="quote-card-head">
+              <div class="quote-badge">Lowest quote</div>
+              <div class="quote-firm">Palmers Solicitors</div>
+              <div class="quote-reg">SRA / CLC Regulated</div>
+              <div class="quote-price-box"><div class="quote-price-label">Total Quote</div><div class="quote-price">£1,420</div></div>
+              <div class="quote-row"><span>Legal fee (ex VAT)</span><span>£950</span></div>
+              <div class="quote-row"><span>VAT (20%)</span><span>£190</span></div>
+              <div class="quote-row"><span>Search fees</span><span>£180</span></div>
+              <div class="quote-row"><span>Land Registry</span><span>£100</span></div>
+            </div>
+            <div class="quote-btn" style="background:var(--green);padding:0.6rem">Choose Palmers Solicitors</div>
+          </div>
+          <div class="quote-card">
+            <div class="quote-card-head">
+              <div style="height:1.4rem"></div>
+              <div class="quote-firm">Heald Solicitors</div>
+              <div class="quote-reg">SRA / CLC Regulated</div>
+              <div class="quote-price-box"><div class="quote-price-label">Total Quote</div><div class="quote-price">£1,595</div></div>
+              <div class="quote-row"><span>Legal fee (ex VAT)</span><span>£1,100</span></div>
+              <div class="quote-row"><span>VAT (20%)</span><span>£220</span></div>
+              <div class="quote-row"><span>Search fees</span><span>£175</span></div>
+              <div class="quote-row"><span>Land Registry</span><span>£100</span></div>
+            </div>
+            <div class="quote-btn" style="background:var(--blue);padding:0.6rem">Choose Heald Solicitors</div>
+          </div>
+          <div class="quote-card">
+            <div class="quote-card-head">
+              <div style="height:1.4rem"></div>
+              <div class="quote-firm">Evans Cook Solicitors</div>
+              <div class="quote-reg">SRA / CLC Regulated</div>
+              <div class="quote-price-box"><div class="quote-price-label">Total Quote</div><div class="quote-price">£1,650</div></div>
+              <div class="quote-row"><span>Legal fee (ex VAT)</span><span>£1,150</span></div>
+              <div class="quote-row"><span>VAT (20%)</span><span>£230</span></div>
+              <div class="quote-row"><span>Search fees</span><span>£170</span></div>
+              <div class="quote-row"><span>Land Registry</span><span>£100</span></div>
+            </div>
+            <div class="quote-btn" style="background:var(--blue);padding:0.6rem">Choose Evans Cook</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 5: instructed success -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">5</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · findconveyancers.co.uk/instruct</div>
+        <div class="step-title">Instruction confirmed</div>
+        <div class="step-desc">Shown immediately after the consumer chooses a firm</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/instruct.html?lead=••••&quote=••••</div>
+      </div>
+      <div class="browser-body">
+        <div style="background:var(--green);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1rem">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem">
+            <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="color:#fff;font-size:1.3rem;font-weight:800;margin-bottom:0.3rem">You're all set!</div>
+          <div style="color:#dcfce7;font-size:0.82rem">Your conveyancer has been notified and will contact you within 24 hours.</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin-bottom:0.3rem">Your conveyancer</div>
+          <div style="font-size:1.1rem;font-weight:800">Palmers Solicitors</div>
+        </div>
+        <div class="next-steps-box">
+          <div style="font-size:0.82rem;font-weight:800;margin-bottom:0.85rem">What happens next?</div>
+          <div class="next-step-row"><div class="ns-dot">1</div><div><strong>They contact you within 24 hours</strong><div style="font-size:0.75rem;color:var(--muted)">Your conveyancer will introduce themselves and explain the process.</div></div></div>
+          <div class="next-step-row"><div class="ns-dot">2</div><div><strong>Receive your client care letter</strong><div style="font-size:0.75rem;color:var(--muted)">Review and sign their terms of engagement and provide ID documents.</div></div></div>
+          <div class="next-step-row"><div class="ns-dot">3</div><div><strong>Conveyancing begins</strong><div style="font-size:0.75rem;color:var(--muted)">Searches, enquiries, and contract review. Typically 8–12 weeks to completion.</div></div></div>
+          <div class="next-step-row"><div class="ns-dot g">✓</div><div><strong>Completion day</strong><div style="font-size:0.75rem;color:var(--muted)">Keys in hand. Your conveyancer handles the final transfer.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 6: consumer confirmation email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">6</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer · Email from noreply@findconveyancers.co.uk</div>
+        <div class="step-title">Instruction confirmation email</div>
+        <div class="step-desc">Sent immediately after instructing a firm</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers &lt;noreply@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> sarah.johnson@email.com<br>
+          <strong>Subject:</strong> Palmers Solicitors will contact you shortly
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#f0fdf4;color:#166534">You're All Set</div>
+            <div class="em-headline">Palmers Solicitors<br>will contact you shortly</div>
+            <div class="em-sub">Your conveyancer is confirmed. Here's everything you need to know about what comes next.</div>
+          </div>
+          <div class="em-label">Your Conveyancer</div>
+          <table class="em-table"><tr><td>Firm</td><td>Palmers Solicitors</td></tr><tr><td>Email</td><td>jill@palmers.co.uk</td></tr><tr><td>Phone</td><td>01604 000000</td></tr><tr><td>Your quote</td><td>£1,420.00</td></tr></table>
+          <div class="em-label">What Happens Next</div>
+          <ul class="em-steps">
+            <li class="em-step-item"><div class="em-step-dot">1</div><div><div class="em-step-title">They'll confirm your instruction</div><div class="em-step-desc">Palmers Solicitors will contact you to confirm and send a client care letter with their terms.</div></div></li>
+            <li class="em-step-item"><div class="em-step-dot">2</div><div><div class="em-step-title">Provide your ID</div><div class="em-step-desc">You'll be asked for identity documents to satisfy anti-money-laundering checks.</div></div></li>
+            <li class="em-step-item"><div class="em-step-dot">3</div><div><div class="em-step-title">The conveyancing begins</div><div class="em-step-desc">From here it typically takes 8–12 weeks through to completion.</div></div></li>
+          </ul>
+          <div class="em-footer">FindConveyancers · findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ CONVEYANCER JOURNEY -->
+<div id="journey-conveyancer" class="journey">
+
+  <div class="journey-header">
+    <div class="journey-icon blue">
+      <svg fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    </div>
+    <div>
+      <div class="journey-title">Conveyancer Journey</div>
+      <div class="journey-sub">What a partner solicitor sees — from sign-up through to being chosen by a client</div>
+    </div>
+  </div>
+
+  <!-- Step 1: welcome email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div class="step-meta">
+        <div class="step-who">Conveyancer · Email from partners@findconveyancers.co.uk</div>
+        <div class="step-title">Partner welcome email</div>
+        <div class="step-desc">Sent when a conveyancer's application is approved</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers Partners &lt;partners@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> jill@palmers.co.uk<br>
+          <strong>Subject:</strong> You're now a FindConveyancers partner
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#f0fdf4;color:#166534">Partner Confirmed</div>
+            <div class="em-headline">You're now a<br>FindConveyancers partner</div>
+            <div class="em-sub">Your firm is registered and your acceptance of our Referral Supply Agreement is confirmed.</div>
+          </div>
+          <div class="em-label">How It Works</div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Referrals arrive by email</div><div class="em-step-desc">We email each new referral to jill@palmers.co.uk with a unique link to submit your quote.</div></div></div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Win the work, get the details</div><div class="em-step-desc">If the client selects you, we email you their full contact details so you can proceed directly.</div></div></div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Pay on completion only</div><div class="em-step-desc">A referral fee is due only when the matter completes, never at instruction, and never if a transaction falls through.</div></div></div>
+          <div class="em-info">Tip: add noreply@findconveyancers.co.uk to your safe-senders list so you never miss a referral.</div>
+          <div class="em-footer">FindConveyancers Partners · partners@findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 2: new referral email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div class="step-meta">
+        <div class="step-who">Conveyancer · Email from noreply@findconveyancers.co.uk</div>
+        <div class="step-title">New referral notification</div>
+        <div class="step-desc">Sent when admin assigns a lead to this firm</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers &lt;noreply@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> jill@palmers.co.uk<br>
+          <strong>Subject:</strong> New referral: Freehold house at £280,000
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#eff6ff;color:#1d4ed8">New Referral</div>
+            <div class="em-headline">You have a new<br>conveyancing referral</div>
+            <div class="em-sub">A prospective client is waiting for a quote. Review the details below and submit yours.</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--body);line-height:1.6;margin-bottom:0.75rem">Hi Jill, you have a new referral from FindConveyancers. Please submit your quote within <strong>24 hours</strong>.</div>
+          <div class="em-label">Property Details</div>
+          <table class="em-table"><tr><td>Address</td><td>14 Church Lane, Northampton, NN1 1AA</td></tr><tr><td>Price</td><td>£280,000</td></tr><tr><td>Transaction</td><td>buying</td></tr><tr><td>Tenure</td><td>Freehold</td></tr><tr><td>New build</td><td>No</td></tr></table>
+          <div class="em-label">Transaction Details</div>
+          <table class="em-table"><tr><td>Mortgaged</td><td>Yes</td></tr><tr><td>Purchase stage</td><td>Offer accepted</td></tr><tr><td>Special circumstances</td><td>First Time Buyer</td></tr><tr><td>Number of applicants</td><td>1</td></tr></table>
+          <div class="em-info">This referral has been sent to a small number of firms. First to submit a competitive quote wins. The client's contact details are shared only if they select your quote.</div>
+          <a class="em-cta" href="#">Submit Your Quote</a>
+          <div class="em-footer">FindConveyancers · findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 3: quote portal -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div class="step-meta">
+        <div class="step-who">Conveyancer · findconveyancers.co.uk/quote</div>
+        <div class="step-title">Quote submission portal</div>
+        <div class="step-desc">Unique link from the email — no login required</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/quote.html?lead=••••&conv=••••</div>
+      </div>
+      <div class="browser-body">
+        <div class="conv-card">
+          <div class="conv-card-label">Quote Request</div>
+          <div class="conv-card-addr">14 Church Lane, Northampton, NN1 1AA</div>
+          <div style="background:rgba(255,255,255,.15);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;color:#bfdbfe;display:inline-block">Submit within 24 hours — only a small number of firms received this lead</div>
+        </div>
+        <div class="conv-card-grid">
+          <div><div class="conv-card-cell-label">Property Value</div><div class="conv-card-cell-val">£280,000</div></div>
+          <div><div class="conv-card-cell-label">Property Type</div><div class="conv-card-cell-val">Freehold</div></div>
+          <div><div class="conv-card-cell-label">Transaction</div><div class="conv-card-cell-val">buying</div></div>
+          <div><div class="conv-card-cell-label">Client</div><div class="conv-card-cell-val">Sarah Johnson</div></div>
+        </div>
+        <div style="font-size:0.9rem;font-weight:700;margin-bottom:0.2rem">Your Quote</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">Enter your fees below. All amounts in pounds sterling (£) excluding VAT unless stated.</div>
+        <div class="fee-row">
+          <div class="fee-input-wrap">
+            <div class="fee-input-label">Legal Fee <span style="color:#ef4444">*</span> <span style="font-weight:400;color:var(--muted)">(ex VAT)</span></div>
+            <div class="fee-prefix"><div class="fee-input" style="padding-left:1.5rem;font-weight:600">950.00</div></div>
+          </div>
+        </div>
+        <div style="background:#f8fafc;border-radius:7px;padding:0.5rem 0.75rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+          <div><div style="font-size:0.78rem;font-weight:600;color:var(--dark)">VAT (20%)</div><div style="font-size:0.68rem;color:var(--light)">Auto-calculated</div></div>
+          <div style="font-size:1rem;font-weight:800;color:var(--dark)">£190.00</div>
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;margin-bottom:0.6rem">Disbursements</div>
+        <div class="fee-row">
+          <div class="fee-input-wrap"><div class="fee-input-label">Search fees</div><div class="fee-prefix"><div class="fee-input" style="padding-left:1.5rem">180.00</div></div></div>
+          <div class="fee-input-wrap"><div class="fee-input-label">Land Registry fee</div><div class="fee-prefix"><div class="fee-input" style="padding-left:1.5rem">100.00</div></div></div>
+        </div>
+        <div class="total-box">
+          <div><div class="total-label">Total Quote</div><div style="font-size:0.7rem;color:var(--blue)">Legal fee + VAT + Disbursements</div></div>
+          <div class="total-price">£1,420.00</div>
+        </div>
+        <div class="mock-btn">Submit Quote</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 4: instructed email -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">4</div>
+      <div class="step-meta">
+        <div class="step-who">Conveyancer · Email from noreply@findconveyancers.co.uk</div>
+        <div class="step-title">You've been instructed</div>
+        <div class="step-desc">Sent when the client selects this firm — includes full client contact details</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers &lt;noreply@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> jill@palmers.co.uk<br>
+          <strong>Subject:</strong> You've been instructed: Sarah Johnson
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#f0fdf4;color:#166534">You've Been Instructed</div>
+            <div class="em-headline">Congratulations,<br>you've been chosen</div>
+            <div class="em-sub">Sarah has selected your firm. Their full contact details are below so you can get started.</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--body);line-height:1.6;margin-bottom:0.75rem">Sarah Johnson has instructed your firm for conveyancing at <strong>14 Church Lane, Northampton, NN1 1AA</strong>.</div>
+          <div class="em-label">Client Contact Details</div>
+          <table class="em-table"><tr><td>Name</td><td>Sarah Johnson</td></tr><tr><td>Email</td><td>sarah.johnson@email.com</td></tr><tr><td>Phone</td><td>07712 345678</td></tr></table>
+          <div class="em-label">Property &amp; Quote</div>
+          <table class="em-table"><tr><td>Address</td><td>14 Church Lane, Northampton, NN1 1AA</td></tr><tr><td>Your quote</td><td>£1,420.00</td></tr></table>
+          <div class="em-info">This is now your client, so please don't pass their details to any third party. Contact them within 24 hours to introduce yourself.</div>
+          <div class="em-footer">FindConveyancers · findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ ESTATE AGENT JOURNEY -->
+<div id="journey-agent" class="journey">
+
+  <div class="journey-header">
+    <div class="journey-icon amber">
+      <svg fill="none" viewBox="0 0 24 24" stroke="#d97706" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+    </div>
+    <div>
+      <div class="journey-title">Estate Agent Journey</div>
+      <div class="journey-sub">How an estate agent joins as a referral partner and earns on completions</div>
+    </div>
+  </div>
+
+  <!-- Step 1: sign-up form -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num amber">1</div>
+      <div class="step-meta">
+        <div class="step-who">Estate Agent · findconveyancers.co.uk/estate-agent-signup</div>
+        <div class="step-title">Partner sign-up form</div>
+        <div class="step-desc">5-step form — agency details, contact, areas, then review</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/estate-agent-signup.html</div>
+      </div>
+      <div class="browser-body">
+        <div class="signup-progress">
+          <div class="sp-step done"></div>
+          <div class="sp-step done"></div>
+          <div class="sp-step active"></div>
+          <div class="sp-step"></div>
+          <div class="sp-step"></div>
+        </div>
+        <div class="form-mock-title">Your Details</div>
+        <div class="form-mock-sub">Step 3 of 5 — the person we'll work with day-to-day</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+          <div class="mock-field"><div class="mock-label">First name</div><div class="mock-input filled">Marcus</div></div>
+          <div class="mock-field"><div class="mock-label">Last name</div><div class="mock-input filled">Webb</div></div>
+        </div>
+        <div class="mock-field"><div class="mock-label">Job title / role</div><div class="mock-input filled">Branch Manager</div></div>
+        <div class="mock-field"><div class="mock-label">Email address</div><div class="mock-input filled">marcus@webbproperty.co.uk</div></div>
+        <div class="mock-field"><div class="mock-label">Phone number</div><div class="mock-input filled">01604 000000</div></div>
+        <div style="display:flex;gap:0.6rem;margin-top:0.75rem">
+          <div style="flex:0 0 auto;padding:0.7rem 1rem;border:2px solid var(--border);border-radius:9px;font-weight:700;font-size:0.85rem;color:var(--muted)">← Back</div>
+          <div class="mock-btn" style="margin-top:0">Continue →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 2: welcome email with referral link -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num amber">2</div>
+      <div class="step-meta">
+        <div class="step-who">Estate Agent · Email from partners@findconveyancers.co.uk</div>
+        <div class="step-title">Welcome email with referral link</div>
+        <div class="step-desc">Sent immediately after sign-up — the link is live and ready to share</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers Partners &lt;partners@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> marcus@webbproperty.co.uk<br>
+          <strong>Subject:</strong> Welcome: your referral link is live
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#eff6ff;color:#1d4ed8">Partner Programme</div>
+            <div class="em-headline">Welcome to the<br>FindConveyancers<br>Partner Programme</div>
+            <div class="em-sub">Your referral link is active and ready to share. Earn a fee for every conveyancing transaction that completes through your link, automatically and with no invoicing.</div>
+          </div>
+          <div class="em-label">Your Referral Link</div>
+          <div class="em-refbox">https://findconveyancers.co.uk/get-quotes.html?ref=webb-property-a1b2c3</div>
+          <div class="em-label">3 Ways to Share It</div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Send to buyers &amp; sellers</div><div class="em-step-desc">Share your link the moment a sale is agreed — clients can request quotes in under 60 seconds.</div></div></div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Add to your email signature</div><div class="em-step-desc">A single line with your referral link works quietly in the background across every email you send.</div></div></div>
+          <div class="em-check-item"><div class="em-check-dot"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div><div><div class="em-step-title">Feature on your website</div><div class="em-step-desc">We'll provide a branded widget or simple button you can drop onto your site in minutes.</div></div></div>
+          <a class="em-cta" href="#">View Your Partner Dashboard</a>
+          <div style="background:#0f172a;border-radius:8px;padding:1rem;margin-bottom:0.75rem">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:0.6rem">How Your Earnings Work</div>
+            <div style="font-size:0.8rem;color:#cbd5e1;line-height:1.6">
+              <div style="margin-bottom:0.35rem">· A referral fee is paid for every transaction that completes through your link</div>
+              <div style="margin-bottom:0.35rem">· Payments are automatic, with no invoicing, chasing or admin required</div>
+              <div>· Your dashboard shows referrals, quote requests, and completions in real time</div>
+            </div>
+          </div>
+          <div class="em-footer">FindConveyancers Partners · partners@findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 3: branded quote page -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num amber">3</div>
+      <div class="step-meta">
+        <div class="step-who">Consumer (via agent's link) · findconveyancers.co.uk/get-quotes?ref=webb-property-a1b2c3</div>
+        <div class="step-title">Co-branded quote request page</div>
+        <div class="step-desc">The agent's agency name appears in the header — consumer sees who referred them</div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+        <div class="browser-url">findconveyancers.co.uk/get-quotes.html?ref=webb-property-a1b2c3</div>
+      </div>
+      <div class="ref-header">
+        <div class="ref-header-brand"><img src="/favicon.svg" alt="">FindConveyancers</div>
+        <div class="ref-divider"></div>
+        <div><div class="ref-by">Referred by</div><div class="ref-agent-name">Webb Property</div></div>
+        <div style="margin-left:auto;display:flex;gap:1rem;font-size:0.8rem;color:var(--muted)">
+          <span>How It Works</span><span>FAQ</span>
+        </div>
+      </div>
+      <div class="browser-body">
+        <div class="form-mock">
+          <div class="form-mock-progress">
+            <div class="prog-step active">1 Transaction</div>
+            <div class="prog-step">2 Property</div>
+            <div class="prog-step">3 Contact</div>
+            <div class="prog-step">4 Review</div>
+          </div>
+          <div class="form-mock-title">What do you need?</div>
+          <div class="form-mock-sub">Tell us what you're doing so we can tailor your quote request</div>
+          <div class="choice-row">
+            <div class="choice-item sel">Buying only</div>
+            <div class="choice-item">Selling only</div>
+            <div class="choice-item">Buying &amp; Selling</div>
+            <div class="choice-item">Remortgage</div>
+          </div>
+          <div class="mock-btn">Next →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 4: referral submitted notification -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num amber">4</div>
+      <div class="step-meta">
+        <div class="step-who">Estate Agent · Email from partners@findconveyancers.co.uk</div>
+        <div class="step-title">Referral submitted notification</div>
+        <div class="step-desc">Sent when a client they referred completes the quote form</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers Partners &lt;partners@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> marcus@webbproperty.co.uk<br>
+          <strong>Subject:</strong> Your referral has entered FindConveyancers: Sarah Johnson
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#eff6ff;color:#1d4ed8">Referral Submitted</div>
+            <div class="em-headline">A client you referred<br>has requested quotes</div>
+            <div class="em-sub">Good news — someone used your referral link and is now being matched with conveyancers.</div>
+          </div>
+          <div class="em-label">Referral Details</div>
+          <table class="em-table"><tr><td>Client</td><td>Sarah Johnson</td></tr><tr><td>Property</td><td>14 Church Lane, Northampton, NN1 1AA</td></tr><tr><td>Transaction</td><td>Buying</td></tr><tr><td>Property value</td><td>£280,000</td></tr></table>
+          <div class="em-info">No action is needed from you at this stage. We'll let you know when the client instructs a conveyancer and your referral fee becomes due.</div>
+          <a class="em-cta" href="#">View Your Partner Dashboard</a>
+          <div class="em-footer">FindConveyancers Partners · partners@findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- Step 5: referral instructed -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">5</div>
+      <div class="step-meta">
+        <div class="step-who">Estate Agent · Email from partners@findconveyancers.co.uk</div>
+        <div class="step-title">Referral instructed — fee due</div>
+        <div class="step-desc">Sent when the client instructs a conveyancer — referral fee is now due on completion</div>
+      </div>
+    </div>
+
+    <div class="email-frame">
+      <div class="email-header-bar">
+        <div class="email-meta">
+          <strong>From:</strong> FindConveyancers Partners &lt;partners@findconveyancers.co.uk&gt;<br>
+          <strong>To:</strong> marcus@webbproperty.co.uk<br>
+          <strong>Subject:</strong> Your referral instructed: Sarah Johnson
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-content">
+          <div class="em-logo-wrap">
+            <div class="em-logo" style="display:inline-flex;position:relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              <div class="em-logo-badge"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg></div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div class="em-badge" style="background:#eff6ff;color:#1d4ed8">Referral Instructed</div>
+            <div class="em-headline">Your referral<br>has been instructed</div>
+            <div class="em-sub">Sarah Johnson has chosen a conveyancer through your link.</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--body);line-height:1.6;margin-bottom:0.75rem">Good news, Webb Property. A client you referred has instructed a conveyancer.</div>
+          <div class="em-label">Referral Details</div>
+          <table class="em-table"><tr><td>Client</td><td>Sarah Johnson</td></tr><tr><td>Property</td><td>14 Church Lane, Northampton, NN1 1AA</td></tr><tr><td>Conveyancer</td><td>Palmers Solicitors</td></tr><tr><td>Quote</td><td>£1,420.00</td></tr><tr><td>Your referral fee</td><td>£200.00 (paid after completion)</td></tr></table>
+          <div class="em-info">A referral fee becomes due once the transaction completes, and we'll handle it automatically with no invoicing needed.</div>
+          <a class="em-cta" href="#">View Your Partner Dashboard</a>
+          <div class="em-footer">FindConveyancers Partners · partners@findconveyancers.co.uk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showJourney(id) {
+  document.querySelectorAll('.journey').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('journey-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(btn, i){
+    btn.classList.toggle('active', ['consumer','conveyancer','agent'][i] === id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
