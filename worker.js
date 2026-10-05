@@ -118,6 +118,10 @@ export default {
 
 // ── Consumer lead submission ───────────────────────────────────────────────────
 async function handleLeadSubmission(request, env) {
+  // Lead capture kill switch: set LEADS_PAUSED = "false" in wrangler.toml to re-open.
+  if (env.LEADS_PAUSED === 'true')
+    return jsonResponse({ error: 'Quote requests are temporarily paused. Please check back soon.' }, 503);
+
   const url  = new URL(request.url);
   const body = await request.json();
 
