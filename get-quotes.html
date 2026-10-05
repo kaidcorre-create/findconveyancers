@@ -76,6 +76,13 @@
 
     /* Form container */
     .form-container { background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    /* Lead capture pause: remove the leads-paused class from <body> to re-open the form */
+    .paused-panel { display: none; background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; text-align: center; }
+    .paused-panel h2 { font-size: 1.5rem; margin-bottom: 0.75rem; color: #0F172A; }
+    .paused-panel p { color: #475569; margin-bottom: 1.25rem; }
+    .paused-panel a { display: inline-block; background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; text-decoration: none; font-weight: 600; margin: 0.25rem; }
+    .leads-paused .paused-panel { display: block; }
+    .leads-paused .progress-section, .leads-paused #errorSummary, .leads-paused #formContainer { display: none !important; }
 
     .form-step { display: none; }
     .form-step.active { display: block; animation: slideIn 0.3s ease; }
@@ -256,7 +263,7 @@
     @media(max-width:480px){.fc-footer-top{grid-template-columns:1fr}}
   </style>
 </head>
-<body>
+<body class="leads-paused">
 <script>(function(){try{var r=new URLSearchParams(location.search).get('ref');if(r){localStorage.setItem('fc_ref',r);localStorage.setItem('fc_ref_at',Date.now());}}catch(e){}})();</script>
 <!-- fc-chrome:header -->
 <div id="fcOvl" class="fc-ovl"></div>
@@ -317,6 +324,14 @@
 <!-- /fc-chrome:header -->
 
 <div class="container">
+  <div class="paused-panel">
+    <h2>Quote requests are temporarily paused</h2>
+    <p>We're not taking new conveyancing quote requests at the moment. Please check back soon. In the meantime, our free calculators and guides can help you plan your move.</p>
+    <a href="/stamp-duty-calculator.html">Stamp Duty Calculator</a>
+    <a href="/buying-costs-calculator.html">Buying Costs Calculator</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
   <div class="progress-section">
     <div class="progress-label">Step <span id="stepLabel">1</span> of 4</div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
